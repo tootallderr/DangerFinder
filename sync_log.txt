@@ -1,0 +1,49 @@
+2025-05-23 19:13:09,098 - INFO - 🚀 Starting GitHub sync process
+2025-05-23 19:13:09,100 - INFO - Repository path: c:\Users\GEorg\OneDrive\Desktop\PPFace
+2025-05-23 19:13:09,186 - INFO - 📦 Updating existing Git repository
+2025-05-23 19:13:09,265 - ERROR - ❌ error: No such remote 'origin'
+2025-05-23 19:13:09,265 - INFO - 📁 Checking required directories
+2025-05-23 19:13:09,265 - INFO - Creating directory: modules
+2025-05-23 19:13:09,267 - INFO - Created .gitkeep in modules
+2025-05-23 19:13:09,268 - INFO - Creating directory: assets
+2025-05-23 19:13:09,273 - INFO - Created .gitkeep in assets
+2025-05-23 19:13:09,274 - INFO - Creating directory: examples
+2025-05-23 19:13:09,277 - INFO - Created .gitkeep in examples
+2025-05-23 19:13:09,277 - INFO - Creating directory: docs
+2025-05-23 19:13:09,280 - INFO - Created .gitkeep in docs
+2025-05-23 19:13:09,280 - INFO - 📎 Checking that all files are tracked
+2025-05-23 19:13:09,377 - WARNING - ⚠️ Core file doesn't exist: facebook-osint.user.js
+2025-05-23 19:13:09,377 - WARNING - ⚠️ Core file doesn't exist: README.md
+2025-05-23 19:13:09,378 - WARNING - ⚠️ Core file doesn't exist: DEPLOYMENT.md
+2025-05-23 19:13:09,378 - WARNING - ⚠️ Core file doesn't exist: facebook-osint-scraper.md
+2025-05-23 19:13:09,378 - WARNING - ⚠️ Core file doesn't exist: element_helpers.js
+2025-05-23 19:13:09,379 - WARNING - ⚠️ Core file doesn't exist: config.json
+2025-05-23 19:13:09,379 - INFO - Adding core file: sync_to_github.py
+2025-05-23 19:13:09,379 - INFO - Running: git add sync_to_github.py
+2025-05-23 19:13:09,484 - WARNING - ⚠️ warning: in the working copy of 'sync_to_github.py', LF will be replaced by CRLF the next time Git touches it
+2025-05-23 19:13:09,484 - INFO - Adding optional file: .gitignore
+2025-05-23 19:13:09,484 - INFO - Running: git add .gitignore
+2025-05-23 19:13:09,575 - INFO - Adding optional file: examples/
+2025-05-23 19:13:09,575 - INFO - Running: git add examples/
+2025-05-23 19:13:09,674 - WARNING - ⚠️ Missing core files: facebook-osint.user.js, README.md, DEPLOYMENT.md, facebook-osint-scraper.md, element_helpers.js, config.json
+2025-05-23 19:13:09,675 - INFO - 💡 These files should be created for a complete project
+2025-05-23 19:13:09,675 - WARNING - ⚠️ Some core files are missing. The project may be incomplete.
+2025-05-23 19:13:09,675 - INFO - 🔧 Applying optimal Git configuration
+2025-05-23 19:13:09,675 - INFO - Running: git config core.autocrlf true
+2025-05-23 19:13:09,831 - INFO - Running: git config diff.renameLimit 10000
+2025-05-23 19:13:09,965 - INFO - Running: git config diff.renames true
+2025-05-23 19:13:10,230 - INFO - ⬇️ Pulling latest changes from master
+2025-05-23 19:13:10,230 - INFO - Running: git pull origin master
+2025-05-23 19:13:10,932 - ERROR - ❌ fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2025-05-23 19:13:10,933 - INFO - ✅ Successfully pulled latest changes
+2025-05-23 19:13:10,933 - INFO - 📋 Generating changelog
+2025-05-23 19:13:11,046 - ERROR - ❌ The system cannot find the path specified.
+fatal: ambiguous argument 'HEAD': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+2025-05-23 19:13:11,047 - INFO - 📋 No changes for changelog or no previous tag
+2025-05-23 19:13:11,047 - INFO - Running: git add .
