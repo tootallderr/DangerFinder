@@ -35,3 +35,192 @@
 2025-05-27 16:59:12,914 - INFO - Running: git config diff.renames true
 2025-05-27 16:59:13,117 - INFO - ⬇️ Pulling latest changes from master
 2025-05-27 16:59:13,118 - INFO - Running: git pull origin master
+2025-05-27 16:59:13,408 - ERROR - ❌ fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2025-05-27 16:59:13,408 - INFO - ✅ Successfully pulled latest changes
+2025-05-27 16:59:13,408 - INFO - 📋 Generating changelog
+2025-05-27 16:59:13,551 - INFO - 📋 No changes for changelog or no previous tag
+2025-05-27 16:59:13,551 - INFO - Running: git add .
+2025-05-27 16:59:13,894 - WARNING - ⚠️ warning: in the working copy of 'sync_to_github.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/graph.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_chase_lockwood_82583.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_chase_lockwood_82583_friends.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_coolManjon.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_danielle_ann_shonsky.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_danielle_hites_7.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_joey_arduckle.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_jon_sloan_2024.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_jon_sloan_2024_friends.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_jon_sloan_802336.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_kasaun_hughey.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_mike_peterson_948833.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_richard_parsons_803540.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_2024.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_2024_friends.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_718097.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/queue.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/visited.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'package-lock.json', LF will be replaced by CRLF the next time Git touches it
+2025-05-27 16:59:14,018 - INFO - 📝 Changes to be committed:
+2025-05-27 16:59:14,019 - INFO - Running: git status --short
+2025-05-27 16:59:14,117 - INFO - A  .github/instructions.md
+D  .github/workflows/ci.yml
+M  .gitignore
+A  .tmp.driveupload/422845
+A  .tmp.driveupload/422849
+A  .tmp.driveupload/422853
+A  .tmp.driveupload/422855
+A  .tmp.driveupload/422859
+A  .tmp.driveupload/422863
+A  .tmp.driveupload/422867
+A  .tmp.driveupload/422871
+D  .vscode/instructions.md
+D  .vscode/tasks.json
+A  README.md
+A  backend/data/graph.json
+A  backend/data/profiles/https___www_facebook_com_chase_lockwood_82583.json
+A  backend/data/profiles/https___www_facebook_com_chase_lockwood_82583_friends.json
+A  backend/data/profiles/https___www_facebook_com_coolManjon.json
+A  backend/data/profiles/https___www_facebook_com_danielle_ann_shonsky.json
+A  backend/data/profiles/https___www_facebook_com_danielle_hites_7.json
+A  backend/data/profiles/https___www_facebook_com_joey_arduckle.json
+A  backend/data/profiles/https___www_facebook_com_jon_sloan_2024.json
+A  backend/data/profiles/https___www_facebook_com_jon_sloan_2024_friends.json
+A  backend/data/profiles/https___www_facebook_com_jon_sloan_802336.json
+A  backend/data/profiles/https___www_facebook_com_kasaun_hughey.json
+A  backend/data/profiles/https___www_facebook_com_mike_peterson_948833.json
+A  backend/data/profiles/https___www_facebook_com_profile_php.json
+A  backend/data/profiles/https___www_facebook_com_richard_parsons_803540.json
+A  backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_2024.json
+A  backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_2024_friends.json
+A  backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_718097.json
+A  backend/data/queue.json
+A  backend/data/visited.json
+A  backend/routes/scrape.js
+A  backend/server.js
+D  config/config.json
+D  main.py
+A  package-lock.json
+A  package.json
+D  requirements.txt
+A  scripts/analyze-communities.js
+A  scripts/build-graph.js
+D  scripts/fetchData.js
+D  src/__init__.py
+D  src/analysis/__init__.py
+D  src/collectors/__init__.py
+D  src/collectors/friend_collector.py
+D  src/collectors/profile_extractor.py
+D  src/collectors/scraper.py
+D  src/collectors/site_analyzer.py
+D  src/core/__init__.py
+D  src/core/plugin_system.py
+D  src/data/__init__.py
+D  src/database/__init__.py
+D  src/database/db_manager.py
+D  src/database/models.py
+D  src/utils/__init__.py
+D  src/utils/config.py
+D  src/utils/dom_analyzer.py
+D  src/utils/errors.py
+D  src/utils/logger.py
+D  src/utils/test_selectors.py
+MM sync_log.txt
+M  sync_to_github.py
+A  tampermonkey/fb-scraper.user.js
+A  test-api.html
+A  visualizer/README.md
+A  visualizer/index.html
+A  visualizer/visualizer.js
+2025-05-27 16:59:14,117 - INFO - 💾 Committing changes: 📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27
+2025-05-27 16:59:14,118 - INFO - Running: git commit -m "📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27"
+2025-05-27 16:59:14,350 - INFO - [master 86c05a7] 📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27
+ 69 files changed, 17111 insertions(+), 6209 deletions(-)
+ create mode 100644 .github/instructions.md
+ delete mode 100644 .github/workflows/ci.yml
+ create mode 100644 .tmp.driveupload/422845
+ create mode 100644 .tmp.driveupload/422849
+ create mode 100644 .tmp.driveupload/422853
+ create mode 100644 .tmp.driveupload/422855
+ create mode 100644 .tmp.driveupload/422859
+ create mode 100644 .tmp.driveupload/422863
+ create mode 100644 .tmp.driveupload/422867
+ create mode 100644 .tmp.driveupload/422871
+ delete mode 100644 .vscode/instructions.md
+ delete mode 100644 .vscode/tasks.json
+ create mode 100644 README.md
+ create mode 100644 backend/data/graph.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_chase_lockwood_82583.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_chase_lockwood_82583_friends.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_coolManjon.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_danielle_ann_shonsky.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_danielle_hites_7.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_joey_arduckle.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_jon_sloan_2024.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_jon_sloan_2024_friends.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_jon_sloan_802336.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_kasaun_hughey.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_mike_peterson_948833.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_richard_parsons_803540.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_2024.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_2024_friends.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_718097.json
+ create mode 100644 backend/data/queue.json
+ create mode 100644 backend/data/visited.json
+ create mode 100644 backend/routes/scrape.js
+ create mode 100644 backend/server.js
+ delete mode 100644 config/config.json
+ delete mode 100644 main.py
+ create mode 100644 package-lock.json
+ create mode 100644 package.json
+ delete mode 100644 requirements.txt
+ create mode 100644 scripts/analyze-communities.js
+ create mode 100644 scripts/build-graph.js
+ delete mode 100644 scripts/fetchData.js
+ delete mode 100644 src/__init__.py
+ delete mode 100644 src/analysis/__init__.py
+ delete mode 100644 src/collectors/__init__.py
+ delete mode 100644 src/collectors/friend_collector.py
+ delete mode 100644 src/collectors/profile_extractor.py
+ delete mode 100644 src/collectors/scraper.py
+ delete mode 100644 src/collectors/site_analyzer.py
+ delete mode 100644 src/core/__init__.py
+ delete mode 100644 src/core/plugin_system.py
+ delete mode 100644 src/data/__init__.py
+ delete mode 100644 src/database/__init__.py
+ delete mode 100644 src/database/db_manager.py
+ delete mode 100644 src/database/models.py
+ delete mode 100644 src/utils/__init__.py
+ delete mode 100644 src/utils/config.py
+ delete mode 100644 src/utils/dom_analyzer.py
+ delete mode 100644 src/utils/errors.py
+ delete mode 100644 src/utils/logger.py
+ delete mode 100644 src/utils/test_selectors.py
+ create mode 100644 tampermonkey/fb-scraper.user.js
+ create mode 100644 test-api.html
+ create mode 100644 visualizer/README.md
+ create mode 100644 visualizer/index.html
+ create mode 100644 visualizer/visualizer.js
+2025-05-27 16:59:14,415 - INFO - ⬆️ Pushing to master
+2025-05-27 16:59:14,415 - INFO - Running: git push origin master
+2025-05-27 16:59:14,564 - ERROR - ❌ fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2025-05-27 16:59:14,564 - ERROR - Command failed: git push origin master
+2025-05-27 16:59:14,564 - ERROR - Error: fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2025-05-27 16:59:14,565 - ERROR - ❌ Sync failed: Command failed: fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.

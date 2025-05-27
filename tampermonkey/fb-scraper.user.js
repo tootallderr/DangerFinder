@@ -143,9 +143,18 @@
                     overflow-y: auto;
                 ">
                     <div id="status-text">Ready to scrape...</div>
-                </div>
-
-                <div style="display: flex; gap: 8px;">
+                </div>                <div style="display: flex; gap: 8px;">
+                    <button id="test-backend" style="
+                        background: rgba(17, 122, 101, 0.8);
+                        border: 1px solid rgba(17, 122, 101, 1);
+                        color: white;
+                        padding: 6px 12px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 11px;
+                        flex: 1;
+                    ">🔗 Test API</button>
+                    
                     <button id="toggle-debug" style="
                         background: rgba(255,193,7,0.8);
                         border: 1px solid rgba(255,193,7,1);
@@ -201,15 +210,14 @@
             depthValue.textContent = currentDepth;
             currentDepthDisplay.textContent = currentDepth;
             GM_setValue('currentDepth', currentDepth);
-        });
-
-        // Scraping buttons
+        });        // Scraping buttons
         document.getElementById('scrape-basic').addEventListener('click', () => scrapeBasicInfo());
         document.getElementById('scrape-about').addEventListener('click', () => scrapeAboutPage());
         document.getElementById('scrape-friends').addEventListener('click', () => scrapeFriendsList());
         document.getElementById('scrape-full').addEventListener('click', () => scrapeFullProfile());
         document.getElementById('auto-next').addEventListener('click', () => autoNext());
         document.getElementById('view-queue').addEventListener('click', () => viewQueue());
+        document.getElementById('test-backend').addEventListener('click', () => testBackendConnection());
         document.getElementById('toggle-debug').addEventListener('click', () => toggleDebugPanel());
         document.getElementById('minimize-panel').addEventListener('click', () => minimizePanel());
     }
@@ -624,10 +632,34 @@
         }
     }
 
-    // Initialize
+    // Test backend connection
+    async function testBackendConnection() {
+        updateStatus('Testing backend connection...', 'info');
+        
+        try {
+            const response = await sendToAPI('/health', null, 'GET');
+            if (response && response.status === 'ok') {
+                updateStatus('✅ Backend connected successfully!', 'success');
+                addLog(`Backend timestamp: ${response.timestamp}`);
+                return true;
+            } else {
+                updateStatus('❌ Backend responded but status not ok', 'error');
+                return false;
+            }
+        } catch (error) {
+            updateStatus(`❌ Backend connection failed: ${error.message}`, 'error');
+            console.error('Backend connection error:', error);
+            return false;
+        }
+    }    // Initialize
     setTimeout(() => {
         createUI();
         updateStatus('Facebook Social Graph Scraper loaded', 'success');
+        
+        // Test backend connection on startup
+        setTimeout(() => {
+            testBackendConnection();
+        }, 1000);
         
         // Auto-scrape if enabled
         if (GM_getValue('autoScrapeEnabled', false)) {
