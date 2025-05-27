@@ -1,0 +1,33 @@
+{
+  "name": "facebook-social-graph-scraper",
+  "version": "1.0.0",
+  "description": "Advanced Facebook social graph scraper with community detection",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node backend/server.js",
+    "build-graph": "node scripts/build-graph.js build",
+    "analyze": "node scripts/analyze-communities.js analyze",
+    "export-graph": "node scripts/build-graph.js export",
+    "export-communities": "node scripts/analyze-communities.js export",
+    "stats": "node scripts/build-graph.js stats",
+    "report": "node scripts/analyze-communities.js report",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "facebook",
+    "social-graph",
+    "scraper",
+    "community-detection",
+    "network-analysis",
+    "tampermonkey"
+  ],
+  "author": "Social Graph Researcher",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "fs": "^0.0.1-security"
+  }
+}
