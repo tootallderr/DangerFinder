@@ -329,3 +329,137 @@ M  sync_to_github.py
  * [new branch]      master -> master
 2025-05-27 17:08:56,468 - INFO - ✅ Successfully pushed changes
 2025-05-27 17:08:56,469 - INFO - 🎉 Sync completed successfully
+2025-05-27 17:54:05,709 - INFO - 🚀 Starting GitHub sync process
+2025-05-27 17:54:05,709 - INFO - Repository path: c:\Users\GEorg\Desktop\DangerFinder
+2025-05-27 17:54:05,745 - INFO - 📦 Updating existing Git repository
+2025-05-27 17:54:05,781 - INFO - ✅ Origin remote already configured correctly
+2025-05-27 17:54:05,781 - INFO - 📁 Checking required directories
+2025-05-27 17:54:05,781 - INFO - 📎 Checking that all files are tracked
+2025-05-27 17:54:05,817 - WARNING - ⚠️ Core file doesn't exist: facebook-osint.user.js
+2025-05-27 17:54:05,818 - WARNING - ⚠️ Core file doesn't exist: DEPLOYMENT.md
+2025-05-27 17:54:05,818 - WARNING - ⚠️ Core file doesn't exist: facebook-osint-scraper.md
+2025-05-27 17:54:05,818 - WARNING - ⚠️ Core file doesn't exist: element_helpers.js
+2025-05-27 17:54:05,818 - WARNING - ⚠️ Core file doesn't exist: config.json
+2025-05-27 17:54:05,819 - INFO - Adding optional file: examples/
+2025-05-27 17:54:05,819 - INFO - Running: git add examples/
+2025-05-27 17:54:05,858 - WARNING - ⚠️ Missing core files: facebook-osint.user.js, DEPLOYMENT.md, facebook-osint-scraper.md, element_helpers.js, config.json
+2025-05-27 17:54:05,858 - INFO - 💡 These files should be created for a complete project
+2025-05-27 17:54:05,858 - WARNING - ⚠️ Some core files are missing. The project may be incomplete.
+2025-05-27 17:54:05,858 - INFO - 🔧 Applying optimal Git configuration
+2025-05-27 17:54:05,858 - INFO - Running: git config core.autocrlf true
+2025-05-27 17:54:05,895 - INFO - Running: git config diff.renameLimit 10000
+2025-05-27 17:54:05,932 - INFO - Running: git config diff.renames true
+2025-05-27 17:54:06,002 - INFO - ⬇️ Pulling latest changes from master
+2025-05-27 17:54:06,423 - INFO - Running: git pull origin master
+2025-05-27 17:54:06,816 - INFO - Already up to date.
+2025-05-27 17:54:06,816 - INFO - From https://github.com/tootallderr/DangerFinder
+ * branch            master     -> FETCH_HEAD
+2025-05-27 17:54:06,816 - INFO - ✅ Successfully pulled latest changes
+2025-05-27 17:54:06,817 - INFO - 📋 Generating changelog
+2025-05-27 17:54:06,888 - INFO - ✅ Changelog written to CHANGELOG.md
+2025-05-27 17:54:06,888 - INFO - Running: git add CHANGELOG.md
+2025-05-27 17:54:06,937 - INFO - Running: git add .
+2025-05-27 17:54:07,076 - WARNING - ⚠️ warning: in the working copy of 'backend/data/graph.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_chase_lockwood_82583.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_richard_parsons_803540.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_2024.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/queue.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/visited.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_beverly_hugar_18.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_greg_hoovler_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_100063644141670.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_100084321644382.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_100089557822166.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_100092600469620.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61551729971488.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61552145009397.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61552184353076.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61557104054838.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61558958985298.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61559910172977.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61568498158577.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61575120641195.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_rebecca_lea_hunter.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_thomas_culver_507.json', LF will be replaced by CRLF the next time Git touches it
+2025-05-27 17:54:07,119 - INFO - 📝 Changes to be committed:
+2025-05-27 17:54:07,119 - INFO - Running: git status --short
+2025-05-27 17:54:07,162 - INFO - M  CHANGELOG.md
+M  backend/data/graph.json
+A  backend/data/profiles/https___www_facebook_com_beverly_hugar_18.json
+M  backend/data/profiles/https___www_facebook_com_chase_lockwood_82583.json
+D  backend/data/profiles/https___www_facebook_com_chase_lockwood_82583_friends.json
+D  backend/data/profiles/https___www_facebook_com_coolManjon.json
+D  backend/data/profiles/https___www_facebook_com_danielle_ann_shonsky.json
+D  backend/data/profiles/https___www_facebook_com_danielle_hites_7.json
+A  backend/data/profiles/https___www_facebook_com_greg_hoovler_2025.json
+D  backend/data/profiles/https___www_facebook_com_joey_arduckle.json
+D  backend/data/profiles/https___www_facebook_com_jon_sloan_2024.json
+D  backend/data/profiles/https___www_facebook_com_jon_sloan_2024_friends.json
+D  backend/data/profiles/https___www_facebook_com_jon_sloan_802336.json
+D  backend/data/profiles/https___www_facebook_com_kasaun_hughey.json
+D  backend/data/profiles/https___www_facebook_com_mike_peterson_948833.json
+M  backend/data/profiles/https___www_facebook_com_profile_php.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_100063644141670.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_100084321644382.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_100089557822166.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_100092600469620.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61551729971488.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61552145009397.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61552184353076.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61557104054838.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61558958985298.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61559910172977.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61568498158577.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61575120641195.json
+A  backend/data/profiles/https___www_facebook_com_rebecca_lea_hunter.json
+M  backend/data/profiles/https___www_facebook_com_richard_parsons_803540.json
+A  backend/data/profiles/https___www_facebook_com_thomas_culver_507.json
+M  backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_2024.json
+D  backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_2024_friends.json
+D  backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_718097.json
+M  backend/data/queue.json
+M  backend/data/visited.json
+M  backend/server.js
+M  tampermonkey/fb-scraper.user.js
+A  test-api.js
+M  visualizer/index.html
+2025-05-27 17:54:07,162 - INFO - 💾 Committing changes: 📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27
+2025-05-27 17:54:07,162 - INFO - Running: git commit -m "📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27"
+2025-05-27 17:54:07,266 - INFO - [master e276ecf] 📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27
+ 40 files changed, 6787 insertions(+), 10364 deletions(-)
+ create mode 100644 backend/data/profiles/https___www_facebook_com_beverly_hugar_18.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_chase_lockwood_82583_friends.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_coolManjon.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_danielle_ann_shonsky.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_danielle_hites_7.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_greg_hoovler_2025.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_joey_arduckle.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_jon_sloan_2024.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_jon_sloan_2024_friends.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_jon_sloan_802336.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_kasaun_hughey.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_mike_peterson_948833.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_100063644141670.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_100084321644382.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_100089557822166.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_100092600469620.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61551729971488.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61552145009397.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61552184353076.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61557104054838.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61558958985298.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61559910172977.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61568498158577.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61575120641195.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_rebecca_lea_hunter.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_thomas_culver_507.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_2024_friends.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle_718097.json
+ create mode 100644 test-api.js
+2025-05-27 17:54:07,304 - INFO - ⬆️ Pushing to master
+2025-05-27 17:54:07,304 - INFO - Running: git push origin master
+2025-05-27 17:54:08,597 - INFO - To https://github.com/tootallderr/DangerFinder.git
+   590d448..e276ecf  master -> master
+2025-05-27 17:54:08,597 - INFO - ✅ Successfully pushed changes
+2025-05-27 17:54:08,597 - INFO - 🎉 Sync completed successfully

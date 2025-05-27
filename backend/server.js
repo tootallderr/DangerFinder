@@ -32,6 +32,7 @@ const PROFILES_DIR = path.join(DATA_DIR, 'profiles');
 const QUEUE_FILE = path.join(DATA_DIR, 'queue.json');
 const VISITED_FILE = path.join(DATA_DIR, 'visited.json');
 const GRAPH_FILE = path.join(DATA_DIR, 'graph.json');
+const ANNOTATIONS_FILE = path.join(DATA_DIR, 'annotations.json');
 
 // Ensure data directories exist
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -48,14 +49,29 @@ const initializeDataFiles = () => {
     if (!fs.existsSync(GRAPH_FILE)) {
         fs.writeFileSync(GRAPH_FILE, JSON.stringify({ nodes: [], edges: [] }));
     }
+    if (!fs.existsSync(ANNOTATIONS_FILE)) {
+        fs.writeFileSync(ANNOTATIONS_FILE, JSON.stringify({}));
+    }
 };
 
 // Helper functions
 const readJSON = (filePath) => {
     try {
-        return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        const content = fs.readFileSync(filePath, 'utf8').trim();
+        if (!content) {
+            // Return appropriate default for empty files
+            if (filePath.includes('queue.json')) return [];
+            if (filePath.includes('visited.json')) return [];
+            if (filePath.includes('graph.json')) return { nodes: [], edges: [] };
+            return null;
+        }
+        return JSON.parse(content);
     } catch (error) {
         console.error(`Error reading ${filePath}:`, error);
+        // Return appropriate default based on file type
+        if (filePath.includes('queue.json')) return [];
+        if (filePath.includes('visited.json')) return [];
+        if (filePath.includes('graph.json')) return { nodes: [], edges: [] };
         return null;
     }
 };
@@ -406,56 +422,112 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Build graph endpoint
-app.post('/api/build-graph', (req, res) => {
-    try {
-        const profiles = [];
-        const profileFiles = fs.readdirSync(PROFILES_DIR);
-        
-        profileFiles.forEach(file => {
-            if (file.endsWith('.json')) {
-                const profileData = JSON.parse(fs.readFileSync(path.join(PROFILES_DIR, file), 'utf8'));
-                profiles.push(profileData);
-            }
-        });
+// Conviction annotation endpoints
 
-        const graph = {
-            nodes: profiles.map(profile => ({
-                id: profile.url,
-                name: profile.name,
-                image: profile.image,
-                depth: profile.depth || 1,
-                ...profile
-            })),
-            edges: []
+// POST /api/annotations - Save conviction annotation
+app.post('/api/annotations', (req, res) => {
+    try {
+        const { profileUrl, annotation } = req.body;
+        
+        if (!profileUrl) {
+            return res.status(400).json({ error: 'Profile URL is required' });
+        }
+
+        if (!annotation) {
+            return res.status(400).json({ error: 'Annotation data is required' });
+        }
+
+        // Read existing annotations
+        const annotations = readJSON(ANNOTATIONS_FILE) || {};
+        
+        // Add timestamp and metadata
+        annotations[profileUrl] = {
+            ...annotation,
+            timestamp: Date.now(),
+            lastUpdated: new Date().toISOString(),
+            savedToBackend: true
         };
 
-        // Build edges from friends relationships
-        profiles.forEach(profile => {
-            if (profile.friends && Array.isArray(profile.friends)) {
-                profile.friends.forEach(friend => {
-                    graph.edges.push({
-                        source: profile.url,
-                        target: friend.url,
-                        type: 'friend'
-                    });
-                });
-            }
-        });
-
-        // Save graph
-        fs.writeFileSync(path.join(DATA_DIR, 'graph.json'), JSON.stringify(graph, null, 2));
-
-        res.json({
-            success: true,
-            nodeCount: graph.nodes.length,
-            edgeCount: graph.edges.length,
-            message: 'Graph built successfully'
-        });
-
+        // Save annotations
+        if (writeJSON(ANNOTATIONS_FILE, annotations)) {
+            console.log(`Conviction annotation saved for: ${profileUrl} - ${annotation.category}`);
+            res.json({ 
+                success: true, 
+                message: 'Annotation saved successfully',
+                annotation: annotations[profileUrl]
+            });
+        } else {
+            res.status(500).json({ error: 'Failed to save annotation' });
+        }
     } catch (error) {
-        console.error('Error building graph:', error);
-        res.status(500).json({ error: error.message });
+        console.error('Error saving annotation:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// GET /api/annotations - Get all annotations
+app.get('/api/annotations', (req, res) => {
+    try {
+        const { profileUrl } = req.query;
+        const annotations = readJSON(ANNOTATIONS_FILE) || {};
+        
+        if (profileUrl) {
+            // Get annotation for specific profile
+            res.json({ annotation: annotations[profileUrl] || null });
+        } else {
+            // Get all annotations
+            res.json({ annotations, count: Object.keys(annotations).length });
+        }
+    } catch (error) {
+        console.error('Error reading annotations:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// GET /api/convictions - Get only confirmed convictions
+app.get('/api/convictions', (req, res) => {
+    try {
+        const annotations = readJSON(ANNOTATIONS_FILE) || {};
+        const convictions = {};
+        
+        for (const [url, annotation] of Object.entries(annotations)) {
+            if (annotation.category === 'confirmed-conviction') {
+                convictions[url] = annotation;
+            }
+        }
+        
+        res.json({ 
+            convictions, 
+            count: Object.keys(convictions).length,
+            exportedAt: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('Error reading convictions:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// DELETE /api/annotations/:profileUrl - Remove annotation
+app.delete('/api/annotations/:profileUrl', (req, res) => {
+    try {
+        const profileUrl = decodeURIComponent(req.params.profileUrl);
+        const annotations = readJSON(ANNOTATIONS_FILE) || {};
+        
+        if (annotations[profileUrl]) {
+            delete annotations[profileUrl];
+            
+            if (writeJSON(ANNOTATIONS_FILE, annotations)) {
+                console.log(`Annotation removed for: ${profileUrl}`);
+                res.json({ success: true, message: 'Annotation removed successfully' });
+            } else {
+                res.status(500).json({ error: 'Failed to remove annotation' });
+            }
+        } else {
+            res.status(404).json({ error: 'Annotation not found' });
+        }
+    } catch (error) {
+        console.error('Error removing annotation:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 

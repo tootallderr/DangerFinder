@@ -19,12 +19,219 @@
         MAX_DEPTH: 5,
         SCRAPE_DELAY: 2000,
         FRIEND_LIMIT: 100
-    };
-
-    let currentDepth = GM_getValue('currentDepth', 1);
+    };    let currentDepth = GM_getValue('currentDepth', 1);
     let isRunning = false;
     let debugPanel = null;
+    
+    // Enhanced state management
+    const ScrapingState = {
+        // Get current state
+        get: () => ({
+            workflow: GM_getValue('currentWorkflow', null),
+            step: GM_getValue('currentStep', null),
+            profileUrl: GM_getValue('currentProfileUrl', null),
+            autoMode: GM_getValue('autoMode', false),
+            depth: GM_getValue('currentDepth', 1),
+            queueIndex: GM_getValue('queueIndex', 0),
+            lastAction: GM_getValue('lastAction', null),
+            timestamp: GM_getValue('stateTimestamp', null)
+        }),
+        
+        // Set state
+        set: (newState) => {
+            if (newState.workflow !== undefined) GM_setValue('currentWorkflow', newState.workflow);
+            if (newState.step !== undefined) GM_setValue('currentStep', newState.step);
+            if (newState.profileUrl !== undefined) GM_setValue('currentProfileUrl', newState.profileUrl);
+            if (newState.autoMode !== undefined) GM_setValue('autoMode', newState.autoMode);
+            if (newState.depth !== undefined) GM_setValue('currentDepth', newState.depth);
+            if (newState.queueIndex !== undefined) GM_setValue('queueIndex', newState.queueIndex);
+            if (newState.lastAction !== undefined) GM_setValue('lastAction', newState.lastAction);
+            GM_setValue('stateTimestamp', Date.now());
+        },
+        
+        // Clear state
+        clear: () => {
+            GM_setValue('currentWorkflow', null);
+            GM_setValue('currentStep', null);
+            GM_setValue('currentProfileUrl', null);
+            GM_setValue('autoMode', false);
+            GM_setValue('lastAction', null);
+        },
+        
+        // Check if we're in a workflow
+        isActive: () => {
+            const state = ScrapingState.get();
+            return state.workflow && state.profileUrl;
+        },
+        
+        // Check if state is recent (within 5 minutes)
+        isRecent: () => {
+            const state = ScrapingState.get();
+            if (!state.timestamp) return false;
+            return (Date.now() - state.timestamp) < 300000; // 5 minutes
+        }
+    };
 
+    // Profile annotation system for research purposes
+    const ProfileAnnotations = {
+        // Get annotations for a profile
+        get: (profileUrl) => {
+            const annotations = GM_getValue('profileAnnotations', {});
+            return annotations[profileUrl] || null;
+        },
+        
+        // Set annotation for a profile
+        set: (profileUrl, annotation) => {
+            const annotations = GM_getValue('profileAnnotations', {});
+            const annotationData = {
+                ...annotation,
+                timestamp: Date.now(),
+                lastUpdated: new Date().toISOString()
+            };
+            
+            annotations[profileUrl] = annotationData;
+            GM_setValue('profileAnnotations', annotations);
+            
+            // Also save to backend server
+            ProfileAnnotations.saveToBackend(profileUrl, annotationData);
+        },
+        
+        // Save annotation to backend server
+        saveToBackend: async (profileUrl, annotation) => {
+            try {
+                const response = await sendToAPI('/annotations', {
+                    profileUrl: profileUrl,
+                    annotation: annotation
+                });
+                
+                if (response && response.success) {
+                    console.log(`✅ Conviction annotation saved to backend: ${profileUrl}`);
+                    return true;
+                } else {
+                    console.error('Failed to save annotation to backend:', response);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error saving annotation to backend:', error);
+                return false;
+            }
+        },
+        
+        // Remove annotation
+        remove: (profileUrl) => {
+            const annotations = GM_getValue('profileAnnotations', {});
+            delete annotations[profileUrl];
+            GM_setValue('profileAnnotations', annotations);
+            
+            // Also remove from backend
+            ProfileAnnotations.removeFromBackend(profileUrl);
+        },
+        
+        // Remove annotation from backend
+        removeFromBackend: async (profileUrl) => {
+            try {
+                const encodedUrl = encodeURIComponent(profileUrl);
+                const response = await sendToAPI(`/annotations/${encodedUrl}`, null, 'DELETE');
+                
+                if (response && response.success) {
+                    console.log(`🗑️ Annotation removed from backend: ${profileUrl}`);
+                    return true;
+                } else {
+                    console.error('Failed to remove annotation from backend:', response);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error removing annotation from backend:', error);
+                return false;
+            }
+        },
+        
+        // Load annotations from backend on startup
+        loadFromBackend: async () => {
+            try {
+                const response = await sendToAPI('/annotations', null, 'GET');
+                
+                if (response && response.annotations) {
+                    const localAnnotations = GM_getValue('profileAnnotations', {});
+                    
+                    // Merge backend annotations with local ones
+                    const mergedAnnotations = { ...response.annotations, ...localAnnotations };
+                    GM_setValue('profileAnnotations', mergedAnnotations);
+                    
+                    console.log(`📥 Loaded ${Object.keys(response.annotations).length} annotations from backend`);
+                    updateStatus(`Loaded ${Object.keys(response.annotations).length} annotations from backend`, 'info');
+                }
+            } catch (error) {
+                console.error('Error loading annotations from backend:', error);
+                updateStatus('Could not load annotations from backend', 'warning');
+            }
+        },
+          // Get all annotated profiles
+        getAll: () => {
+            return GM_getValue('profileAnnotations', {});
+        },
+          // Export annotations for backup
+        export: () => {
+            const annotations = GM_getValue('profileAnnotations', {});
+            const blob = new Blob([JSON.stringify(annotations, null, 2)], 
+                                 { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `profile-annotations-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        },
+        
+        // Get conviction data specifically
+        getConvictions: () => {
+            const annotations = GM_getValue('profileAnnotations', {});
+            const convictions = {};
+            for (const [url, annotation] of Object.entries(annotations)) {
+                if (annotation.category === 'confirmed-conviction') {
+                    convictions[url] = annotation;
+                }
+            }
+            return convictions;
+        },
+        
+        // Export convictions as CSV for analysis
+        exportConvictionsCSV: () => {
+            const convictions = ProfileAnnotations.getConvictions();
+            if (Object.keys(convictions).length === 0) {
+                alert('No confirmed convictions found to export');
+                return;
+            }
+            
+            let csv = 'Profile URL,Name,Conviction Type,Crime Category,Date,Jurisdiction,Risk Level,Source,Notes,Last Updated\n';
+            
+            for (const [url, conviction] of Object.entries(convictions)) {
+                const conv = conviction.convictionDetails || {};
+                const row = [
+                    url,
+                    conviction.profileName || '',
+                    conv.type || '',
+                    conv.crimeCategory || '',
+                    conv.date || '',
+                    conv.jurisdiction || '',
+                    conviction.risk || '',
+                    conviction.source || '',
+                    (conviction.notes || '').replace(/"/g, '""'),
+                    conviction.lastUpdated || ''
+                ].map(field => `"${field}"`).join(',');
+                csv += row + '\n';
+            }
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `confirmed-convictions-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    };
+    
     // Main UI Panel
     function createUI() {
         if (document.getElementById('fb-scraper-ui')) return;
@@ -52,9 +259,7 @@
                     <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">
                         Depth: <span id="current-depth">${currentDepth}</span> / ${CONFIG.MAX_DEPTH}
                     </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
+                </div>                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
                     <button id="scrape-basic" style="
                         background: rgba(255,255,255,0.2);
                         border: 1px solid rgba(255,255,255,0.3);
@@ -112,6 +317,29 @@
                         transition: all 0.3s;
                     ">⚡ Auto Next</button>
                     
+                    <button id="stop-workflow" style="
+                        background: rgba(231, 76, 60, 0.8);
+                        border: 1px solid rgba(231, 76, 60, 1);
+                        color: white;
+                        padding: 8px 12px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 12px;
+                        transition: all 0.3s;
+                    ">🛑 Stop</button>
+                </div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
+                    <button id="workflow-friends" style="
+                        background: rgba(155, 89, 182, 0.8);
+                        border: 1px solid rgba(155, 89, 182, 1);
+                        color: white;
+                        padding: 8px 12px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 12px;
+                        transition: all 0.3s;
+                    ">👥 Friends Auto</button>
+                    
                     <button id="view-queue" style="
                         background: rgba(52, 152, 219, 0.8);
                         border: 1px solid rgba(52, 152, 219, 1);
@@ -122,6 +350,31 @@
                         font-size: 12px;
                         transition: all 0.3s;
                     ">📊 View Queue</button>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
+                    <button id="mark-conviction" style="
+                        background: rgba(231, 76, 60, 0.9);
+                        border: 1px solid rgba(231, 76, 60, 1);
+                        color: white;
+                        padding: 8px 12px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 12px;
+                        transition: all 0.3s;
+                        font-weight: bold;
+                    ">🚨 Mark Conviction</button>
+                    
+                    <button id="annotate-profile" style="
+                        background: rgba(142, 68, 173, 0.8);
+                        border: 1px solid rgba(142, 68, 173, 1);
+                        color: white;
+                        padding: 8px 12px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 12px;
+                        transition: all 0.3s;
+                    ">📝 Annotate</button>
                 </div>
 
                 <div style="margin-bottom: 15px;">
@@ -210,17 +463,19 @@
             depthValue.textContent = currentDepth;
             currentDepthDisplay.textContent = currentDepth;
             GM_setValue('currentDepth', currentDepth);
-        });        // Scraping buttons
-        document.getElementById('scrape-basic').addEventListener('click', () => scrapeBasicInfo());
-        document.getElementById('scrape-about').addEventListener('click', () => scrapeAboutPage());
-        document.getElementById('scrape-friends').addEventListener('click', () => scrapeFriendsList());
-        document.getElementById('scrape-full').addEventListener('click', () => scrapeFullProfile());
+        });        // Scraping buttons        document.getElementById('scrape-basic').addEventListener('click', () => startWorkflow('basic_only'));
+        document.getElementById('scrape-about').addEventListener('click', () => startWorkflow('about_only'));
+        document.getElementById('scrape-friends').addEventListener('click', () => startWorkflow('friends_only'));
+        document.getElementById('scrape-full').addEventListener('click', () => startWorkflow('full_scrape'));
         document.getElementById('auto-next').addEventListener('click', () => autoNext());
+        document.getElementById('stop-workflow').addEventListener('click', () => stopWorkflow());
+        document.getElementById('workflow-friends').addEventListener('click', () => startAutoWorkflow('friends_only'));
         document.getElementById('view-queue').addEventListener('click', () => viewQueue());
+        document.getElementById('mark-conviction').addEventListener('click', () => quickMarkConviction());
+        document.getElementById('annotate-profile').addEventListener('click', () => showAnnotationDialog());
         document.getElementById('test-backend').addEventListener('click', () => testBackendConnection());
         document.getElementById('toggle-debug').addEventListener('click', () => toggleDebugPanel());
-        document.getElementById('minimize-panel').addEventListener('click', () => minimizePanel());
-    }
+        document.getElementById('minimize-panel').addEventListener('click', () => minimizePanel());}
 
     // Status and logging functions
     function updateStatus(message, type = 'info') {
@@ -228,8 +483,19 @@
         const timestamp = new Date().toLocaleTimeString();
         const emoji = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
         
-        statusText.innerHTML = `[${timestamp}] ${emoji} ${message}`;
-        console.log(`FB Scraper: ${message}`);
+        // Check if we should show workflow status instead
+        const state = ScrapingState.get();
+        if (state.workflow && ScrapingState.isActive() && type !== 'error') {
+            const workflowInfo = `🔄 ${state.workflow} → ${state.step}`;
+            statusText.innerHTML = `
+                <div style="font-weight: bold; color: #4CAF50;">${workflowInfo}</div>
+                <div style="font-size: 11px; opacity: 0.8;">Current: ${message}</div>
+                <div style="font-size: 10px; opacity: 0.6;">Auto: ${state.autoMode ? 'ON' : 'OFF'} | ${timestamp}</div>
+            `;
+        } else {
+            statusText.innerHTML = `[${timestamp}] ${emoji} ${message}`;
+        }
+          console.log(`FB Scraper: ${message}`);
     }
 
     function addLog(message) {
@@ -239,7 +505,9 @@
         logDiv.innerHTML = `[${timestamp}] ${message}`;
         statusArea.appendChild(logDiv);
         statusArea.scrollTop = statusArea.scrollHeight;
-    }    // Core scraping functions
+    }
+
+    // Core scraping functions
     async function scrapeBasicInfo() {
         updateStatus('Scraping basic profile info...', 'info');
         
@@ -446,33 +714,270 @@
         } catch (error) {
             updateStatus(`Error in full scrape: ${error.message}`, 'error');
         }
-    }
-
-    // Auto navigation
+    }    // Auto navigation with workflow management
     async function autoNext() {
-        if (isRunning) {
+        const state = ScrapingState.get();
+        
+        if (isRunning && !state.autoMode) {
             isRunning = false;
+            ScrapingState.set({ autoMode: false });
             updateStatus('Auto scraping stopped', 'info');
             return;
         }
 
         isRunning = true;
-        updateStatus('Starting auto scraper...', 'info');
+        ScrapingState.set({ autoMode: true });
+        updateStatus('Auto scraper active...', 'info');
 
         try {
+            // Check if we're continuing a workflow
+            if (state.workflow && state.isRecent() && ScrapingState.isActive()) {
+                await continueWorkflow();
+                return;
+            }
+
+            // Get next URL from queue
             const response = await sendToAPI('/scrape/next', null, 'GET');
             if (response.url) {
-                updateStatus(`Navigating to next profile: ${response.url}`, 'info');
+                // Start new workflow
+                ScrapingState.set({
+                    workflow: 'full_scrape',
+                    step: 'basic_info',
+                    profileUrl: response.url,
+                    queueIndex: response.queueIndex || 0
+                });
+                
+                updateStatus(`Starting workflow for: ${response.url}`, 'info');
+                
+                // Navigate to the profile
                 setTimeout(() => {
                     window.location.href = response.url;
                 }, 2000);
             } else {
                 updateStatus('No more URLs in queue', 'info');
                 isRunning = false;
+                ScrapingState.set({ autoMode: false });
             }
         } catch (error) {
-            updateStatus(`Error getting next URL: ${error.message}`, 'error');
+            updateStatus(`Error in auto-next: ${error.message}`, 'error');
             isRunning = false;
+            ScrapingState.set({ autoMode: false });
+        }
+    }
+    
+    // Continue existing workflow
+    async function continueWorkflow() {
+        const state = ScrapingState.get();
+        const currentUrl = getCurrentProfileUrl();
+        
+        updateStatus(`Continuing workflow: ${state.workflow} - ${state.step}`, 'info');
+        
+        // Verify we're on the correct profile
+        if (state.profileUrl && currentUrl !== state.profileUrl) {
+            updateStatus(`URL mismatch, navigating back to ${state.profileUrl}`, 'warning');
+            setTimeout(() => {
+                window.location.href = state.profileUrl;
+            }, 1000);
+            return;
+        }
+        
+        switch (state.workflow) {
+            case 'full_scrape':
+                await executeFullScrapeWorkflow(state.step);
+                break;
+            case 'friends_only':
+                await executeFriendsWorkflow(state.step);
+                break;
+            case 'about_only':
+                await executeAboutWorkflow(state.step);
+                break;
+            default:
+                updateStatus(`Unknown workflow: ${state.workflow}`, 'error');
+                ScrapingState.clear();
+        }
+    }
+    
+    // Execute full scrape workflow
+    async function executeFullScrapeWorkflow(currentStep) {
+        switch (currentStep) {
+            case 'basic_info':
+                await scrapeBasicInfo();
+                ScrapingState.set({ step: 'friends_list' });
+                setTimeout(() => navigateToFriends(), 3000);
+                break;
+                
+            case 'friends_list':
+                await scrapeFriendsList();
+                ScrapingState.set({ step: 'about_page' });
+                setTimeout(() => navigateToAbout(), 3000);
+                break;
+                
+            case 'about_page':
+                await scrapeAboutPage();
+                ScrapingState.set({ step: 'complete' });
+                setTimeout(() => completeWorkflowAndNext(), 3000);
+                break;
+                
+            case 'complete':
+                await completeWorkflowAndNext();
+                break;
+                
+            default:
+                updateStatus(`Unknown step: ${currentStep}`, 'error');
+                ScrapingState.clear();        }
+    }
+    
+    // Workflow management functions
+    async function startWorkflow(workflowType) {
+        const currentUrl = getCurrentProfileUrl();
+        
+        ScrapingState.set({
+            workflow: workflowType,
+            step: 'basic_info',
+            profileUrl: currentUrl,
+            autoMode: false
+        });
+        
+        updateStatus(`Starting ${workflowType} workflow...`, 'info');
+        isRunning = true;
+        
+        // Execute the workflow
+        setTimeout(() => {
+            continueWorkflow();
+        }, 1000);
+    }
+    
+    async function startAutoWorkflow(workflowType) {
+        ScrapingState.set({ autoMode: true });
+        GM_setValue('preferredWorkflow', workflowType);
+        updateStatus(`Starting auto ${workflowType} mode...`, 'info');
+        autoNext();
+    }
+    
+    function stopWorkflow() {
+        isRunning = false;
+        ScrapingState.clear();
+        updateStatus('Workflow stopped and state cleared', 'warning');
+    }
+    
+    // Update status display to show current workflow state
+    function updateWorkflowStatus() {
+        const state = ScrapingState.get();
+        const statusElement = document.getElementById('status-text');
+        
+        if (state.workflow && ScrapingState.isActive()) {
+            const workflowInfo = `🔄 ${state.workflow} → ${state.step}`;
+            statusElement.innerHTML = `
+                <div style="font-weight: bold; color: #4CAF50;">${workflowInfo}</div>
+                <div style="font-size: 11px; opacity: 0.8;">${state.profileUrl}</div>
+                <div style="font-size: 10px; opacity: 0.6;">Auto: ${state.autoMode ? 'ON' : 'OFF'}</div>
+            `;
+        }
+    }
+    
+    // Execute friends-only workflow
+    async function executeFriendsWorkflow(currentStep) {
+        switch (currentStep) {
+            case 'basic_info':
+                await scrapeBasicInfo();
+                ScrapingState.set({ step: 'friends_list' });
+                setTimeout(() => navigateToFriends(), 3000);
+                break;
+                
+            case 'friends_list':
+                await scrapeFriendsList();
+                await completeWorkflowAndNext();
+                break;
+                
+            default:                updateStatus(`Unknown friends workflow step: ${currentStep}`, 'error');
+                ScrapingState.clear();
+        }
+    }
+    
+    // Execute about-only workflow
+    async function executeAboutWorkflow(currentStep) {
+        switch (currentStep) {
+            case 'basic_info':
+                await scrapeBasicInfo();
+                ScrapingState.set({ step: 'about_page' });
+                setTimeout(() => navigateToAbout(), 3000);
+                break;
+                
+            case 'about_page':
+                await scrapeAboutPage();
+                await completeWorkflowAndNext();
+                break;
+                
+            default:
+                updateStatus(`Unknown about workflow step: ${currentStep}`, 'error');
+                ScrapingState.clear();
+        }
+    }
+    
+    // Complete workflow and move to next profile
+    async function completeWorkflowAndNext() {
+        const state = ScrapingState.get();
+        updateStatus(`Completed workflow for ${state.profileUrl}`, 'success');
+        
+        // Clear current workflow
+        ScrapingState.clear();
+        
+        // If auto mode is still on, continue to next profile
+        if (state.autoMode) {
+            updateStatus('Moving to next profile...', 'info');
+            setTimeout(() => autoNext(), 2000);
+        } else {
+            isRunning = false;
+            updateStatus('Workflow completed. Auto mode stopped.', 'info');
+        }
+    }
+    
+    // Navigation helpers
+    async function navigateToFriends() {
+        const currentUrl = getCurrentProfileUrl();
+        let friendsUrl;
+        
+        if (currentUrl.includes('/profile.php')) {
+            // Numerical profile: profile.php?id=123&sk=friends
+            const match = currentUrl.match(/profile\.php\?id=(\d+)/);
+            if (match) {
+                friendsUrl = `${currentUrl}&sk=friends`;
+            }
+        } else {
+            // Username profile: username/friends
+            friendsUrl = `${currentUrl}/friends`;
+        }
+        
+        if (friendsUrl) {
+            ScrapingState.set({ lastAction: 'navigating_to_friends' });
+            updateStatus(`Navigating to friends page...`, 'info');
+            window.location.href = friendsUrl;
+        } else {
+            updateStatus('Could not determine friends URL', 'error');
+        }
+    }
+    
+    async function navigateToAbout() {
+        const currentUrl = getCurrentProfileUrl();
+        let aboutUrl;
+        
+        if (currentUrl.includes('/profile.php')) {
+            // Numerical profile: profile.php?id=123&sk=about
+            const match = currentUrl.match(/profile\.php\?id=(\d+)/);
+            if (match) {
+                aboutUrl = `${currentUrl}&sk=about`;
+            }
+        } else {
+            // Username profile: username/about
+            aboutUrl = `${currentUrl}/about`;
+        }
+        
+        if (aboutUrl) {
+            ScrapingState.set({ lastAction: 'navigating_to_about' });
+            updateStatus(`Navigating to about page...`, 'info');
+            window.location.href = aboutUrl;
+        } else {
+            updateStatus('Could not determine about URL', 'error');
         }
     }
 
@@ -790,17 +1295,636 @@
     }    // Initialize
     setTimeout(() => {
         createUI();
-        updateStatus('Facebook Social Graph Scraper loaded', 'success');
+        updateProfileDisplay(); // Check for existing annotations on load
         
-        // Test backend connection on startup
+        // Global functions for console access
+        window.FB_Scraper = {
+            getConvictions: () => ProfileAnnotations.getConvictions(),
+            exportConvictions: () => ProfileAnnotations.exportConvictionsCSV(),
+            getConvictionStats: () => {
+                const convictions = ProfileAnnotations.getConvictions();
+                const stats = {
+                    total: Object.keys(convictions).length,
+                    byType: {},
+                    byRisk: {},
+                    byCrime: {}
+                };
+                
+                for (const conviction of Object.values(convictions)) {
+                    const conv = conviction.convictionDetails || {};
+                    
+                    // Count by conviction type
+                    const type = conv.type || 'unknown';
+                    stats.byType[type] = (stats.byType[type] || 0) + 1;
+                    
+                    // Count by risk level
+                    const risk = conviction.risk || 'unknown';
+                    stats.byRisk[risk] = (stats.byRisk[risk] || 0) + 1;
+                    
+                    // Count by crime category
+                    const crime = conv.crimeCategory || 'unknown';
+                    stats.byCrime[crime] = (stats.byCrime[crime] || 0) + 1;
+                }
+                
+                console.table(stats);
+                return stats;
+            },
+            exportAllAnnotations: () => ProfileAnnotations.export(),
+            clearAllAnnotations: () => {
+                if (confirm('Are you sure you want to clear ALL profile annotations? This cannot be undone.')) {
+                    GM_setValue('profileAnnotations', {});
+                    updateProfileDisplay();
+                    console.log('All annotations cleared');
+                }
+            },
+            loadFromBackend: async () => {
+                try {
+                    updateStatus('Loading annotations from backend...', 'info');
+                    const response = await sendToAPI('/annotations', null, 'GET');
+                    
+                    if (response && response.annotations) {
+                        const localAnnotations = GM_getValue('profileAnnotations', {});
+                        
+                        // Merge backend annotations with local ones
+                        const mergedAnnotations = { ...response.annotations, ...localAnnotations };
+                        GM_setValue('profileAnnotations', mergedAnnotations);
+                        
+                        console.log(`📥 Loaded ${Object.keys(response.annotations).length} annotations from backend`);
+                        updateStatus(`Loaded ${Object.keys(response.annotations).length} annotations from backend`, 'success');
+                        updateProfileDisplay();
+                        return response.annotations;
+                    }
+                } catch (error) {
+                    console.error('Error loading annotations from backend:', error);
+                    updateStatus('Failed to load annotations from backend', 'error');
+                }
+            },
+            getBackendConvictions: async () => {
+                try {
+                    updateStatus('Fetching convictions from backend...', 'info');
+                    const response = await sendToAPI('/convictions', null, 'GET');
+                    
+                    if (response && response.convictions) {
+                        console.log(`Found ${response.count} convictions in backend:`);
+                        console.table(response.convictions);
+                        updateStatus(`Found ${response.count} convictions in backend`, 'success');
+                        return response.convictions;
+                    } else {
+                        updateStatus('No convictions found in backend', 'info');
+                    }
+                } catch (error) {
+                    console.error('Error fetching backend convictions:', error);
+                    updateStatus('Failed to fetch convictions from backend', 'error');
+                }
+            },
+            syncToBackend: async () => {
+                try {
+                    updateStatus('Syncing annotations to backend...', 'info');
+                    const localAnnotations = GM_getValue('profileAnnotations', {});
+                    let syncCount = 0;
+                    
+                    for (const [url, annotation] of Object.entries(localAnnotations)) {
+                        try {
+                            await sendToAPI('/annotations', {
+                                profileUrl: url,
+                                annotation: annotation
+                            });
+                            syncCount++;
+                        } catch (error) {
+                            console.error(`Failed to sync ${url}:`, error);
+                        }
+                    }
+                    
+                    console.log(`Synced ${syncCount} annotations to backend`);
+                    updateStatus(`Synced ${syncCount} annotations to backend`, 'success');
+                    return syncCount;
+                } catch (error) {
+                    console.error('Error syncing to backend:', error);
+                    updateStatus('Failed to sync annotations to backend', 'error');
+                }
+            }
+        };
+        
+        console.log('FB Scraper initialized. Available commands:');
+        console.log('- FB_Scraper.getConvictions() - Get all confirmed convictions');
+        console.log('- FB_Scraper.exportConvictions() - Export convictions as CSV');
+        console.log('- FB_Scraper.getConvictionStats() - Show conviction statistics');
+        console.log('- FB_Scraper.exportAllAnnotations() - Export all annotations as JSON');
+        
+        // Check for existing workflow state
+        const state = ScrapingState.get();
+        if (state.workflow && ScrapingState.isActive() && ScrapingState.isRecent()) {
+            updateStatus(`Resuming workflow: ${state.workflow} - ${state.step}`, 'info');
+            isRunning = true;
+            
+            // Resume workflow after page elements load
+            setTimeout(() => {
+                continueWorkflow();
+            }, 3000);
+        } else {
+            updateStatus('Facebook Social Graph Scraper loaded', 'success');
+            
+            // Clear stale state
+            if (state.workflow && !ScrapingState.isRecent()) {
+                updateStatus('Clearing stale workflow state', 'warning');
+                ScrapingState.clear();
+            }
+        }
+          // Test backend connection on startup
         setTimeout(() => {
             testBackendConnection();
+            // Load annotations from backend after connection test
+            setTimeout(() => {
+                ProfileAnnotations.loadFromBackend();
+            }, 1000);
         }, 1000);
         
-        // Auto-scrape if enabled
-        if (GM_getValue('autoScrapeEnabled', false)) {
+        // Auto-scrape if enabled and no existing workflow
+        if (GM_getValue('autoScrapeEnabled', false) && !ScrapingState.isActive()) {
             setTimeout(autoNext, 3000);
         }
     }, 2000);
 
+    // Show annotation dialog
+    function showAnnotationDialog() {
+        const currentUrl = getCurrentProfileUrl();
+        const existing = ProfileAnnotations.get(currentUrl);
+        
+        const dialog = document.createElement('div');
+        dialog.style.cssText = `
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 20000; width: 400px; color: black; font-family: Arial, sans-serif;
+        `;
+        
+        dialog.innerHTML = `
+            <h3 style="margin-top: 0;">Profile Research Annotation</h3>
+            <div style="margin-bottom: 10px;">
+                <strong>Profile:</strong> ${currentUrl}
+            </div>
+              <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Research Category:</label>
+                <select id="annotation-category" style="width: 100%; padding: 5px;">
+                    <option value="">Select category...</option>
+                    <option value="confirmed-conviction">🚨 Confirmed Conviction</option>
+                    <option value="public-record">Public Record Verified</option>
+                    <option value="court-record">Court Record Confirmed</option>
+                    <option value="news-verified">News Source Verified</option>
+                    <option value="investigation">Under Investigation</option>
+                    <option value="cleared">Cleared/Innocent</option>
+                    <option value="other">Other Research Note</option>
+                </select>
+            </div>
+            
+            <div id="conviction-details" style="margin-bottom: 15px; display: none; background: #fff3cd; padding: 10px; border-radius: 4px; border: 1px solid #ffeaa7;">
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; margin-bottom: 5px;">Conviction Type:</label>
+                    <select id="conviction-type" style="width: 100%; padding: 5px;">
+                        <option value="">Select type...</option>
+                        <option value="felony">Felony</option>
+                        <option value="misdemeanor">Misdemeanor</option>
+                        <option value="infraction">Infraction/Citation</option>
+                        <option value="juvenile">Juvenile Record</option>
+                        <option value="federal">Federal Crime</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; margin-bottom: 5px;">Crime Category:</label>
+                    <input type="text" id="crime-category" placeholder="e.g., Assault, Theft, DUI, Fraud, etc." 
+                           style="width: 100%; padding: 5px;">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; margin-bottom: 5px;">Conviction Date:</label>
+                    <input type="date" id="conviction-date" style="width: 100%; padding: 5px;">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; margin-bottom: 5px;">Jurisdiction:</label>
+                    <input type="text" id="conviction-jurisdiction" placeholder="e.g., Superior Court of CA, Federal District Court" 
+                           style="width: 100%; padding: 5px;">
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Source/Reference:</label>
+                <input type="text" id="annotation-source" placeholder="Court case #, news article URL, etc." 
+                       style="width: 100%; padding: 5px;" value="${existing?.source || ''}">
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Notes:</label>
+                <textarea id="annotation-notes" rows="3" style="width: 100%; padding: 5px;" 
+                          placeholder="Research notes, case details, etc.">${existing?.notes || ''}</textarea>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Risk Level:</label>
+                <select id="annotation-risk" style="width: 100%; padding: 5px;">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <option value="unknown">Unknown</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button id="save-annotation" style="padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px;">Save</button>
+                <button id="remove-annotation" style="padding: 8px 16px; background: #f44336; color: white; border: none; border-radius: 4px;">Remove</button>
+                <button id="cancel-annotation" style="padding: 8px 16px; background: #666; color: white; border: none; border-radius: 4px;">Cancel</button>
+            </div>
+        `;
+        
+        document.body.appendChild(dialog);
+          // Pre-fill existing data
+        if (existing) {
+            document.getElementById('annotation-category').value = existing.category || '';
+            document.getElementById('annotation-risk').value = existing.risk || 'unknown';
+            
+            // Handle conviction-specific data
+            if (existing.category === 'confirmed-conviction' && existing.convictionDetails) {
+                document.getElementById('conviction-details').style.display = 'block';
+                document.getElementById('conviction-type').value = existing.convictionDetails.type || '';
+                document.getElementById('crime-category').value = existing.convictionDetails.crimeCategory || '';
+                document.getElementById('conviction-date').value = existing.convictionDetails.date || '';
+                document.getElementById('conviction-jurisdiction').value = existing.convictionDetails.jurisdiction || '';
+            }
+        }
+        
+        // Show/hide conviction details based on category selection
+        document.getElementById('annotation-category').addEventListener('change', (e) => {
+            const convictionDetails = document.getElementById('conviction-details');
+            if (e.target.value === 'confirmed-conviction') {
+                convictionDetails.style.display = 'block';
+            } else {
+                convictionDetails.style.display = 'none';
+            }
+        });
+          // Event handlers
+        document.getElementById('save-annotation').addEventListener('click', () => {
+            const category = document.getElementById('annotation-category').value;
+            const source = document.getElementById('annotation-source').value;
+            const notes = document.getElementById('annotation-notes').value;
+            const risk = document.getElementById('annotation-risk').value;
+            
+            if (!category) {
+                alert('Please select a research category');
+                return;
+            }
+            
+            const annotationData = {
+                category,
+                source,
+                notes,
+                risk,
+                profileName: extractProfileName()
+            };
+            
+            // Handle conviction-specific data
+            if (category === 'confirmed-conviction') {
+                const convictionType = document.getElementById('conviction-type').value;
+                const crimeCategory = document.getElementById('crime-category').value;
+                const convictionDate = document.getElementById('conviction-date').value;
+                const jurisdiction = document.getElementById('conviction-jurisdiction').value;
+                
+                if (!convictionType || !crimeCategory) {
+                    alert('Please fill in conviction type and crime category for confirmed convictions');
+                    return;
+                }
+                
+                annotationData.convictionDetails = {
+                    type: convictionType,
+                    crimeCategory,
+                    date: convictionDate,
+                    jurisdiction
+                };
+                
+                // Set risk to high for confirmed convictions if not manually set
+                if (risk === 'unknown') {
+                    annotationData.risk = 'high';
+                }
+            }
+            
+            ProfileAnnotations.set(currentUrl, annotationData);
+            
+            updateStatus(`Profile annotated: ${category}`, 'success');
+            document.body.removeChild(dialog);
+            updateProfileDisplay();
+        });
+        
+        document.getElementById('remove-annotation').addEventListener('click', () => {
+            ProfileAnnotations.remove(currentUrl);
+            updateStatus('Profile annotation removed', 'info');
+            document.body.removeChild(dialog);
+            updateProfileDisplay();
+        });
+        
+        document.getElementById('cancel-annotation').addEventListener('click', () => {
+            document.body.removeChild(dialog);
+        });
+    }
+    
+    // Quick mark conviction function
+    function quickMarkConviction() {
+        const currentUrl = getCurrentProfileUrl();
+        
+        const dialog = document.createElement('div');
+        dialog.style.cssText = `
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 20000; width: 450px; color: black; font-family: Arial, sans-serif;
+            border: 3px solid #e74c3c;
+        `;
+        
+        dialog.innerHTML = `
+            <h3 style="margin-top: 0; color: #e74c3c;">🚨 Mark Confirmed Conviction</h3>
+            <div style="margin-bottom: 15px;">
+                <strong>Profile:</strong> ${currentUrl}
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Conviction Type:</label>
+                <select id="quick-conviction-type" style="width: 100%; padding: 8px;">
+                    <option value="">Select type...</option>
+                    <option value="felony">Felony</option>
+                    <option value="misdemeanor">Misdemeanor</option>
+                    <option value="infraction">Infraction/Citation</option>
+                    <option value="juvenile">Juvenile Record</option>
+                    <option value="federal">Federal Crime</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Crime Category:</label>
+                <input type="text" id="quick-crime-category" placeholder="e.g., Assault, Theft, DUI, Fraud, etc." 
+                       style="width: 100%; padding: 8px;">
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Source/Reference:</label>
+                <input type="text" id="quick-source" placeholder="Court case #, news article URL, etc." 
+                       style="width: 100%; padding: 8px;">
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Quick Notes:</label>
+                <textarea id="quick-notes" rows="3" style="width: 100%; padding: 8px;" 
+                          placeholder="Brief conviction details, date, jurisdiction, etc."></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button id="quick-save-conviction" style="padding: 10px 20px; background: #e74c3c; color: white; border: none; border-radius: 4px; font-weight: bold;">🚨 Mark Conviction</button>
+                <button id="quick-full-form" style="padding: 10px 16px; background: #9b59b6; color: white; border: none; border-radius: 4px;">📝 Full Form</button>
+                <button id="quick-cancel" style="padding: 10px 16px; background: #666; color: white; border: none; border-radius: 4px;">Cancel</button>
+            </div>
+        `;
+        
+        document.body.appendChild(dialog);
+        
+        // Event handlers
+        document.getElementById('quick-save-conviction').addEventListener('click', () => {
+            const convictionType = document.getElementById('quick-conviction-type').value;
+            const crimeCategory = document.getElementById('quick-crime-category').value;
+            const source = document.getElementById('quick-source').value;
+            const notes = document.getElementById('quick-notes').value;
+            
+            if (!convictionType || !crimeCategory) {
+                alert('Please fill in conviction type and crime category');
+                return;
+            }
+            
+            ProfileAnnotations.set(currentUrl, {
+                category: 'confirmed-conviction',
+                source,
+                notes,
+                risk: 'high',
+                profileName: extractProfileName(),
+                convictionDetails: {
+                    type: convictionType,
+                    crimeCategory,
+                    date: '',
+                    jurisdiction: ''
+                }
+            });
+            
+            updateStatus(`🚨 CONVICTED: ${crimeCategory} (${convictionType})`, 'error');
+            document.body.removeChild(dialog);
+            updateProfileDisplay();
+        });
+        
+        document.getElementById('quick-full-form').addEventListener('click', () => {
+            document.body.removeChild(dialog);
+            showAnnotationDialog();
+        });
+        
+        document.getElementById('quick-cancel').addEventListener('click', () => {
+            document.body.removeChild(dialog);
+        });
+    }
+      // Update profile display to show annotations
+    function updateProfileDisplay() {
+        const currentUrl = getCurrentProfileUrl();
+        const annotation = ProfileAnnotations.get(currentUrl);
+        
+        // Remove existing annotation display
+        const existing = document.getElementById('profile-annotation-display');
+        if (existing) existing.remove();
+        
+        if (annotation) {
+            const display = document.createElement('div');
+            display.id = 'profile-annotation-display';
+            
+            // Special styling for confirmed convictions
+            const isConviction = annotation.category === 'confirmed-conviction';
+            const bgColor = isConviction ? 'rgba(231, 76, 60, 0.95)' : 'rgba(255, 193, 7, 0.9)';
+            const borderColor = isConviction ? '#e74c3c' : '#FFC107';
+            const textColor = isConviction ? 'white' : 'black';
+            
+            display.style.cssText = `
+                position: fixed; top: 60px; right: 10px; width: 320px;
+                background: ${bgColor}; color: ${textColor}; padding: 12px;
+                border-radius: 8px; font-size: 12px; z-index: 9999;
+                border: 3px solid ${borderColor};
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                font-family: Arial, sans-serif;
+            `;
+            
+            const riskColor = isConviction ? '#ffcccb' : {
+                'low': '#4CAF50',
+                'medium': '#FF9800', 
+                'high': '#f44336',
+                'unknown': '#666'
+            }[annotation.risk];
+            
+            let content = `
+                <div style="font-weight: bold; margin-bottom: 8px; font-size: 14px;">
+                    ${isConviction ? '🚨 CONFIRMED CONVICTION' : '🔍 Research Annotation'}
+                </div>
+            `;
+            
+            if (isConviction && annotation.convictionDetails) {
+                const conv = annotation.convictionDetails;
+                content += `
+                    <div style="margin-bottom: 6px; font-weight: bold;">
+                        <span style="background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 3px;">
+                            ${conv.type?.toUpperCase() || 'CONVICTION'}
+                        </span>
+                    </div>
+                    <div style="margin-bottom: 4px;">
+                        <strong>Crime:</strong> ${conv.crimeCategory}
+                    </div>
+                    ${conv.date ? `<div style="margin-bottom: 4px;"><strong>Date:</strong> ${conv.date}</div>` : ''}
+                    ${conv.jurisdiction ? `<div style="margin-bottom: 4px;"><strong>Jurisdiction:</strong> ${conv.jurisdiction}</div>` : ''}
+                `;
+            } else {
+                content += `
+                    <div style="margin-bottom: 4px;">
+                        <strong>Category:</strong> ${annotation.category}
+                    </div>
+                `;
+            }
+            
+            content += `
+                <div style="margin-bottom: 4px;">
+                    <strong>Risk:</strong> <span style="color: ${riskColor}; font-weight: bold;">${annotation.risk.toUpperCase()}</span>
+                </div>
+                ${annotation.source ? `<div style="margin-bottom: 4px;"><strong>Source:</strong> ${annotation.source}</div>` : ''}
+                ${annotation.notes ? `<div style="margin-bottom: 6px;"><strong>Notes:</strong> ${annotation.notes}</div>` : ''}
+                <div style="font-size: 10px; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 4px; margin-top: 6px;">
+                    Updated: ${new Date(annotation.lastUpdated).toLocaleDateString()}
+                </div>
+            `;
+            
+            display.innerHTML = content;
+            document.body.appendChild(display);
+              // Auto-hide after 10 seconds for non-convictions
+            if (!isConviction) {
+                setTimeout(() => {
+                    if (display && display.parentNode) {
+                        display.remove();
+                    }
+                }, 10000);
+            }
+        }
+    }
+    
+    // Initialize the scraper
+    createUI();
+    updateProfileDisplay(); // Check for existing annotations on load
+    
+    // Global functions for console access
+    window.FB_Scraper = {
+        getConvictions: () => ProfileAnnotations.getConvictions(),
+        exportConvictions: () => ProfileAnnotations.exportConvictionsCSV(),
+        getConvictionStats: () => {
+            const convictions = ProfileAnnotations.getConvictions();
+            const stats = {
+                total: Object.keys(convictions).length,
+                byType: {},
+                byRisk: {},
+                byCrime: {}
+            };
+            
+            for (const conviction of Object.values(convictions)) {
+                const conv = conviction.convictionDetails || {};
+                
+                // Count by conviction type
+                const type = conv.type || 'unknown';
+                stats.byType[type] = (stats.byType[type] || 0) + 1;
+                
+                // Count by risk level
+                const risk = conviction.risk || 'unknown';
+                stats.byRisk[risk] = (stats.byRisk[risk] || 0) + 1;
+                
+                // Count by crime category
+                const crime = conv.crimeCategory || 'unknown';
+                stats.byCrime[crime] = (stats.byCrime[crime] || 0) + 1;
+            }
+            
+            console.table(stats);
+            return stats;
+        },
+        exportAllAnnotations: () => ProfileAnnotations.export(),
+        clearAllAnnotations: () => {
+            if (confirm('Are you sure you want to clear ALL profile annotations? This cannot be undone.')) {
+                GM_setValue('profileAnnotations', {});
+                updateProfileDisplay();
+                console.log('All annotations cleared');
+            }
+        },
+        loadFromBackend: async () => {
+            try {
+                updateStatus('Loading annotations from backend...', 'info');
+                const response = await sendToAPI('/annotations', null, 'GET');
+                
+                if (response && response.annotations) {
+                    const localAnnotations = GM_getValue('profileAnnotations', {});
+                    
+                    // Merge backend annotations with local ones
+                    const mergedAnnotations = { ...response.annotations, ...localAnnotations };
+                    GM_setValue('profileAnnotations', mergedAnnotations);
+                    
+                    console.log(`📥 Loaded ${Object.keys(response.annotations).length} annotations from backend`);
+                    updateStatus(`Loaded ${Object.keys(response.annotations).length} annotations from backend`, 'success');
+                    updateProfileDisplay();
+                    return response.annotations;
+                }
+            } catch (error) {
+                console.error('Error loading annotations from backend:', error);
+                updateStatus('Failed to load annotations from backend', 'error');
+            }
+        },
+        getBackendConvictions: async () => {
+            try {
+                updateStatus('Fetching convictions from backend...', 'info');
+                const response = await sendToAPI('/convictions', null, 'GET');
+                
+                if (response && response.convictions) {
+                    console.log(`Found ${response.count} convictions in backend:`);
+                    console.table(response.convictions);
+                    updateStatus(`Found ${response.count} convictions in backend`, 'success');
+                    return response.convictions;
+                } else {
+                    updateStatus('No convictions found in backend', 'info');
+                }
+            } catch (error) {
+                console.error('Error fetching backend convictions:', error);
+                updateStatus('Failed to fetch convictions from backend', 'error');
+            }
+        },
+        syncToBackend: async () => {
+            try {
+                updateStatus('Syncing annotations to backend...', 'info');
+                const localAnnotations = GM_getValue('profileAnnotations', {});
+                let syncCount = 0;
+                
+                for (const [url, annotation] of Object.entries(localAnnotations)) {
+                    try {
+                        await sendToAPI('/annotations', {
+                            profileUrl: url,
+                            annotation: annotation
+                        });
+                        syncCount++;
+                    } catch (error) {
+                        console.error(`Failed to sync ${url}:`, error);
+                    }
+                }
+                
+                console.log(`Synced ${syncCount} annotations to backend`);
+                updateStatus(`Synced ${syncCount} annotations to backend`, 'success');
+                return syncCount;
+            } catch (error) {
+                console.error('Error syncing to backend:', error);
+                updateStatus('Failed to sync annotations to backend', 'error');
+            }
+        }    };
+    
+    console.log('FB Scraper initialized. Available commands:');
+    console.log('- FB_Scraper.getConvictions() - Get all confirmed convictions');
+    console.log('- FB_Scraper.exportConvictions() - Export convictions as CSV');
+    console.log('- FB_Scraper.getConvictionStats() - Show conviction statistics');
+    console.log('- FB_Scraper.exportAllAnnotations() - Export all annotations as JSON');
+    console.log('- FB_Scraper.syncToBackend() - Sync all annotations to backend server');
+    console.log('- FB_Scraper.loadFromBackend() - Load annotations from backend server');
+    console.log('- FB_Scraper.getBackendConvictions() - Show convictions stored in backend');
 })();

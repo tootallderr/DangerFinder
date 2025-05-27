@@ -187,3 +187,32 @@ Scraping capabilities:
 | `POST /api/profile-image`   | Upload profile image                    |
 
 ---
+## 🚩 Future Enhancements
+
+- **Alias & Similar Name Detection**
+  - Implement fuzzy matching to find aliases and similar names across profiles.
+  - Calculate and store a confidence score for each alias match.
+  - Enable filtering of the graph with and without alias resolution for comparison.
+
+- **Risk Factor Analysis**
+  - Allow marking of "confirmed" high-risk accounts (e.g., known offenders).
+  - Increase risk scores for profiles and relationships connected to confirmed accounts.
+  - Highlight high-risk nodes and edges in the visualization.
+
+- **Fake Name & Suspicious Content Detection**
+  - Use heuristics and pattern matching to flag obviously fake names.
+  - Scan for suspicious keywords (e.g., "CP", "Pizza", etc.) in names, bios, and posts.
+  - Tag and filter profiles containing high-risk or banned terms.
+  
+- **Community Analysis Enhancements** 
+  - Implement advanced community detection algorithms (e.g., Louvain, Girvan-Newman).
+  - Visualize community structures with distinct colors and labels.
+  - Provide insights into community sizes, central nodes, and inter-community connections.
+
+  
+
+- **Configurable Filtering & Reporting**
+  - Add options to filter and export the graph based on alias resolution, risk factors, or suspicious content.
+  - Generate reports on detected aliases, fake names, and flagged content for further review.
+  
+---
