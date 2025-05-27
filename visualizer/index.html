@@ -232,7 +232,7 @@
         <div class="controls">
             <div class="control-group">
                 <label>Layout:</label>
-                <select id="layout-select">
+                <select id="layout-select" title="Select graph layout">
                     <option value="force">Force-Directed</option>
                     <option value="circular">Circular</option>
                     <option value="hierarchical">Hierarchical</option>
@@ -244,7 +244,7 @@
             </div>
             <div class="control-group">
                 <label>Min Connections:</label>
-                <input type="range" id="connection-filter" min="0" max="50" value="0">
+                <input type="range" id="connection-filter" min="0" max="50" value="0" title="Minimum number of connections to display">
                 <span id="connection-value">0</span>
             </div>
             <button class="btn" id="refresh-btn">🔄 Refresh</button>

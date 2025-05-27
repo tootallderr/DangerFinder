@@ -21,6 +21,11 @@ app.use('/visualizer', express.static(path.join(__dirname, '..', 'visualizer')))
 // Routes
 app.use('/api/scrape', scrapeRoutes);
 
+// Root route - redirect to visualizer
+app.get('/', (req, res) => {
+    res.redirect('/visualizer');
+});
+
 // Data file paths
 const DATA_DIR = path.join(__dirname, 'data');
 const PROFILES_DIR = path.join(DATA_DIR, 'profiles');
@@ -178,7 +183,46 @@ app.get('/api/visited', (req, res) => {
 app.get('/api/graph', (req, res) => {
     try {
         const graph = readJSON(GRAPH_FILE) || { nodes: [], edges: [] };
-        res.json(graph);
+        
+        // Convert to format expected by visualizer
+        const visualizerFormat = {
+            nodes: {},
+            adjacency_list: {}
+        };
+        
+        // Convert nodes array to object
+        graph.nodes.forEach(node => {
+            visualizerFormat.nodes[node.id] = {
+                name: node.name,
+                url: node.url,
+                profile_image: node.image || node.profile_image || '',
+                depth: node.depth || 0,
+                pagerank: node.pagerank || 0,
+                betweenness: node.betweenness || 0,
+                community: node.community || 0,
+                ...node.data
+            };
+            
+            // Initialize adjacency list
+            visualizerFormat.adjacency_list[node.id] = [];
+        });
+        
+        // Convert edges to adjacency list
+        graph.edges.forEach(edge => {
+            const source = edge.source;
+            const target = edge.target;
+            
+            if (visualizerFormat.adjacency_list[source]) {
+                visualizerFormat.adjacency_list[source].push(target);
+            }
+            
+            // Add reverse edge for undirected graph
+            if (visualizerFormat.adjacency_list[target]) {
+                visualizerFormat.adjacency_list[target].push(source);
+            }
+        });
+        
+        res.json(visualizerFormat);
     } catch (error) {
         console.error('Error reading graph:', error);
         res.status(500).json({ error: 'Internal server error' });

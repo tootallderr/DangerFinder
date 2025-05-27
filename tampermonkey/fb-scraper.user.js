@@ -239,15 +239,13 @@
         logDiv.innerHTML = `[${timestamp}] ${message}`;
         statusArea.appendChild(logDiv);
         statusArea.scrollTop = statusArea.scrollHeight;
-    }
-
-    // Core scraping functions
+    }    // Core scraping functions
     async function scrapeBasicInfo() {
         updateStatus('Scraping basic profile info...', 'info');
         
         try {
             const profileData = {
-                url: window.location.href.split('?')[0],
+                url: getCurrentProfileUrl(),
                 name: extractProfileName(),
                 profile_image: await extractProfileImage(),
                 depth: currentDepth,
@@ -259,21 +257,39 @@
         } catch (error) {
             updateStatus(`Error scraping basic info: ${error.message}`, 'error');
         }
-    }
-
-    async function scrapeAboutPage() {
+    }    async function scrapeAboutPage() {
         updateStatus('Navigating to About page...', 'info');
         
         try {
-            const aboutUrl = getCurrentProfileUrl() + '/about';
-            if (window.location.href !== aboutUrl) {
+            const currentUrl = getCurrentProfileUrl();
+            let aboutUrl;
+            
+            // Handle different profile URL formats for about page
+            if (currentUrl.includes('/profile.php')) {
+                // For numerical profiles, use the profile.php format with about section
+                if (currentUrl.includes('?id=')) {
+                    const idMatch = currentUrl.match(/\?id=(\d+)/);
+                    if (idMatch) {
+                        aboutUrl = `https://www.facebook.com/profile.php?id=${idMatch[1]}&sk=about`;
+                    } else {
+                        aboutUrl = currentUrl + '&sk=about';
+                    }
+                } else {
+                    aboutUrl = currentUrl + '?sk=about';
+                }
+            } else {
+                // For regular username profiles
+                aboutUrl = currentUrl + '/about';
+            }
+            
+            if (!window.location.href.includes('about') && !window.location.href.includes('sk=about')) {
                 window.location.href = aboutUrl;
                 return;
             }
 
             const aboutData = extractAboutInfo();
             const profileData = {
-                url: getCurrentProfileUrl(),
+                url: currentUrl,
                 name: extractProfileName(),
                 about: aboutData,
                 depth: currentDepth,
@@ -285,21 +301,50 @@
         } catch (error) {
             updateStatus(`Error scraping about page: ${error.message}`, 'error');
         }
-    }
-
-    async function scrapeFriendsList() {
+    }async function scrapeFriendsList() {
         updateStatus('Scraping friends list...', 'info');
         
         try {
-            const friendsUrl = getCurrentProfileUrl() + '/friends';
-            if (!window.location.href.includes('/friends')) {
+            const currentUrl = getCurrentProfileUrl();
+            let friendsUrl;
+            
+            // Handle different profile URL formats
+            if (currentUrl.includes('/profile.php')) {
+                // For numerical profiles, use the profile.php format with friends section
+                if (currentUrl.includes('?id=')) {
+                    const idMatch = currentUrl.match(/\?id=(\d+)/);
+                    if (idMatch) {
+                        friendsUrl = `https://www.facebook.com/profile.php?id=${idMatch[1]}&sk=friends`;
+                    } else {
+                        friendsUrl = currentUrl + '&sk=friends';
+                    }
+                } else {
+                    friendsUrl = currentUrl + '?sk=friends';
+                }
+            } else {
+                // For regular username profiles
+                friendsUrl = currentUrl + '/friends';
+            }
+            
+            if (!window.location.href.includes('friends') && !window.location.href.includes('sk=friends')) {
                 window.location.href = friendsUrl;
                 return;
+            }            const friends = await extractFriendsList();
+            
+            // Get the base profile URL (without friends path/parameter)
+            let baseProfileUrl = getCurrentProfileUrl();
+            if (baseProfileUrl.includes('/friends')) {
+                baseProfileUrl = baseProfileUrl.replace('/friends', '');
             }
-
-            const friends = await extractFriendsList();
+            if (baseProfileUrl.includes('&sk=friends')) {
+                baseProfileUrl = baseProfileUrl.replace('&sk=friends', '');
+            }
+            if (baseProfileUrl.includes('?sk=friends')) {
+                baseProfileUrl = baseProfileUrl.replace('?sk=friends', '');
+            }
+            
             const profileData = {
-                url: getCurrentProfileUrl().replace('/friends', ''),
+                url: baseProfileUrl,
                 name: extractProfileName(),
                 friends: friends,
                 depth: currentDepth,
@@ -321,22 +366,38 @@
         } catch (error) {
             updateStatus(`Error scraping friends: ${error.message}`, 'error');
         }
-    }
-
-    async function scrapeFullProfile() {
+    }    async function scrapeFullProfile() {
         updateStatus('Starting full profile scrape...', 'info');
         
         try {
             // Basic info
+            const currentUrl = getCurrentProfileUrl();
             const basicData = {
-                url: getCurrentProfileUrl(),
+                url: currentUrl,
                 name: extractProfileName(),
                 profile_image: await extractProfileImage()
             };
 
-            // Navigate to about page
-            const aboutUrl = getCurrentProfileUrl() + '/about';
-            if (!window.location.href.includes('/about')) {
+            // Navigate to about page with proper URL format
+            let aboutUrl;
+            if (currentUrl.includes('/profile.php')) {
+                // For numerical profiles
+                if (currentUrl.includes('?id=')) {
+                    const idMatch = currentUrl.match(/\?id=(\d+)/);
+                    if (idMatch) {
+                        aboutUrl = `https://www.facebook.com/profile.php?id=${idMatch[1]}&sk=about`;
+                    } else {
+                        aboutUrl = currentUrl + '&sk=about';
+                    }
+                } else {
+                    aboutUrl = currentUrl + '?sk=about';
+                }
+            } else {
+                // For regular username profiles
+                aboutUrl = currentUrl + '/about';
+            }
+            
+            if (!window.location.href.includes('about') && !window.location.href.includes('sk=about')) {
                 updateStatus('Navigating to About page...', 'info');
                 setTimeout(() => {
                     window.location.href = aboutUrl;
@@ -353,14 +414,31 @@
                 depth: currentDepth,
                 type: 'full',
                 scraped_sections: ['basic', 'about']
-            };
-
-            await sendToAPI('/profile', fullProfileData);
+            };            await sendToAPI('/profile', fullProfileData);
             updateStatus('Full profile scraped successfully', 'success');
 
-            // Navigate to friends after a delay
+            // Navigate to friends after a delay with proper URL format
             setTimeout(() => {
-                const friendsUrl = getCurrentProfileUrl() + '/friends';
+                const currentUrl = getCurrentProfileUrl();
+                let friendsUrl;
+                
+                if (currentUrl.includes('/profile.php')) {
+                    // For numerical profiles
+                    if (currentUrl.includes('?id=')) {
+                        const idMatch = currentUrl.match(/\?id=(\d+)/);
+                        if (idMatch) {
+                            friendsUrl = `https://www.facebook.com/profile.php?id=${idMatch[1]}&sk=friends`;
+                        } else {
+                            friendsUrl = currentUrl + '&sk=friends';
+                        }
+                    } else {
+                        friendsUrl = currentUrl + '?sk=friends';
+                    }
+                } else {
+                    // For regular username profiles
+                    friendsUrl = currentUrl + '/friends';
+                }
+                
                 updateStatus('Navigating to friends list...', 'info');
                 window.location.href = friendsUrl;
             }, 2000);
@@ -417,26 +495,74 @@
         }
 
         return 'Unknown Profile';
-    }
-
-    function getCurrentProfileUrl() {
-        return window.location.href.split('?')[0].split('/about')[0].split('/friends')[0];
-    }
-
-    async function extractProfileImage() {
+    }    function getCurrentProfileUrl() {
+        let url = window.location.href;
+        
+        // For numerical profiles (profile.php), preserve the ID parameter
+        if (url.includes('/profile.php')) {
+            // Extract the base URL with ID parameter
+            const match = url.match(/^(https?:\/\/[^\/]+\/profile\.php(?:\?id=\d+)?)/);
+            if (match) {
+                return match[1];
+            }
+        }
+        
+        // For regular username profiles, remove query parameters and path suffixes
+        return url.split('?')[0].split('/about')[0].split('/friends')[0];
+    }    async function extractProfileImage() {
+        // More specific selectors for the target profile's main profile picture
         const selectors = [
-            'image[width="168"][height="168"]',
-            'svg image',
-            'img[data-imgperflogname="profileCoverPhoto"]',
-            '.profile-picture img'
+            // Main profile photo container - most reliable
+            '[data-pagelet="ProfileTilesFeed"] image',
+            '[role="main"] image[width="168"][height="168"]',
+            '[role="main"] svg image',
+            // Profile header area
+            'div[data-pagelet="ProfileActions"] image',
+            'div[data-pagelet="ProfileTilesFeed"] svg image',
+            // Cover photo area profile picture
+            '[data-pagelet="ProfileTilesFeed"] [role="img"]',
+            // Fallback selectors for older layout
+            '.profilePicThumb img',
+            '.profilePic img',
+            'a[href*="profilepic"] image',
+            // SVG images in profile area
+            '[role="main"] svg image[width]',
+            // More specific width/height combinations
+            'image[width="160"][height="160"]',
+            'image[width="176"][height="176"]',
+            'image[width="168"][height="168"]:not([data-testid*="nav"])',
         ];
 
         for (const selector of selectors) {
             const img = document.querySelector(selector);
             if (img) {
-                const src = img.getAttribute('xlink:href') || img.src;
-                if (src && src.startsWith('http')) {
-                    return src;
+                const src = img.getAttribute('xlink:href') || img.src || img.getAttribute('href');
+                if (src && src.startsWith('http') && src.includes('fbcdn.net')) {
+                    // Additional check: make sure it's not a navigation or ad image
+                    const parentElement = img.closest('[data-testid*="nav"], [role="navigation"], [data-pagelet*="nav"]');
+                    if (!parentElement) {
+                        return src;
+                    }
+                }
+            }
+        }
+
+        // If no image found with specific selectors, try a broader search but with content filtering
+        const allImages = document.querySelectorAll('image, img');
+        for (const img of allImages) {
+            const src = img.getAttribute('xlink:href') || img.src;
+            if (src && src.startsWith('http') && src.includes('fbcdn.net')) {
+                // Check if it's in the main content area and not navigation
+                const isInNav = img.closest('[data-testid*="nav"], [role="navigation"], [data-pagelet*="nav"], [aria-label*="navigation"]');
+                const isInMain = img.closest('[role="main"], [data-pagelet="ProfileTilesFeed"]');
+                
+                if (isInMain && !isInNav) {
+                    // Additional size check to ensure it's a profile picture
+                    const width = img.getAttribute('width') || img.width;
+                    const height = img.getAttribute('height') || img.height;
+                    if (width && height && parseInt(width) >= 120 && parseInt(height) >= 120) {
+                        return src;
+                    }
                 }
             }
         }
@@ -482,9 +608,7 @@
 
         const friendElements = document.querySelectorAll('a[href*="/profile.php"], a[href*="facebook.com/"]:not([href*="photos"]):not([href*="videos"])');
         
-        const processedUrls = new Set();
-
-        friendElements.forEach(element => {
+        const processedUrls = new Set();        friendElements.forEach(element => {
             const url = element.href;
             const nameElement = element.querySelector('[dir="auto"]') || element;
             const name = nameElement.textContent.trim();
@@ -496,9 +620,21 @@
                 name.length > 0 && name.length < 100) {
                 
                 processedUrls.add(url);
+                
+                // Clean URL appropriately based on type
+                let cleanUrl;
+                if (url.includes('/profile.php')) {
+                    // For numerical profiles, preserve the ID parameter
+                    const match = url.match(/^(https?:\/\/[^\/]+\/profile\.php(?:\?id=\d+)?)/);
+                    cleanUrl = match ? match[1] : url.split('?')[0];
+                } else {
+                    // For regular username profiles, remove query parameters
+                    cleanUrl = url.split('?')[0];
+                }
+                
                 friends.push({
                     name: name,
-                    url: url.split('?')[0]
+                    url: cleanUrl
                 });
             }
         });
