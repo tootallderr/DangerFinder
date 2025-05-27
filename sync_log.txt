@@ -224,3 +224,63 @@ fatal: Could not read from remote repository.
 
 Please make sure you have the correct access rights
 and the repository exists.
+2025-05-27 17:04:08,978 - INFO - 🚀 Starting GitHub sync process
+2025-05-27 17:04:08,978 - INFO - Repository path: c:\Users\GEorg\OneDrive\Desktop\PPFace - Copy
+2025-05-27 17:04:09,064 - INFO - 📦 Updating existing Git repository
+2025-05-27 17:04:09,130 - ERROR - ❌ error: No such remote 'origin'
+2025-05-27 17:04:09,130 - INFO - 📁 Checking required directories
+2025-05-27 17:04:09,131 - INFO - 📎 Checking that all files are tracked
+2025-05-27 17:04:09,207 - WARNING - ⚠️ Core file doesn't exist: facebook-osint.user.js
+2025-05-27 17:04:09,207 - WARNING - ⚠️ Core file doesn't exist: DEPLOYMENT.md
+2025-05-27 17:04:09,208 - WARNING - ⚠️ Core file doesn't exist: facebook-osint-scraper.md
+2025-05-27 17:04:09,208 - WARNING - ⚠️ Core file doesn't exist: element_helpers.js
+2025-05-27 17:04:09,208 - WARNING - ⚠️ Core file doesn't exist: config.json
+2025-05-27 17:04:09,208 - INFO - Adding optional file: examples/
+2025-05-27 17:04:09,209 - INFO - Running: git add examples/
+2025-05-27 17:04:09,306 - WARNING - ⚠️ Missing core files: facebook-osint.user.js, DEPLOYMENT.md, facebook-osint-scraper.md, element_helpers.js, config.json
+2025-05-27 17:04:09,306 - INFO - 💡 These files should be created for a complete project
+2025-05-27 17:04:09,306 - WARNING - ⚠️ Some core files are missing. The project may be incomplete.
+2025-05-27 17:04:09,307 - INFO - 🔧 Applying optimal Git configuration
+2025-05-27 17:04:09,307 - INFO - Running: git config core.autocrlf true
+2025-05-27 17:04:09,394 - INFO - Running: git config diff.renameLimit 10000
+2025-05-27 17:04:09,462 - INFO - Running: git config diff.renames true
+2025-05-27 17:04:09,596 - INFO - ⬇️ Pulling latest changes from master
+2025-05-27 17:04:09,596 - INFO - Running: git pull origin master
+2025-05-27 17:04:09,777 - ERROR - ❌ fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2025-05-27 17:04:09,777 - INFO - ✅ Successfully pulled latest changes
+2025-05-27 17:04:09,777 - INFO - 📋 Generating changelog
+2025-05-27 17:04:09,928 - INFO - ✅ Changelog written to CHANGELOG.md
+2025-05-27 17:04:09,928 - INFO - Running: git add CHANGELOG.md
+2025-05-27 17:04:10,005 - INFO - Running: git add .
+2025-05-27 17:04:10,260 - INFO - 📝 Changes to be committed:
+2025-05-27 17:04:10,261 - INFO - Running: git status --short
+2025-05-27 17:04:10,349 - INFO - A  CHANGELOG.md
+MM sync_log.txt
+M  tampermonkey/fb-scraper.user.js
+2025-05-27 17:04:10,349 - INFO - 💾 Committing changes: 📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27
+2025-05-27 17:04:10,350 - INFO - Running: git commit -m "📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27"
+2025-05-27 17:04:10,513 - INFO - [master 4cd90c5] 📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27
+ 3 files changed, 231 insertions(+), 7 deletions(-)
+ create mode 100644 CHANGELOG.md
+2025-05-27 17:04:10,580 - INFO - ⬆️ Pushing to master
+2025-05-27 17:04:10,580 - INFO - Running: git push origin master
+2025-05-27 17:04:10,729 - ERROR - ❌ fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2025-05-27 17:04:10,730 - ERROR - Command failed: git push origin master
+2025-05-27 17:04:10,730 - ERROR - Error: fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2025-05-27 17:04:10,730 - ERROR - ❌ Sync failed: Command failed: fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.

@@ -22,7 +22,7 @@ logger = logging.getLogger("github_sync")
 
 # CONFIG
 REPO_PATH = os.path.abspath(os.path.dirname(__file__))
-REMOTE_URL = "https://github.com/tootallderr/F.Finder"  # Replace with your actual remote URL
+REMOTE_URL = "https://github.com/tootallderr/F.Finder.git"  # Updated to your actual repo
 # Set the commit message to include a timestamp
 COMMIT_MESSAGE = f"📦 v0.2 Update with Enhanced UI and Error Handling - {datetime.now().strftime('%Y-%m-%d')}"
 # Don't hardcode the branch name, let's detect it dynamically
@@ -301,29 +301,43 @@ def ensure_files_tracked():
 
 def is_git_repo(path):
     """Check if the given path is a Git repository."""
-    return run_command("git rev-parse --is-inside-work-tree", path, check_error=False, silent=True).returncode == 0
+    result = run_command("git rev-parse --is-inside-work-tree", path, check_error=False, silent=True)
+    return result is not None and result.returncode == 0
 
 def init_or_update_repo():
     """Initialize a new Git repository or update the existing one."""
     if is_git_repo(REPO_PATH):
         logger.info("📦 Updating existing Git repository")
+        
+        # Check if origin remote exists
+        result = run_command("git remote get-url origin", REPO_PATH, check_error=False, silent=True)
+        if result and result.returncode != 0:
+            # Origin doesn't exist, add it
+            logger.info("🔗 Adding origin remote")
+            run_command(f"git remote add origin {REMOTE_URL}", REPO_PATH, check_error=False)
+        else:
+            # Origin exists, check if URL is correct
+            if result and hasattr(result, 'stdout'):
+                current_url = result.stdout.strip()
+                if current_url != REMOTE_URL:
+                    logger.info(f"🔄 Updating remote URL from {current_url} to {REMOTE_URL}")
+                    run_command(f"git remote set-url origin {REMOTE_URL}", REPO_PATH)
+                else:
+                    logger.info("✅ Origin remote already configured correctly")
+            else:
+                logger.warning("⚠️ Unable to determine current remote URL")
+                run_command(f"git remote set-url origin {REMOTE_URL}", REPO_PATH)
+                
     else:
         logger.info("🆕 Initializing new Git repository")
         run_command("git init", REPO_PATH)
         
-        # Set default branch to main
-        run_command("git branch -M main", REPO_PATH, check_error=False)
+        # Set default branch to master (to match your existing branch)
+        run_command("git branch -M master", REPO_PATH, check_error=False)
         
         # Set up the remote
+        logger.info("🔗 Adding origin remote")
         run_command(f"git remote add origin {REMOTE_URL}", REPO_PATH, check_error=False)
-    
-    # Ensure remote URL is correct
-    result = run_command("git remote get-url origin", REPO_PATH, check_error=False, silent=True)
-    if result and result.returncode == 0:
-        current_url = result.stdout.strip()
-        if current_url != REMOTE_URL:
-            logger.info(f"🔄 Updating remote URL from {current_url} to {REMOTE_URL}")
-            run_command(f"git remote set-url origin {REMOTE_URL}", REPO_PATH)
     
     # Create .gitignore if needed
     create_gitignore()
@@ -345,8 +359,18 @@ def pull_latest_changes():
     logger.info(f"⬇️ Pulling latest changes from {branch}")
     
     try:
-        run_command(f"git pull origin {branch}", REPO_PATH, check_error=False)
-        logger.info("✅ Successfully pulled latest changes")
+        # First check if the remote repository exists and we can connect
+        result = run_command("git ls-remote origin", REPO_PATH, check_error=False, silent=True)
+        if result and result.returncode == 0:
+            # Remote exists and is accessible, try to pull
+            pull_result = run_command(f"git pull origin {branch}", REPO_PATH, check_error=False)
+            if pull_result and pull_result.returncode == 0:
+                logger.info("✅ Successfully pulled latest changes")
+            else:
+                logger.warning("⚠️ Pull failed, but continuing with local changes")
+        else:
+            logger.warning("⚠️ Remote repository not accessible or doesn't exist yet. Will try to push.")
+            
     except GitSyncException as e:
         logger.warning(f"⚠️ Pull encountered issues, continuing anyway: {str(e)}")
 
@@ -357,7 +381,7 @@ def commit_and_push():
     
     # Check if there are changes to commit
     status = run_command("git status --porcelain", REPO_PATH, silent=True)
-    if not status.stdout.strip():
+    if status is None or not status.stdout.strip():
         logger.info("✅ No changes to commit")
         return
         
@@ -372,8 +396,21 @@ def commit_and_push():
     # Push to remote
     branch = get_current_branch(REPO_PATH)
     logger.info(f"⬆️ Pushing to {branch}")
-    run_command(f"git push origin {branch}", REPO_PATH)
-    logger.info("✅ Successfully pushed changes")
+    
+    try:
+        # Try a regular push first
+        run_command(f"git push origin {branch}", REPO_PATH)
+        logger.info("✅ Successfully pushed changes")
+    except GitSyncException as e:
+        # If regular push fails, try force push (useful for first push)
+        logger.warning("⚠️ Regular push failed, trying force push for initial setup")
+        try:
+            run_command(f"git push -u origin {branch}", REPO_PATH)
+            logger.info("✅ Successfully force pushed changes (initial setup)")
+        except GitSyncException as e2:
+            logger.error(f"❌ Both push attempts failed: {str(e2)}")
+            logger.error("💡 Make sure the repository exists on GitHub and you have push access")
+            raise
 
 def generate_changelog():
     """Generate a changelog from commits."""
