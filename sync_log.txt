@@ -284,3 +284,48 @@ fatal: Could not read from remote repository.
 
 Please make sure you have the correct access rights
 and the repository exists.
+2025-05-27 17:08:51,255 - INFO - 🚀 Starting GitHub sync process
+2025-05-27 17:08:51,255 - INFO - Repository path: c:\Users\GEorg\OneDrive\Desktop\PPFace - Copy
+2025-05-27 17:08:51,356 - INFO - 📦 Updating existing Git repository
+2025-05-27 17:08:51,431 - INFO - 🔄 Updating remote URL from https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git to https://github.com/tootallderr/F.Finder.git
+2025-05-27 17:08:51,432 - INFO - Running: git remote set-url origin https://github.com/tootallderr/F.Finder.git
+2025-05-27 17:08:51,530 - INFO - 📁 Checking required directories
+2025-05-27 17:08:51,530 - INFO - 📎 Checking that all files are tracked
+2025-05-27 17:08:51,607 - WARNING - ⚠️ Core file doesn't exist: facebook-osint.user.js
+2025-05-27 17:08:51,608 - WARNING - ⚠️ Core file doesn't exist: DEPLOYMENT.md
+2025-05-27 17:08:51,608 - WARNING - ⚠️ Core file doesn't exist: facebook-osint-scraper.md
+2025-05-27 17:08:51,608 - WARNING - ⚠️ Core file doesn't exist: element_helpers.js
+2025-05-27 17:08:51,609 - WARNING - ⚠️ Core file doesn't exist: config.json
+2025-05-27 17:08:51,609 - INFO - Adding optional file: examples/
+2025-05-27 17:08:51,609 - INFO - Running: git add examples/
+2025-05-27 17:08:51,690 - WARNING - ⚠️ Missing core files: facebook-osint.user.js, DEPLOYMENT.md, facebook-osint-scraper.md, element_helpers.js, config.json
+2025-05-27 17:08:51,691 - INFO - 💡 These files should be created for a complete project
+2025-05-27 17:08:51,691 - WARNING - ⚠️ Some core files are missing. The project may be incomplete.
+2025-05-27 17:08:51,691 - INFO - 🔧 Applying optimal Git configuration
+2025-05-27 17:08:51,691 - INFO - Running: git config core.autocrlf true
+2025-05-27 17:08:51,761 - INFO - Running: git config diff.renameLimit 10000
+2025-05-27 17:08:51,829 - INFO - Running: git config diff.renames true
+2025-05-27 17:08:52,003 - INFO - ⬇️ Pulling latest changes from master
+2025-05-27 17:08:52,900 - INFO - Running: git pull origin master
+2025-05-27 17:08:53,318 - ERROR - ❌ fatal: couldn't find remote ref master
+2025-05-27 17:08:53,318 - WARNING - ⚠️ Pull failed, but continuing with local changes
+2025-05-27 17:08:53,318 - INFO - 📋 Generating changelog
+2025-05-27 17:08:53,476 - INFO - ✅ Changelog written to CHANGELOG.md
+2025-05-27 17:08:53,477 - INFO - Running: git add CHANGELOG.md
+2025-05-27 17:08:53,582 - INFO - Running: git add .
+2025-05-27 17:08:53,689 - WARNING - ⚠️ warning: in the working copy of 'sync_to_github.py', LF will be replaced by CRLF the next time Git touches it
+2025-05-27 17:08:53,783 - INFO - 📝 Changes to be committed:
+2025-05-27 17:08:53,783 - INFO - Running: git status --short
+2025-05-27 17:08:53,873 - INFO - M  CHANGELOG.md
+MM sync_log.txt
+M  sync_to_github.py
+2025-05-27 17:08:53,873 - INFO - 💾 Committing changes: 📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27
+2025-05-27 17:08:53,874 - INFO - Running: git commit -m "📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27"
+2025-05-27 17:08:54,060 - INFO - [master 49070ca] 📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27
+ 3 files changed, 115 insertions(+), 17 deletions(-)
+2025-05-27 17:08:54,133 - INFO - ⬆️ Pushing to master
+2025-05-27 17:08:54,134 - INFO - Running: git push origin master
+2025-05-27 17:08:56,467 - INFO - To https://github.com/tootallderr/F.Finder.git
+ * [new branch]      master -> master
+2025-05-27 17:08:56,468 - INFO - ✅ Successfully pushed changes
+2025-05-27 17:08:56,469 - INFO - 🎉 Sync completed successfully

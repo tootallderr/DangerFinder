@@ -22,7 +22,7 @@ logger = logging.getLogger("github_sync")
 
 # CONFIG
 REPO_PATH = os.path.abspath(os.path.dirname(__file__))
-REMOTE_URL = "https://github.com/tootallderr/F.Finder.git"  # Updated to your actual repo
+REMOTE_URL = "https://github.com/tootallderr/DangerFinder.git"  # Updated to new repo
 # Set the commit message to include a timestamp
 COMMIT_MESSAGE = f"📦 v0.2 Update with Enhanced UI and Error Handling - {datetime.now().strftime('%Y-%m-%d')}"
 # Don't hardcode the branch name, let's detect it dynamically
