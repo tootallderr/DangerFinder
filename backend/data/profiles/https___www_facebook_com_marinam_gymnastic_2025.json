@@ -1,8 +1,171 @@
 {
   "url": "https://www.facebook.com/marinam.gymnastic.2025",
   "name": "Marinam Gymnastic",
-  "about": {},
-  "depth": 1,
+  "profile_image": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-1/493730000_122098321868856501_470694733398995109_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=107&ccb=1-7&_nc_sid=e99d92&_nc_ohc=amJUEW4Y29sQ7kNvwHT2tCB&_nc_oc=Adne5w0omEpGOsnXhT9MMILu_v1qyMAqHiymYPwQBkQlGR8Nt8IJJYrm3JeHmGymGVg&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&_nc_gid=_QbCYUVcYVr-WV7ki6Kjrw&oh=00_AfKn3zuiDW98WSPxlbsfmiFsnSB7o5lAfTXB2TnOV2YhLw&oe=683C440F",
+  "depth": 2,
   "type": "about",
-  "scraped_at": "2025-05-27T22:37:51.053Z"
+  "scraped_at": "2025-05-28T02:24:44.382Z",
+  "friends": [
+    {
+      "name": "Marinam Gymnastic",
+      "url": "https://www.facebook.com/marinam.gymnastic.2025"
+    },
+    {
+      "name": "Chase Lockwood",
+      "url": "https://www.facebook.com/chase.lockwood.82583"
+    },
+    {
+      "name": "Jose Luis Diaz",
+      "url": "https://www.facebook.com/jose.luis.diaz.653958"
+    },
+    {
+      "name": "Gary Wallick",
+      "url": "https://www.facebook.com/gary.wallick1"
+    },
+    {
+      "name": "David Robertson",
+      "url": "https://www.facebook.com/profile.php?id=100079244854023"
+    },
+    {
+      "name": "Nestor Carussy",
+      "url": "https://www.facebook.com/profile.php?id=61575169337224"
+    },
+    {
+      "name": "Jurgen Hoek",
+      "url": "https://www.facebook.com/profile.php?id=100072067056838"
+    },
+    {
+      "name": "Bobby Wilson",
+      "url": "https://www.facebook.com/bobby.wilson.726857"
+    },
+    {
+      "name": "Welliton Hoffmam",
+      "url": "https://www.facebook.com/welliton.hoffmam.2025"
+    },
+    {
+      "name": "Mark Bengtson",
+      "url": "https://www.facebook.com/mark.bengtson"
+    },
+    {
+      "name": "Tylan Peterson",
+      "url": "https://www.facebook.com/profile.php?id=61557040677675"
+    },
+    {
+      "name": "Cj Breaux",
+      "url": "https://www.facebook.com/cj.breaux.2025"
+    },
+    {
+      "name": "Jason Stacy",
+      "url": "https://www.facebook.com/jason.stacy.496845"
+    },
+    {
+      "name": "Jd Austin",
+      "url": "https://www.facebook.com/jd.austin.762815"
+    },
+    {
+      "name": "Dennis Hawley",
+      "url": "https://www.facebook.com/dennis.hawley.465299"
+    },
+    {
+      "name": "Phil Nowles",
+      "url": "https://www.facebook.com/profile.php?id=61574880862265"
+    },
+    {
+      "name": "Jeffrey Blizzard",
+      "url": "https://www.facebook.com/jeffrey.blizzard.2025"
+    },
+    {
+      "name": "Stefan Luepke",
+      "url": "https://www.facebook.com/stefan.luepke.5"
+    },
+    {
+      "name": "Antonio Bottin",
+      "url": "https://www.facebook.com/profile.php?id=61572539936328"
+    },
+    {
+      "name": "Justin Williams",
+      "url": "https://www.facebook.com/justin.williams.331491"
+    },
+    {
+      "name": "Peter Wills",
+      "url": "https://www.facebook.com/profile.php?id=61566549377552"
+    },
+    {
+      "name": "Johnny Miller Sr.",
+      "url": "https://www.facebook.com/johnny.miller.sr.2025"
+    },
+    {
+      "name": "Christian Tuggle",
+      "url": "https://www.facebook.com/christian.tuggle.2025"
+    },
+    {
+      "name": "James Lee",
+      "url": "https://www.facebook.com/james.lee.733618"
+    },
+    {
+      "name": "William M Goode",
+      "url": "https://www.facebook.com/william.m.goode.880777"
+    },
+    {
+      "name": "Laudivino Domingues da Silva",
+      "url": "https://www.facebook.com/laudivino.domingues.da.silva"
+    },
+    {
+      "name": "Jaime Zapata",
+      "url": "https://www.facebook.com/jaime.zapata.341459"
+    },
+    {
+      "name": "Rasika Priyankara",
+      "url": "https://www.facebook.com/profile.php?id=61563983460083"
+    },
+    {
+      "name": "Robynzone Josue Lopeztello",
+      "url": "https://www.facebook.com/josue.lopeztello"
+    },
+    {
+      "name": "Enrico Gawlikowski",
+      "url": "https://www.facebook.com/profile.php?id=100008028679457"
+    },
+    {
+      "name": "Lukman Widodo",
+      "url": "https://www.facebook.com/lukman.widodo.712"
+    },
+    {
+      "name": "Frank Schaerlaken",
+      "url": "https://www.facebook.com/frank.schaerlaken.1"
+    }
+  ],
+  "last_updated": "2025-05-28T02:24:44.383Z",
+  "scrape_history": [
+    {
+      "timestamp": "2025-05-28T02:24:34.312Z",
+      "type": "friends",
+      "sections": [
+        "name",
+        "friends",
+        "type"
+      ]
+    },
+    {
+      "timestamp": "2025-05-28T02:24:44.382Z",
+      "type": "about",
+      "sections": [
+        "name",
+        "about",
+        "type"
+      ]
+    }
+  ],
+  "about": {
+    "work": [
+      "Retired from motel 6"
+    ],
+    "location": [
+      "New York, New YorkNo relationship info to showFriendsAll friendsRecently AddedMoreAll friendsRecently AddedChase LockwoodAdd friendJose Luis DiazAdd friendGary WallickWorks at Retired from motel 6",
+      "{Origin Domain}\",\"1_2882107be72d37df895b05e0573990a6\":\"Unblock Messages?\",\"1_2b99f4eb0d10fb2a590c91881bc93620\":\"Can't Create Duplicate Account\",\"1_2dfe4f010e821ffa89d9c4133df72506\":\"Problem with bluetooth or audio source\",\"1_2e510be3887bae0dd4d73733dffa6ec4\":\"{firstname1}, {firstname2}, and {firstname3} are online\",\"1_2e9405cf33a60079eba08f7433c66595\":\"Unable To Connect Your Call\",\"1_2feb150fdf16fe534e635fa1143a7508\":\"No Devices Yet\",\"1_31426213a5556e794c313d21dbeceb6b\":\"Turn On\",\"1_3bce071d20c866b7a915136c01c2a17f\":\"Remove From Channel\",\"1_3e252ef60c34f4c269a640aedaaf9a91\":\"Recent Calls\",\"1_4323029c4a9559df6910965a98e5f7ee\":\"Customize your conversation with {short-name}",
+      "New York, New York\"},\"field_type\":\"hometown\",\"list_item_groups\":[],\"link_url\":null,\"group_key\":null,\"icon\":{\"height\":24,\"scale\":1,\"uri\":\"https:\\/\\/static",
+      "New York, New York\",\"delight_ranges\":[],\"image_ranges\":[],\"inline_style_ranges\":[],\"aggregated_ranges\":[],\"ranges\":[{\"entity\":{\"__typename\":\"Page\",\"__isEntity\":\"Page\",\"__isActor\":\"Page\",\"id\":\"108424279189115\",\"url\":\"https:\\/\\/www",
+      "motel 6"
+    ]
+  }
 }

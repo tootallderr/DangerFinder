@@ -1,0 +1,18 @@
+{
+  "https://www.facebook.com/chase.lockwood.82583": {
+    "category": "confirmed-conviction",
+    "source": "",
+    "notes": "",
+    "risk": "high",
+    "profileName": "Chase Lockwood",
+    "convictionDetails": {
+      "type": "felony",
+      "crimeCategory": "Admitted on Camera to Child Porn",
+      "date": "",
+      "jurisdiction": ""
+    },
+    "timestamp": 1748397454817,
+    "lastUpdated": "2025-05-28T01:57:34.817Z",
+    "savedToBackend": true
+  }
+}

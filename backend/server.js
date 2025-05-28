@@ -86,6 +86,139 @@ const writeJSON = (filePath, data) => {
     }
 };
 
+// Merge profile data with existing profile
+const mergeProfileData = (existingProfile, newProfile) => {
+    console.log(`🔄 Merging profile data for: ${newProfile.url}`);
+    console.log(`📥 New profile type: ${newProfile.type}`);
+    
+    if (!existingProfile) {
+        console.log('📝 No existing profile found, creating new one');
+        return newProfile;
+    }
+
+    console.log(`📋 Existing profile has sections: ${Object.keys(existingProfile).join(', ')}`);
+    console.log(`📋 New profile has sections: ${Object.keys(newProfile).join(', ')}`);
+
+    const merged = { ...existingProfile };
+
+    // Update basic fields if they exist in new profile
+    if (newProfile.name) merged.name = newProfile.name;
+    if (newProfile.url) merged.url = newProfile.url;
+    if (newProfile.profile_image) merged.profile_image = newProfile.profile_image;
+    if (newProfile.depth !== undefined) merged.depth = Math.min(existingProfile.depth || Infinity, newProfile.depth);
+    if (newProfile.type) merged.type = newProfile.type;
+
+    // Merge about sections
+    if (newProfile.about) {
+        console.log(`📚 Merging about section. New about data:`, newProfile.about);
+        merged.about = merged.about || {};
+        let aboutUpdated = false;
+        
+        if (newProfile.about.work) {
+            const oldWork = merged.about.work || [];
+            merged.about.work = [...oldWork, ...newProfile.about.work]
+                .filter((item, index, arr) => arr.indexOf(item) === index); // Remove duplicates
+            console.log(`💼 Work info updated: ${oldWork.length} -> ${merged.about.work.length} items`);
+            aboutUpdated = true;
+        }
+        if (newProfile.about.education) {
+            const oldEducation = merged.about.education || [];
+            merged.about.education = [...oldEducation, ...newProfile.about.education]
+                .filter((item, index, arr) => arr.indexOf(item) === index);
+            console.log(`🎓 Education info updated: ${oldEducation.length} -> ${merged.about.education.length} items`);
+            aboutUpdated = true;
+        }
+        if (newProfile.about.location) {
+            const oldLocation = merged.about.location || [];
+            merged.about.location = [...oldLocation, ...newProfile.about.location]
+                .filter((item, index, arr) => arr.indexOf(item) === index);
+            console.log(`📍 Location info updated: ${oldLocation.length} -> ${merged.about.location.length} items`);
+            aboutUpdated = true;
+        }
+        if (newProfile.about.relationship) {
+            merged.about.relationship = newProfile.about.relationship;
+            console.log(`💕 Relationship status updated`);
+            aboutUpdated = true;
+        }
+        if (newProfile.about.bio) {
+            merged.about.bio = newProfile.about.bio;
+            console.log(`📄 Bio updated`);
+            aboutUpdated = true;
+        }
+        
+        if (!aboutUpdated) {
+            console.log(`⚠️ About section provided but no data was merged`);
+        }
+    }
+
+    // Merge friends list
+    if (newProfile.friends && Array.isArray(newProfile.friends)) {
+        merged.friends = merged.friends || [];
+        const existingFriendUrls = new Set(merged.friends.map(f => f.url));
+        const oldFriendsCount = merged.friends.length;
+        
+        newProfile.friends.forEach(newFriend => {
+            if (newFriend.url && !existingFriendUrls.has(newFriend.url)) {
+                merged.friends.push(newFriend);
+                existingFriendUrls.add(newFriend.url);
+            }
+        });
+        
+        console.log(`👥 Friends list updated: ${oldFriendsCount} -> ${merged.friends.length} friends`);
+    }
+
+    // Merge photos
+    if (newProfile.photos && Array.isArray(newProfile.photos)) {
+        merged.photos = merged.photos || [];
+        const existingPhotoUrls = new Set(merged.photos.map(p => p.url || p));
+        const oldPhotosCount = merged.photos.length;
+        
+        newProfile.photos.forEach(newPhoto => {
+            const photoUrl = newPhoto.url || newPhoto;
+            if (photoUrl && !existingPhotoUrls.has(photoUrl)) {
+                merged.photos.push(newPhoto);
+                existingPhotoUrls.add(photoUrl);
+            }
+        });
+        
+        console.log(`📸 Photos updated: ${oldPhotosCount} -> ${merged.photos.length} photos`);
+    }
+
+    // Merge posts
+    if (newProfile.posts && Array.isArray(newProfile.posts)) {
+        merged.posts = merged.posts || [];
+        const existingPostIds = new Set(merged.posts.map(p => p.id || p.url || p.text));
+        const oldPostsCount = merged.posts.length;
+        
+        newProfile.posts.forEach(newPost => {
+            const postId = newPost.id || newPost.url || newPost.text;
+            if (postId && !existingPostIds.has(postId)) {
+                merged.posts.push(newPost);
+                existingPostIds.add(postId);
+            }
+        });
+        
+        console.log(`📝 Posts updated: ${oldPostsCount} -> ${merged.posts.length} posts`);
+    }
+
+    // Update metadata
+    merged.scraped_at = newProfile.scraped_at || new Date().toISOString();
+    merged.last_updated = new Date().toISOString();
+
+    // Keep track of scraping history
+    merged.scrape_history = merged.scrape_history || [];
+    merged.scrape_history.push({
+        timestamp: newProfile.scraped_at || new Date().toISOString(),
+        type: newProfile.type || 'unknown',
+        sections: Object.keys(newProfile).filter(key => 
+            !['url', 'scraped_at', 'depth'].includes(key)
+        )
+    });
+
+    console.log(`✅ Profile merge completed. Final sections: ${Object.keys(merged).join(', ')}`);
+    return merged;
+};
+
 // Routes
 
 // POST /api/profile - Store profile data
@@ -102,12 +235,18 @@ app.post('/api/profile', (req, res) => {
         const filename = url.replace(/[^a-zA-Z0-9]/g, '_') + '.json';
         const profilePath = path.join(PROFILES_DIR, filename);
 
-        // Add metadata
+        // Read existing profile if it exists
+        const existingProfile = fs.existsSync(profilePath) ? readJSON(profilePath) : null;
+
+        // Add metadata to new profile data
         profileData.scraped_at = new Date().toISOString();
         profileData.depth = depth || 1;
 
-        // Save profile
-        if (writeJSON(profilePath, profileData)) {
+        // Merge with existing profile data
+        const mergedProfile = mergeProfileData(existingProfile, profileData);
+
+        // Save merged profile
+        if (writeJSON(profilePath, mergedProfile)) {
             // Add to visited list
             const visited = readJSON(VISITED_FILE) || [];
             if (!visited.includes(url)) {
@@ -116,10 +255,18 @@ app.post('/api/profile', (req, res) => {
             }
 
             // Update graph
-            updateGraph(profileData);
+            updateGraph(mergedProfile);
 
-            console.log(`Profile saved: ${name} (${url}) at depth ${depth}`);
-            res.json({ success: true, message: 'Profile saved successfully' });
+            const action = existingProfile ? 'updated' : 'saved';
+            console.log(`Profile ${action}: ${name} (${url}) at depth ${depth}`);
+            res.json({ 
+                success: true, 
+                message: `Profile ${action} successfully`,
+                merged: !!existingProfile,
+                sections_added: Object.keys(profileData).filter(key => 
+                    !['url', 'scraped_at', 'depth'].includes(key)
+                )
+            });
         } else {
             res.status(500).json({ error: 'Failed to save profile' });
         }

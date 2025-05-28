@@ -153,6 +153,23 @@
             margin-bottom: 10px;
         }
 
+        /* Node image styles for better rendering */
+        .nodes image {
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .nodes circle {
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .node:hover image {
+            filter: drop-shadow(2px 2px 8px rgba(255,255,255,0.5));
+        }
+
+        .node:hover circle {
+            filter: drop-shadow(2px 2px 8px rgba(255,255,255,0.5));
+        }
+
         .community-list {
             max-height: 200px;
             overflow-y: auto;

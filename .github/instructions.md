@@ -189,30 +189,10 @@ Scraping capabilities:
 ---
 ## 🚩 Future Enhancements
 
-- **Alias & Similar Name Detection**
-  - Implement fuzzy matching to find aliases and similar names across profiles.
-  - Calculate and store a confidence score for each alias match.
-  - Enable filtering of the graph with and without alias resolution for comparison.
-
-- **Risk Factor Analysis**
-  - Allow marking of "confirmed" high-risk accounts (e.g., known offenders).
-  - Increase risk scores for profiles and relationships connected to confirmed accounts.
-  - Highlight high-risk nodes and edges in the visualization.
-
-- **Fake Name & Suspicious Content Detection**
-  - Use heuristics and pattern matching to flag obviously fake names.
-  - Scan for suspicious keywords (e.g., "CP", "Pizza", etc.) in names, bios, and posts.
-  - Tag and filter profiles containing high-risk or banned terms.
-  
-- **Community Analysis Enhancements** 
-  - Implement advanced community detection algorithms (e.g., Louvain, Girvan-Newman).
-  - Visualize community structures with distinct colors and labels.
-  - Provide insights into community sizes, central nodes, and inter-community connections.
-
-  
-
-- **Configurable Filtering & Reporting**
-  - Add options to filter and export the graph based on alias resolution, risk factors, or suspicious content.
-  - Generate reports on detected aliases, fake names, and flagged content for further review.
-  
----
+- [x] **Duplicate URL Prevention**: Implement tracking system to avoid re-scraping profiles. When the system finds a URL that's already been scraped, it reuses the existing data and connections without duplicating effort.
+- [x] **Recursive Connection Management**: When building the social graph, properly handle recursive friend relationships by checking existing connections before adding new edges.
+- [x] **Optimized Queue Processing**: Sort the scraping queue by depth level to ensure a breadth-first approach that maximizes coverage of the social network.
+- [x] **Incremental Graph Building**: Update the graph in real-time as new profiles are scraped without requiring a full rebuild.
+- [ ] **Advanced Community Detection**: Implement more sophisticated community detection algorithms beyond simple connected components.
+- [ ] **Privacy-Focused Enhancement**: Add features to automatically detect and anonymize personal data in exported graphs.
+- [ ] **Performance Optimization**: Implement pagination and lazy-loading for large graphs with thousands of nodes.

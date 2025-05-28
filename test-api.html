@@ -111,11 +111,11 @@
             <div class="section">
                 <h2>📋 Queue Management</h2>
                 <input type="text" id="queue-urls" placeholder="Enter Facebook URLs (comma-separated)">
-                <input type="number" id="queue-depth" placeholder="Depth level (1-5)" min="1" max="5" value="1">
-                <div>
+                <input type="number" id="queue-depth" placeholder="Depth level (1-5)" min="1" max="5" value="1">                <div>
                     <button class="button" onclick="addToQueue()">Add to Queue</button>
                     <button class="button" onclick="getQueue()">View Queue</button>
                     <button class="button" onclick="getNextProfile()">Get Next</button>
+                    <button class="button" onclick="getNextProfileWithDepth()">Get Next (Max Depth)</button>
                 </div>
                 <div id="queue-output" class="output">Queue operations will appear here...</div>
             </div>
@@ -249,11 +249,19 @@ npm run stats           # Show graph statistics</div>
             } catch (error) {
                 displayOutput('queue-output', error.message, true);
             }
-        }
-
-        async function getNextProfile() {
+        }        async function getNextProfile() {
             try {
                 const result = await apiRequest('/scrape/next');
+                displayOutput('queue-output', result);
+            } catch (error) {
+                displayOutput('queue-output', error.message, true);
+            }
+        }
+
+        async function getNextProfileWithDepth() {
+            try {
+                const depth = document.getElementById('queue-depth').value || 1;
+                const result = await apiRequest(`/scrape/next?maxDepth=${depth}`);
                 displayOutput('queue-output', result);
             } catch (error) {
                 displayOutput('queue-output', error.message, true);

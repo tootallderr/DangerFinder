@@ -1,8 +1,131 @@
 {
   "url": "https://www.facebook.com/chase.lockwood.82583",
   "name": "Chase Lockwood",
-  "about": {},
+  "profile_image": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-1/491926097_122098350800854447_2878091200531327644_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=107&ccb=1-7&_nc_sid=e99d92&_nc_ohc=7DDfyottA-MQ7kNvwF9kvEU&_nc_oc=Adl-5GCjlqSgc5VG5jK6ISr4GZL1JTDxJyks7fc15DDVNgDxp_1tOMAmLB_wZ4xk3v0&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&_nc_gid=_cNWkEY7B32yHYueCNb2LA&oh=00_AfKqXk26EOiEwYt11c0y0_tDBGRnukcFsFOBc9Xd0OIafQ&oe=683C2941",
   "depth": 1,
   "type": "about",
-  "scraped_at": "2025-05-28T01:16:27.641Z"
+  "scraped_at": "2025-05-28T01:59:50.310Z",
+  "friends": [
+    {
+      "name": "Chase Lockwood",
+      "url": "https://www.facebook.com/chase.lockwood.82583"
+    },
+    {
+      "name": "Cathy Culver",
+      "url": "https://www.facebook.com/cathy.culver.506577"
+    },
+    {
+      "name": "Linda Kahena",
+      "url": "https://www.facebook.com/linda.kahena"
+    },
+    {
+      "name": "Shopia Almeida",
+      "url": "https://www.facebook.com/profile.php?id=61574034098433"
+    },
+    {
+      "name": "Allison Rollins",
+      "url": "https://www.facebook.com/profile.php?id=61556358533951"
+    },
+    {
+      "name": "Richard Parsons",
+      "url": "https://www.facebook.com/richard.parsons.803540"
+    },
+    {
+      "name": "Sohari Brebes",
+      "url": "https://www.facebook.com/sohari.brebes.2025"
+    },
+    {
+      "name": "Pizza Lilian",
+      "url": "https://www.facebook.com/pizza.lilian.2025"
+    },
+    {
+      "name": "Elizabeth Connors",
+      "url": "https://www.facebook.com/elizabeth.connors.201141"
+    },
+    {
+      "name": "Princessmae Amandy",
+      "url": "https://www.facebook.com/princessmae.amandy"
+    },
+    {
+      "name": "Ximena Castillo",
+      "url": "https://www.facebook.com/ximena.castillo.2548"
+    },
+    {
+      "name": "Marinam Gymnastic",
+      "url": "https://www.facebook.com/marinam.gymnastic.2025"
+    },
+    {
+      "name": "Scarlett Johansson",
+      "url": "https://www.facebook.com/Chris.deep.542516"
+    },
+    {
+      "name": "Cote De Tali Pablo",
+      "url": "https://www.facebook.com/cote.de.tali.pablo.270086"
+    },
+    {
+      "name": "Chythia Kate",
+      "url": "https://www.facebook.com/chythiakate"
+    },
+    {
+      "name": "Sophia Perez",
+      "url": "https://www.facebook.com/sophia.perez.548008"
+    },
+    {
+      "name": "Sandra Thomas",
+      "url": "https://www.facebook.com/sandra.thomas.974371"
+    },
+    {
+      "name": "Asd 853",
+      "url": "https://www.facebook.com/asd853.2025"
+    }
+  ],
+  "last_updated": "2025-05-28T01:59:50.311Z",
+  "scrape_history": [
+    {
+      "timestamp": "2025-05-28T01:57:56.163Z",
+      "type": "friends",
+      "sections": [
+        "name",
+        "friends",
+        "type"
+      ]
+    },
+    {
+      "timestamp": "2025-05-28T01:58:05.790Z",
+      "type": "about",
+      "sections": [
+        "name",
+        "about",
+        "type"
+      ]
+    },
+    {
+      "timestamp": "2025-05-28T01:59:23.451Z",
+      "type": "basic",
+      "sections": [
+        "name",
+        "profile_image",
+        "type"
+      ]
+    },
+    {
+      "timestamp": "2025-05-28T01:59:40.480Z",
+      "type": "friends",
+      "sections": [
+        "name",
+        "friends",
+        "type"
+      ]
+    },
+    {
+      "timestamp": "2025-05-28T01:59:50.310Z",
+      "type": "about",
+      "sections": [
+        "name",
+        "about",
+        "type"
+      ]
+    }
+  ],
+  "about": {}
 }

@@ -1,8 +1,284 @@
 {
   "url": "https://www.facebook.com/richard.parsons.803540",
   "name": "Richard Parsons",
-  "about": {},
-  "depth": 1,
+  "profile_image": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-1/488035871_122195297210118563_9114915450735439413_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=103&ccb=1-7&_nc_sid=111fe6&_nc_ohc=1NT9ACMAVuQQ7kNvwEz70oD&_nc_oc=AdmD_JAs_-dNbiyguT3cJUvOQ0eevftKeD4oXgmFmFvPVbcWCchHLxtbSdiyNZ2amv4&_nc_zt=24&_nc_ht=scontent-iad3-2.xx&_nc_gid=b0c-pPc4wRTTONpSzN8PGQ&oh=00_AfKhrN92nSfOyUomuH5AyWCVjkcvL90ezzf2w3bS2n171A&oe=683C293E",
+  "depth": 2,
   "type": "about",
-  "scraped_at": "2025-05-27T23:20:07.391Z"
+  "scraped_at": "2025-05-28T02:14:31.318Z",
+  "friends": [
+    {
+      "name": "Richard Parsons",
+      "url": "https://www.facebook.com/richard.parsons.803540"
+    },
+    {
+      "name": "Stacey Davensizer",
+      "url": "https://www.facebook.com/stacey.ludwig.520"
+    },
+    {
+      "name": "Danielle Ann Shonsky",
+      "url": "https://www.facebook.com/danielle.ann.shonsky"
+    },
+    {
+      "name": "Mandy Gregory",
+      "url": "https://www.facebook.com/mandy.gregory.3979"
+    },
+    {
+      "name": "Greg Hoovler",
+      "url": "https://www.facebook.com/greg.hoovler.2025"
+    },
+    {
+      "name": "Cassandra Lee Quatman Ferragonio",
+      "url": "https://www.facebook.com/cassandra.lee.quatman.ferragonio"
+    },
+    {
+      "name": "Tracey L Arbuckle",
+      "url": "https://www.facebook.com/tracey.l.arbuckle"
+    },
+    {
+      "name": "Seth Strock",
+      "url": "https://www.facebook.com/seth.strock.2025"
+    },
+    {
+      "name": "Kiara Mayye",
+      "url": "https://www.facebook.com/kiara.mayye"
+    },
+    {
+      "name": "Cathy Thompson",
+      "url": "https://www.facebook.com/cathy.tury.3"
+    },
+    {
+      "name": "Elizabeth Marie Hamby",
+      "url": "https://www.facebook.com/elizabeth.marie.hamby"
+    },
+    {
+      "name": "Amber King",
+      "url": "https://www.facebook.com/amber.king.112481"
+    },
+    {
+      "name": "Aubrianna Ashby",
+      "url": "https://www.facebook.com/aubrianna.ashby"
+    },
+    {
+      "name": "Emily Thornburg",
+      "url": "https://www.facebook.com/XeXeE.SkItTlEzX"
+    },
+    {
+      "name": "Sum Mayye",
+      "url": "https://www.facebook.com/sum.mayye"
+    },
+    {
+      "name": "Cathy Culver",
+      "url": "https://www.facebook.com/cathy.culver.506577"
+    },
+    {
+      "name": "Momo Williams",
+      "url": "https://www.facebook.com/momo.williams.296178"
+    },
+    {
+      "name": "Chase Lockwood",
+      "url": "https://www.facebook.com/chase.lockwood.82583"
+    },
+    {
+      "name": "April Milano",
+      "url": "https://www.facebook.com/april.milano.54"
+    },
+    {
+      "name": "Tiffany Marie Rivas",
+      "url": "https://www.facebook.com/tiffanymarie.mcfall"
+    },
+    {
+      "name": "Wendy Ayres",
+      "url": "https://www.facebook.com/wendy.ayres.5"
+    },
+    {
+      "name": "Destiny Hooper",
+      "url": "https://www.facebook.com/destiny.hooper.441773"
+    },
+    {
+      "name": "Tony Tatta",
+      "url": "https://www.facebook.com/undertaker16146"
+    },
+    {
+      "name": "Brittany Eaken",
+      "url": "https://www.facebook.com/brittany.eaken23"
+    },
+    {
+      "name": "Andrew Fleeger",
+      "url": "https://www.facebook.com/andrew.fleeger.2025"
+    },
+    {
+      "name": "Tommy Tatta",
+      "url": "https://www.facebook.com/tommy.tatta.2025"
+    },
+    {
+      "name": "Jeanne C Verbeke",
+      "url": "https://www.facebook.com/jeanne.verbeke.5"
+    },
+    {
+      "name": "John M Mccabe",
+      "url": "https://www.facebook.com/john.mccabe.5036"
+    },
+    {
+      "name": "Jessy Maravola",
+      "url": "https://www.facebook.com/jmaravola"
+    },
+    {
+      "name": "Jeff Eakin",
+      "url": "https://www.facebook.com/jeff.eakin.222897"
+    },
+    {
+      "name": "Austin Isaiah",
+      "url": "https://www.facebook.com/austin.isaiah.2025"
+    },
+    {
+      "name": "Courtney Capan",
+      "url": "https://www.facebook.com/courtney.capan.3"
+    },
+    {
+      "name": "Miranda Snackz Parsons",
+      "url": "https://www.facebook.com/miranda.snackz.parsons"
+    },
+    {
+      "name": "Scott Prestenbach",
+      "url": "https://www.facebook.com/scott.prestenbach"
+    },
+    {
+      "name": "Hellfire Demon",
+      "url": "https://www.facebook.com/hellfire.demon.411116"
+    },
+    {
+      "name": "Taylor Colwell",
+      "url": "https://www.facebook.com/taylor.colwell.65122"
+    },
+    {
+      "name": "Donny Dambaugh",
+      "url": "https://www.facebook.com/donny.dambaugh"
+    },
+    {
+      "name": "April Hughes",
+      "url": "https://www.facebook.com/april.hughes.370177"
+    },
+    {
+      "name": "Marvin Meredith",
+      "url": "https://www.facebook.com/marvin.meredith.796"
+    },
+    {
+      "name": "Mk Blood",
+      "url": "https://www.facebook.com/mk.blood.106"
+    },
+    {
+      "name": "Marlene Parsons",
+      "url": "https://www.facebook.com/marlene.parsons.144"
+    },
+    {
+      "name": "Greg Hoovler",
+      "url": "https://www.facebook.com/greg.hoovler.368162"
+    },
+    {
+      "name": "Joseph Milano",
+      "url": "https://www.facebook.com/profile.php?id=61556405812060"
+    },
+    {
+      "name": "Samuel Aley",
+      "url": "https://www.facebook.com/samuel.aley.2025"
+    },
+    {
+      "name": "Jessica Hoovler",
+      "url": "https://www.facebook.com/jessica.hoovler.2025"
+    },
+    {
+      "name": "Christine Marie Culver",
+      "url": "https://www.facebook.com/profile.php?id=61571185625858"
+    },
+    {
+      "name": "Tracey L Arbuckle",
+      "url": "https://www.facebook.com/profile.php?id=100063644141670"
+    },
+    {
+      "name": "Bobby Ball",
+      "url": "https://www.facebook.com/profile.php?id=61557104054838"
+    },
+    {
+      "name": "Michelle Ball",
+      "url": "https://www.facebook.com/profile.php?id=61552270134248"
+    },
+    {
+      "name": "Danielle Williams",
+      "url": "https://www.facebook.com/profile.php?id=100089526782978"
+    },
+    {
+      "name": "Lou Simpson",
+      "url": "https://www.facebook.com/lou.simpson.127"
+    },
+    {
+      "name": "Bobby Ball",
+      "url": "https://www.facebook.com/profile.php?id=61559910172977"
+    },
+    {
+      "name": "Brittany Eaken",
+      "url": "https://www.facebook.com/brittany.eaken.7"
+    },
+    {
+      "name": "Christine Culver",
+      "url": "https://www.facebook.com/profile.php?id=61575120641195"
+    },
+    {
+      "name": "Relative Race",
+      "url": "https://facebook.com/RelativeRace"
+    },
+    {
+      "name": "Got Talent Global",
+      "url": "https://facebook.com/gottalentglobal"
+    },
+    {
+      "name": "The Steve Wilkos Show",
+      "url": "https://facebook.com/TheSteveWilkosShow"
+    },
+    {
+      "name": "Britain's Got Talent",
+      "url": "https://facebook.com/BritainsGotTalent"
+    },
+    {
+      "name": "Mecha Domination",
+      "url": "https://facebook.com/MechaDomination"
+    },
+    {
+      "name": "Ever Legion",
+      "url": "https://facebook.com/everlegionEN"
+    }
+  ],
+  "last_updated": "2025-05-28T02:14:31.319Z",
+  "scrape_history": [
+    {
+      "timestamp": "2025-05-28T02:14:21.239Z",
+      "type": "friends",
+      "sections": [
+        "name",
+        "friends",
+        "type"
+      ]
+    },
+    {
+      "timestamp": "2025-05-28T02:14:31.318Z",
+      "type": "about",
+      "sections": [
+        "name",
+        "about",
+        "type"
+      ]
+    }
+  ],
+  "about": {
+    "work": [
+      "Paranormal InvestigatorAdd friendTracey L ArbuckleWorks at I Dont Work, Im A Princess ;*Add friendSeth StrockAdd friendKiara MayyeSouthington Local SchoolsAdd friendSee allPhotosRichard Parsons 's PhotosAlbumsMoreRichard Parsons 's PhotosAlbums\n{\"require\":[[\"maybeDisableAnimations\",null,null,[]]]}\n\n{\"require\":[[\"replaceNativeTimer\",null,null,[]]]}\n\n{\"require\":[[\"bootstrapWebSession\",null,null,[1748398464]]]}\n\n{\"require\":[[\"qplTagServerJS\",null,null,[[\"makehaste_min_rc:public:control\",\"comet_preloader_display_threads:8\",\"comet_preloader_deferred_threads:1\",\"comet_aa_coinflip:false\",\"should_use_bt_safe_js\",\"logged_in\"]]]]}\n\n{\"require\":[[\"qplTimingsServerJS\",null,null,[\"7509314227950800666\",\"tierOne\"]]]}\n\n{\"require\":[[\"CometSSRMergedContentInjector\",\"ssrInit\",null,[{\"enabled\":true,\"cavalry_get_lid\":\"7509314227950800666\",\"success_status\":\"success\",\"disabled_status\":\"fail_ssr_disabled\",\"bad_preloaders_status\":\"fail_bad_preloaders\",\"eid\":\"mount_0_0_nc\",\"should_ignore_static_id\":true,\"gks\":{\"comet_ssr_wait_for_dev\":false,\"mwp_ssr_enabled\":true,\"stop_render_at_splashscreen\":false,\"use_content_visibility_hidden\":false,\"comet_ssr_unhide_early\":true},\"is_in_crawler_mode\":false}]]]}\n\n{\"require\":[[\"JSScheduler\",\"makeSchedulerGlobalEntry\",null,[\"null\",false,false]]]}\n\n{\"require\":[[\"ScheduledServerJS\",\"handle\",null,[{\"__bbox\":{\"define\":[[\"cr:310\",[\"RunWWW\"],{\"__rc\":[\"RunWWW\",null]},-1],[\"cr:1078\",[],{\"__rc\":[null,null]},-1],[\"cr:1080\",[\"unexpectedUseInComet\"],{\"__rc\":[\"unexpectedUseInComet\",null]},-1],[\"cr:1126\",[\"TimeSliceSham\"],{\"__rc\":[\"TimeSliceSham\",null]},-1],[\"cr:3725\",[\"clearTimeoutWWWOrMobile\"],{\"__rc\":[\"clearTimeoutWWWOrMobile\",null]},-1],[\"cr:4344\",[\"setTimeoutWWWOrMobile\"],{\"__rc\":[\"setTimeoutWWWOrMobile\",null]},-1],[\"cr:6640\",[],{\"__rc\":[null,null]},-1],[\"cr:7385\",[\"clearIntervalWWW\"],{\"__rc\":[\"clearIntervalWWW\",null]},-1],[\"cr:7386\",[\"clearTimeoutWWW\"],{\"__rc\":[\"clearTimeoutWWW\",null]},-1],[\"cr:7388\",[\"setIntervalWWW\"],{\"__rc\":[\"setIntervalWWW\",null]},-1],[\"cr:7389\",[\"setIntervalAcrossTransitionsWWW\"],{\"__rc\":[\"setIntervalAcrossTransitionsWWW\",null]},-1],[\"cr:7390\",[\"setTimeoutWWW\"],{\"__rc\":[\"setTimeoutWWW\",null]},-1],[\"cr:7391\",[\"setTimeoutAcrossTransitionsWWW\"],{\"__rc\":[\"setTimeoutAcrossTransitionsWWW\",null]},-1],[\"cr:8959\",[\"DTSG\"],{\"__rc\":[\"DTSG\",null]},-1],[\"cr:8960\",[\"DTSG_ASYNC\"],{\"__rc\":[\"DTSG_ASYNC\",null]},-1],[\"cr:696703\",[\"JSScheduler\"],{\"__rc\":[\"JSScheduler\",null]},-1],[\"cr:806696\",[\"clearTimeoutComet\"],{\"__rc\":[\"clearTimeoutComet\",null]},-1],[\"cr:807042\",[\"setTimeoutComet\"],{\"__rc\":[\"setTimeoutComet\",null]},-1],[\"cr:896461\",[\"setIntervalComet\"],{\"__rc\":[\"setIntervalComet\",null]},-1],[\"cr:896462\",[\"setIntervalComet\"],{\"__rc\":[\"setIntervalComet\",null]},-1],[\"cr:925100\",[\"RunComet\"],{\"__rc\":[\"RunComet\",null]},-1],[\"cr:986633\",[\"setTimeoutComet\"],{\"__rc\":[\"setTimeoutComet\",null]},-1],[\"cr:1003267\",[\"clearIntervalComet\"],{\"__rc\":[\"clearIntervalComet\",null]},-1],[\"cr:686\",[],{\"__rc\":[null,null]},-1],[\"cr:734\",[],{\"__rc\":[null,null]},-1],[\"cr:755\",[\"warningWWW\"],{\"__rc\":[\"warningWWW\",null]},-1],[\"cr:873\",[\"InteractionTracing\"],{\"__rc\":[\"InteractionTracing\",null]},-1],[\"cr:1293\",[\"ReactDOM",
+      "Paranormal Investigator\"},\"url\":\"https:\\/\\/www",
+      "I Dont Work, Im A Princess ;*\"},\"url\":\"https:\\/\\/www"
+    ],
+    "location": [
+      "Grove City, PennsylvaniaNo relationship info to showFriendsAll friendsRecently AddedCurrent cityHometownFollowingMoreAll friendsRecently AddedCurrent cityHometownFollowingStacey DavensizerSharon\u0001High School\u0003Add friendDanielle Ann ShonskyHickory High SchoolAdd friendMandy GregorySharon High SchoolAdd friendGreg HoovlerSharon, PennsylvaniaAdd friendCassandra Lee Quatman FerragonioWorks at Paranormal InvestigatorAdd friendTracey L ArbuckleWorks at I Dont Work, Im A Princess ;*Add friendSeth StrockAdd friendKiara MayyeSouthington Local SchoolsAdd friendSee allPhotosRichard Parsons 's PhotosAlbumsMoreRichard Parsons 's PhotosAlbums\n{\"require\":[[\"maybeDisableAnimations\",null,null,[]]]}\n\n{\"require\":[[\"replaceNativeTimer\",null,null,[]]]}\n\n{\"require\":[[\"bootstrapWebSession\",null,null,[1748398464]]]}\n\n{\"require\":[[\"qplTagServerJS\",null,null,[[\"makehaste_min_rc:public:control\",\"comet_preloader_display_threads:8\",\"comet_preloader_deferred_threads:1\",\"comet_aa_coinflip:false\",\"should_use_bt_safe_js\",\"logged_in\"]]]]}\n\n{\"require\":[[\"qplTimingsServerJS\",null,null,[\"7509314227950800666\",\"tierOne\"]]]}\n\n{\"require\":[[\"CometSSRMergedContentInjector\",\"ssrInit\",null,[{\"enabled\":true,\"cavalry_get_lid\":\"7509314227950800666\",\"success_status\":\"success\",\"disabled_status\":\"fail_ssr_disabled\",\"bad_preloaders_status\":\"fail_bad_preloaders\",\"eid\":\"mount_0_0_nc\",\"should_ignore_static_id\":true,\"gks\":{\"comet_ssr_wait_for_dev\":false,\"mwp_ssr_enabled\":true,\"stop_render_at_splashscreen\":false,\"use_content_visibility_hidden\":false,\"comet_ssr_unhide_early\":true},\"is_in_crawler_mode\":false}]]]}\n\n{\"require\":[[\"JSScheduler\",\"makeSchedulerGlobalEntry\",null,[\"null\",false,false]]]}\n\n{\"require\":[[\"ScheduledServerJS\",\"handle\",null,[{\"__bbox\":{\"define\":[[\"cr:310\",[\"RunWWW\"],{\"__rc\":[\"RunWWW\",null]},-1],[\"cr:1078\",[],{\"__rc\":[null,null]},-1],[\"cr:1080\",[\"unexpectedUseInComet\"],{\"__rc\":[\"unexpectedUseInComet\",null]},-1],[\"cr:1126\",[\"TimeSliceSham\"],{\"__rc\":[\"TimeSliceSham\",null]},-1],[\"cr:3725\",[\"clearTimeoutWWWOrMobile\"],{\"__rc\":[\"clearTimeoutWWWOrMobile\",null]},-1],[\"cr:4344\",[\"setTimeoutWWWOrMobile\"],{\"__rc\":[\"setTimeoutWWWOrMobile\",null]},-1],[\"cr:6640\",[],{\"__rc\":[null,null]},-1],[\"cr:7385\",[\"clearIntervalWWW\"],{\"__rc\":[\"clearIntervalWWW\",null]},-1],[\"cr:7386\",[\"clearTimeoutWWW\"],{\"__rc\":[\"clearTimeoutWWW\",null]},-1],[\"cr:7388\",[\"setIntervalWWW\"],{\"__rc\":[\"setIntervalWWW\",null]},-1],[\"cr:7389\",[\"setIntervalAcrossTransitionsWWW\"],{\"__rc\":[\"setIntervalAcrossTransitionsWWW\",null]},-1],[\"cr:7390\",[\"setTimeoutWWW\"],{\"__rc\":[\"setTimeoutWWW\",null]},-1],[\"cr:7391\",[\"setTimeoutAcrossTransitionsWWW\"],{\"__rc\":[\"setTimeoutAcrossTransitionsWWW\",null]},-1],[\"cr:8959\",[\"DTSG\"],{\"__rc\":[\"DTSG\",null]},-1],[\"cr:8960\",[\"DTSG_ASYNC\"],{\"__rc\":[\"DTSG_ASYNC\",null]},-1],[\"cr:696703\",[\"JSScheduler\"],{\"__rc\":[\"JSScheduler\",null]},-1],[\"cr:806696\",[\"clearTimeoutComet\"],{\"__rc\":[\"clearTimeoutComet\",null]},-1],[\"cr:807042\",[\"setTimeoutComet\"],{\"__rc\":[\"setTimeoutComet\",null]},-1],[\"cr:896461\",[\"setIntervalComet\"],{\"__rc\":[\"setIntervalComet\",null]},-1],[\"cr:896462\",[\"setIntervalComet\"],{\"__rc\":[\"setIntervalComet\",null]},-1],[\"cr:925100\",[\"RunComet\"],{\"__rc\":[\"RunComet\",null]},-1],[\"cr:986633\",[\"setTimeoutComet\"],{\"__rc\":[\"setTimeoutComet\",null]},-1],[\"cr:1003267\",[\"clearIntervalComet\"],{\"__rc\":[\"clearIntervalComet\",null]},-1],[\"cr:686\",[],{\"__rc\":[null,null]},-1],[\"cr:734\",[],{\"__rc\":[null,null]},-1],[\"cr:755\",[\"warningWWW\"],{\"__rc\":[\"warningWWW\",null]},-1],[\"cr:873\",[\"InteractionTracing\"],{\"__rc\":[\"InteractionTracing\",null]},-1],[\"cr:1293\",[\"ReactDOM",
+      "{Origin Domain}\",\"1_2882107be72d37df895b05e0573990a6\":\"Unblock Messages?\",\"1_2b99f4eb0d10fb2a590c91881bc93620\":\"Can't Create Duplicate Account\",\"1_2dfe4f010e821ffa89d9c4133df72506\":\"Problem with bluetooth or audio source\",\"1_2e510be3887bae0dd4d73733dffa6ec4\":\"{firstname1}, {firstname2}, and {firstname3} are online\",\"1_2e9405cf33a60079eba08f7433c66595\":\"Unable To Connect Your Call\",\"1_2feb150fdf16fe534e635fa1143a7508\":\"No Devices Yet\",\"1_31426213a5556e794c313d21dbeceb6b\":\"Turn On\",\"1_3bce071d20c866b7a915136c01c2a17f\":\"Remove From Channel\",\"1_3e252ef60c34f4c269a640aedaaf9a91\":\"Recent Calls\",\"1_4323029c4a9559df6910965a98e5f7ee\":\"Customize your conversation with {short-name}",
+      "Grove City, Pennsylvania\"},\"field_type\":\"hometown\",\"list_item_groups\":[],\"link_url\":null,\"group_key\":null,\"icon\":{\"height\":24,\"scale\":1,\"uri\":\"https:\\/\\/static",
+      "Grove City, Pennsylvania\",\"delight_ranges\":[],\"image_ranges\":[],\"inline_style_ranges\":[],\"aggregated_ranges\":[],\"ranges\":[{\"entity\":{\"__typename\":\"Page\",\"__isEntity\":\"Page\",\"__isActor\":\"Page\",\"id\":\"112564645425293\",\"url\":\"https:\\/\\/www"
+    ]
+  }
 }

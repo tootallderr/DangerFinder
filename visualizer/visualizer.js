@@ -129,19 +129,71 @@ class GraphVisualizer {
             .join('line')
             .attr('stroke', '#999')
             .attr('stroke-opacity', 0.6)
-            .attr('stroke-width', 2);
+            .attr('stroke-width', 2);        // Create defs for clipping paths
+        const defs = this.svg.select('defs').empty() ? this.svg.append('defs') : this.svg.select('defs');
 
         // Create nodes
-        const node = g.append('g')
-            .selectAll('circle')
+        const nodeGroup = g.append('g').attr('class', 'nodes');
+        
+        const node = nodeGroup
+            .selectAll('g.node')
             .data(this.nodes)
-            .join('circle')
-            .attr('r', d => this.getNodeRadius(d))
-            .attr('fill', d => this.getNodeColor(d))
-            .attr('stroke', '#fff')
-            .attr('stroke-width', 1.5)
+            .join('g')
+            .attr('class', 'node')
             .style('cursor', 'pointer')
             .call(this.drag(this.simulation));
+
+        const self = this;
+
+        // Add clipping circles for each node
+        node.each(function(d) {
+            const clipId = `clip-${d.id.replace(/[^a-zA-Z0-9]/g, '_')}`;
+            defs.append('clipPath')
+                .attr('id', clipId)
+                .append('circle')
+                .attr('r', self.getNodeRadius(d));
+        });
+
+        // Add profile images or fallback circles
+        node.each(function(d) {
+            const nodeEl = d3.select(this);
+            const radius = self.getNodeRadius(d);
+            const clipId = `clip-${d.id.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+            if (d.profile_image && d.profile_image.trim() !== '') {
+                // Add profile image
+                nodeEl.append('image')
+                    .attr('href', d.profile_image)
+                    .attr('x', -radius)
+                    .attr('y', -radius)
+                    .attr('width', radius * 2)
+                    .attr('height', radius * 2)
+                    .attr('clip-path', `url(#${clipId})`)
+                    .on('error', function() {
+                        // Fallback to colored circle if image fails to load
+                        d3.select(this).remove();
+                        nodeEl.append('circle')
+                            .attr('r', radius)
+                            .attr('fill', self.getNodeColor(d))
+                            .attr('stroke', '#fff')
+                            .attr('stroke-width', 1.5);
+                    });
+                
+                // Add border circle over the image
+                nodeEl.append('circle')
+                    .attr('r', radius)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#fff')
+                    .attr('stroke-width', 1.5);
+            } else {
+                // Fallback to colored circle
+                nodeEl.append('circle')
+                    .attr('r', radius)
+                    .attr('fill', self.getNodeColor(d))
+                    .attr('stroke', '#fff')
+                    .attr('stroke-width', 1.5);
+            }
+        });
 
         // Add node labels
         const labels = g.append('g')
@@ -154,15 +206,11 @@ class GraphVisualizer {
             .attr('fill', 'white')
             .attr('text-anchor', 'middle')
             .attr('dy', '.35em')
-            .style('pointer-events', 'none');
-
-        // Add tooltips and click handlers
+            .style('pointer-events', 'none');        // Add tooltips and click handlers
         node
             .on('mouseover', (event, d) => this.showTooltip(event, d))
             .on('mouseout', () => this.hideTooltip())
-            .on('click', (event, d) => this.selectNode(d));
-
-        // Update positions on simulation tick
+            .on('click', (event, d) => this.selectNode(d));        // Update positions on simulation tick
         this.simulation.on('tick', () => {
             link
                 .attr('x1', d => d.source.x)
@@ -171,8 +219,7 @@ class GraphVisualizer {
                 .attr('y2', d => d.target.y);
 
             node
-                .attr('cx', d => d.x)
-                .attr('cy', d => d.y);
+                .attr('transform', d => `translate(${d.x}, ${d.y})`);
 
             labels
                 .attr('x', d => d.x)
@@ -243,14 +290,12 @@ class GraphVisualizer {
 
     hideTooltip() {
         document.getElementById('tooltip').style.opacity = 0;
-    }
-
-    selectNode(node) {
+    }    selectNode(node) {
         this.selectedNode = node;
         this.updateNodeDetails(node);
         
         // Highlight selected node
-        this.svg.selectAll('circle')
+        this.svg.selectAll('g.node circle')
             .attr('stroke-width', d => d === node ? 3 : 1.5)
             .attr('stroke', d => d === node ? '#ff6b6b' : '#fff');
     }
@@ -354,12 +399,10 @@ class GraphVisualizer {
             node.fy = null;
         });
         this.simulation.alpha(1).restart();
-    }
-
-    filterNodes(searchTerm) {
+    }    filterNodes(searchTerm) {
         const term = searchTerm.toLowerCase();
         
-        this.svg.selectAll('circle')
+        this.svg.selectAll('g.node')
             .style('opacity', d => {
                 return !term || d.name.toLowerCase().includes(term) ? 1 : 0.2;
             });
@@ -373,7 +416,7 @@ class GraphVisualizer {
     filterByConnections(minConnections) {
         document.getElementById('connection-value').textContent = minConnections;
         
-        this.svg.selectAll('circle')
+        this.svg.selectAll('g.node')
             .style('opacity', d => d.degree >= minConnections ? 1 : 0.2);
 
         this.svg.selectAll('text')
