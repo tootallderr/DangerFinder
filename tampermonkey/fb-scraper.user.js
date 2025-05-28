@@ -149,17 +149,21 @@
         // Load annotations from backend on startup
         loadFromBackend: async () => {
             try {
+                updateStatus('Loading annotations from backend...', 'info');
                 const response = await sendToAPI('/annotations', null, 'GET');
                 
                 if (response && response.annotations) {
                     const localAnnotations = GM_getValue('profileAnnotations', {});
                     
                     // Merge backend annotations with local ones
+                    // Local takes precedence over backend for any conflicts
                     const mergedAnnotations = { ...response.annotations, ...localAnnotations };
                     GM_setValue('profileAnnotations', mergedAnnotations);
                     
                     console.log(`📥 Loaded ${Object.keys(response.annotations).length} annotations from backend`);
-                    updateStatus(`Loaded ${Object.keys(response.annotations).length} annotations from backend`, 'info');
+                    updateStatus(`Loaded ${Object.keys(response.annotations).length} annotations from backend`, 'success');
+                    updateProfileDisplay();
+                    return response.annotations;
                 }
             } catch (error) {
                 console.error('Error loading annotations from backend:', error);
@@ -170,7 +174,8 @@
         getAll: () => {
             return GM_getValue('profileAnnotations', {});
         },
-          // Export annotations for backup
+        
+        // Export annotations for backup
         export: () => {
             const annotations = GM_getValue('profileAnnotations', {});
             const blob = new Blob([JSON.stringify(annotations, null, 2)], 
@@ -195,41 +200,191 @@
             return convictions;
         },
         
-        // Export convictions as CSV for analysis
-        exportConvictionsCSV: () => {
-            const convictions = ProfileAnnotations.getConvictions();
-            if (Object.keys(convictions).length === 0) {
-                alert('No confirmed convictions found to export');
-                return;
+        // Get convictions from backend
+        getBackendConvictions: async () => {
+            try {
+                updateStatus('Fetching convictions from backend...', 'info');
+                const response = await sendToAPI('/convictions', null, 'GET');
+                
+                if (response && response.convictions) {
+                    console.log(`Found ${response.count} convictions in backend`);
+                    updateStatus(`Found ${response.count} convictions in backend`, 'success');
+                    return response.convictions;
+                }
+                updateStatus('No convictions found in backend', 'info');
+                return {};
+            } catch (error) {
+                console.error('Error fetching backend convictions:', error);
+                updateStatus('Failed to fetch convictions from backend', 'error');
+                return {};
+            }
+        },
+        
+        // Sync all local annotations to backend
+        syncToBackend: async () => {
+            try {
+                updateStatus('Syncing annotations to backend...', 'info');
+                const localAnnotations = GM_getValue('profileAnnotations', {});
+                let syncCount = 0;
+                
+                for (const [url, annotation] of Object.entries(localAnnotations)) {
+                    try {
+                        await sendToAPI('/annotations', {
+                            profileUrl: url,
+                            annotation: annotation
+                        });
+                        syncCount++;
+                    } catch (error) {
+                        console.error(`Failed to sync ${url}:`, error);
+                    }
+                }
+                
+                console.log(`Synced ${syncCount} annotations to backend`);
+                updateStatus(`Synced ${syncCount} annotations to backend`, 'success');
+                return syncCount;
+            } catch (error) {
+                console.error('Error syncing to backend:', error);
+                updateStatus('Failed to sync annotations to backend', 'error');
+                return 0;
+            }
+        },
+        
+        // Clear local annotations and reload only from backend
+        resetToBackend: async () => {
+            try {
+                if (!confirm('Are you sure you want to clear all local annotations and reload from server?')) {
+                    return false;
+                }
+                
+                updateStatus('Clearing local annotations...', 'info');
+                GM_setValue('profileAnnotations', {});
+                
+                updateStatus('Loading annotations from backend...', 'info');
+                const response = await sendToAPI('/annotations', null, 'GET');
+                
+                if (response && response.annotations) {
+                    GM_setValue('profileAnnotations', response.annotations);
+                    console.log(`Reset completed: Loaded ${Object.keys(response.annotations).length} annotations from backend`);
+                    updateStatus(`Reset completed with ${Object.keys(response.annotations).length} annotations`, 'success');
+                    updateProfileDisplay();
+                    return true;
+                } else {
+                    updateStatus('Reset completed but no annotations were found on backend', 'warning');
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error during reset to backend:', error);
+                updateStatus('Failed to reset annotations from backend', 'error');
+                return false;
+            }
+        },
+        
+        // Get statistics about convictions (from both local and backend)
+        getConvictionStats: async () => {
+            updateStatus('Generating conviction statistics...', 'info');
+            
+            // Get local convictions
+            const localConvictions = ProfileAnnotations.getConvictions();
+            
+            // Try to get backend convictions
+            let backendConvictions = {};
+            try {
+                backendConvictions = await ProfileAnnotations.getBackendConvictions();
+            } catch (error) {
+                console.error('Failed to get backend convictions:', error);
             }
             
-            let csv = 'Profile URL,Name,Conviction Type,Crime Category,Date,Jurisdiction,Risk Level,Source,Notes,Last Updated\n';
+            // Generate stats
+            const localCount = Object.keys(localConvictions).length;
+            const backendCount = Object.keys(backendConvictions).length;
             
-            for (const [url, conviction] of Object.entries(convictions)) {
-                const conv = conviction.convictionDetails || {};
-                const row = [
-                    url,
-                    conviction.profileName || '',
-                    conv.type || '',
-                    conv.crimeCategory || '',
-                    conv.date || '',
-                    conv.jurisdiction || '',
-                    conviction.risk || '',
-                    conviction.source || '',
-                    (conviction.notes || '').replace(/"/g, '""'),
-                    conviction.lastUpdated || ''
-                ].map(field => `"${field}"`).join(',');
-                csv += row + '\n';
+            // Find overlaps and unique entries
+            const allUrls = new Set([
+                ...Object.keys(localConvictions),
+                ...Object.keys(backendConvictions)
+            ]);
+            
+            const onlyLocal = [];
+            const onlyBackend = [];
+            const inBoth = [];
+            
+            for (const url of allUrls) {
+                if (localConvictions[url] && backendConvictions[url]) {
+                    inBoth.push(url);
+                } else if (localConvictions[url]) {
+                    onlyLocal.push(url);
+                } else if (backendConvictions[url]) {
+                    onlyBackend.push(url);
+                }
             }
             
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `confirmed-convictions-${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
+            // Categorize by crime type
+            const crimeCategories = {};
+            
+            // Process local convictions
+            for (const [url, conviction] of Object.entries(localConvictions)) {
+                const category = conviction?.convictionDetails?.crimeCategory || 'Uncategorized';
+                if (!crimeCategories[category]) {
+                    crimeCategories[category] = { count: 0, urls: [] };
+                }
+                crimeCategories[category].count++;
+                crimeCategories[category].urls.push(url);
+            }
+            
+            // Process backend-only convictions
+            for (const [url, conviction] of Object.entries(backendConvictions)) {
+                // Skip if already counted from local
+                if (localConvictions[url]) continue;
+                
+                const category = conviction?.convictionDetails?.crimeCategory || 'Uncategorized';
+                if (!crimeCategories[category]) {
+                    crimeCategories[category] = { count: 0, urls: [] };
+                }
+                crimeCategories[category].count++;
+                crimeCategories[category].urls.push(url);
+            }
+            
+            // Generate report
+            const totalCount = allUrls.size;
+            
+            const report = {
+                summary: {
+                    totalConvictions: totalCount,
+                    localConvictions: localCount,
+                    backendConvictions: backendCount,
+                    onlyLocal: onlyLocal.length,
+                    onlyBackend: onlyBackend.length,
+                    inBothStores: inBoth.length
+                },
+                crimeCategories: crimeCategories,
+                syncStatus: {
+                    needsSync: onlyLocal.length > 0,
+                    missingLocal: onlyBackend
+                }
+            };
+            
+            // Log report to console
+            console.log('%c📊 Conviction Statistics Report', 'font-size: 16px; font-weight: bold;');
+            console.log(`Total confirmed convictions: ${totalCount}`);
+            console.log(`- Local storage: ${localCount}`);
+            console.log(`- Backend server: ${backendCount}`);
+            console.log(`- In both stores: ${inBoth.length}`);
+            console.log(`- Only in local: ${onlyLocal.length}`);
+            console.log(`- Only in backend: ${onlyBackend.length}`);
+            
+            console.log('%c🔍 Crime Categories', 'font-size: 14px; font-weight: bold;');
+            for (const [category, data] of Object.entries(crimeCategories)) {
+                console.log(`${category}: ${data.count} conviction(s)`);
+            }
+            
+            if (onlyLocal.length > 0) {
+                console.log('%c⚠️ Local convictions not synced to backend', 'color: orange; font-weight: bold;');
+                console.log('Run FB_Scraper.syncToBackend() to sync these convictions');
+            }
+            
+            updateStatus(`Generated stats for ${totalCount} convictions`, 'success');
+            return report;
+        },
     };
     
     // Main UI Panel
@@ -485,7 +640,7 @@
         
         // Check if we should show workflow status instead
         const state = ScrapingState.get();
-        if (state.workflow && ScrapingState.isActive() && type !== 'error') {
+        if (state.workflow && state.profileUrl && type !== 'error') {
             const workflowInfo = `🔄 ${state.workflow} → ${state.step}`;
             statusText.innerHTML = `
                 <div style="font-weight: bold; color: #4CAF50;">${workflowInfo}</div>
@@ -714,11 +869,14 @@
         } catch (error) {
             updateStatus(`Error in full scrape: ${error.message}`, 'error');
         }
-    }    // Auto navigation with workflow management
+    }
+    
+    // Auto navigation with workflow management
     async function autoNext() {
-        const state = ScrapingState.get();
+        const currentState = ScrapingState.get();
         
-        if (isRunning && !state.autoMode) {
+        // Toggle auto mode if already running
+        if (isRunning && !currentState.autoMode) {
             isRunning = false;
             ScrapingState.set({ autoMode: false });
             updateStatus('Auto scraping stopped', 'info');
@@ -731,8 +889,12 @@
 
         try {
             // Check if we're continuing a workflow
-            if (state.workflow && state.isRecent() && ScrapingState.isActive()) {
+            if (currentState.workflow && currentState.isRecent() && ScrapingState.isActive()) {
+                console.log('🔄 Auto Mode: Continuing existing workflow');
                 await continueWorkflow();
+                // Don't return here - if continueWorkflow completes the workflow,
+                // autoNext will be called again by completeWorkflowAndNext
+                // This prevents premature exit from auto mode
                 return;
             }
 
@@ -761,35 +923,33 @@
         } catch (error) {
             updateStatus(`Error in auto-next: ${error.message}`, 'error');
             isRunning = false;
-            ScrapingState.set({ autoMode: false });
-        }
+            ScrapingState.set({ autoMode: false });        }
     }
     
     // Continue existing workflow
     async function continueWorkflow() {
-        const state = ScrapingState.get();
+        const workflowState = ScrapingState.get();
         const currentUrl = getCurrentProfileUrl();
-        
-        updateStatus(`Continuing workflow: ${state.workflow} - ${state.step}`, 'info');
+          updateStatus(`Continuing workflow: ${workflowState.workflow} - ${workflowState.step}`, 'info');
         
         // Verify we're on the correct profile
-        if (state.profileUrl && currentUrl !== state.profileUrl) {
-            updateStatus(`URL mismatch, navigating back to ${state.profileUrl}`, 'warning');
+        if (workflowState.profileUrl && currentUrl !== workflowState.profileUrl) {
+            updateStatus(`URL mismatch, navigating back to ${workflowState.profileUrl}`, 'warning');
             setTimeout(() => {
-                window.location.href = state.profileUrl;
+                window.location.href = workflowState.profileUrl;
             }, 1000);
             return;
         }
         
-        switch (state.workflow) {
+        switch (workflowState.workflow) {
             case 'full_scrape':
-                await executeFullScrapeWorkflow(state.step);
+                await executeFullScrapeWorkflow(workflowState.step);
                 break;
             case 'friends_only':
-                await executeFriendsWorkflow(state.step);
+                await executeFriendsWorkflow(workflowState.step);
                 break;
             case 'about_only':
-                await executeAboutWorkflow(state.step);
+                await executeAboutWorkflow(workflowState.step);
                 break;
             default:
                 updateStatus(`Unknown workflow: ${state.workflow}`, 'error');
@@ -916,15 +1076,21 @@
     
     // Complete workflow and move to next profile
     async function completeWorkflowAndNext() {
-        const state = ScrapingState.get();
-        updateStatus(`Completed workflow for ${state.profileUrl}`, 'success');
+        const currentState = ScrapingState.get();
+        updateStatus(`Completed workflow for ${currentState.profileUrl}`, 'success');
         
-        // Clear current workflow
+        // Keep auto mode flag active but clear the current workflow
+        const wasAutoMode = currentState.autoMode;
         ScrapingState.clear();
         
-        // If auto mode is still on, continue to next profile
-        if (state.autoMode) {
-            updateStatus('Moving to next profile...', 'info');
+        // If we were in auto mode, restore it and continue
+        if (wasAutoMode) {
+            // Explicitly set auto mode again to ensure it persists
+            ScrapingState.set({ autoMode: true });
+            isRunning = true;
+            
+            console.log('🔄 Auto Mode: Continuing to next profile in queue');
+            updateStatus('Moving to next profile in queue...', 'info');
             setTimeout(() => autoNext(), 2000);
         } else {
             isRunning = false;
@@ -1291,125 +1457,14 @@
             updateStatus(`❌ Backend connection failed: ${error.message}`, 'error');
             console.error('Backend connection error:', error);
             return false;
-        }
-    }    // Initialize
+        }    }
+    
+    // Initialize
     setTimeout(() => {
         createUI();
         updateProfileDisplay(); // Check for existing annotations on load
         
-        // Global functions for console access
-        window.FB_Scraper = {
-            getConvictions: () => ProfileAnnotations.getConvictions(),
-            exportConvictions: () => ProfileAnnotations.exportConvictionsCSV(),
-            getConvictionStats: () => {
-                const convictions = ProfileAnnotations.getConvictions();
-                const stats = {
-                    total: Object.keys(convictions).length,
-                    byType: {},
-                    byRisk: {},
-                    byCrime: {}
-                };
-                
-                for (const conviction of Object.values(convictions)) {
-                    const conv = conviction.convictionDetails || {};
-                    
-                    // Count by conviction type
-                    const type = conv.type || 'unknown';
-                    stats.byType[type] = (stats.byType[type] || 0) + 1;
-                    
-                    // Count by risk level
-                    const risk = conviction.risk || 'unknown';
-                    stats.byRisk[risk] = (stats.byRisk[risk] || 0) + 1;
-                    
-                    // Count by crime category
-                    const crime = conv.crimeCategory || 'unknown';
-                    stats.byCrime[crime] = (stats.byCrime[crime] || 0) + 1;
-                }
-                
-                console.table(stats);
-                return stats;
-            },
-            exportAllAnnotations: () => ProfileAnnotations.export(),
-            clearAllAnnotations: () => {
-                if (confirm('Are you sure you want to clear ALL profile annotations? This cannot be undone.')) {
-                    GM_setValue('profileAnnotations', {});
-                    updateProfileDisplay();
-                    console.log('All annotations cleared');
-                }
-            },
-            loadFromBackend: async () => {
-                try {
-                    updateStatus('Loading annotations from backend...', 'info');
-                    const response = await sendToAPI('/annotations', null, 'GET');
-                    
-                    if (response && response.annotations) {
-                        const localAnnotations = GM_getValue('profileAnnotations', {});
-                        
-                        // Merge backend annotations with local ones
-                        const mergedAnnotations = { ...response.annotations, ...localAnnotations };
-                        GM_setValue('profileAnnotations', mergedAnnotations);
-                        
-                        console.log(`📥 Loaded ${Object.keys(response.annotations).length} annotations from backend`);
-                        updateStatus(`Loaded ${Object.keys(response.annotations).length} annotations from backend`, 'success');
-                        updateProfileDisplay();
-                        return response.annotations;
-                    }
-                } catch (error) {
-                    console.error('Error loading annotations from backend:', error);
-                    updateStatus('Failed to load annotations from backend', 'error');
-                }
-            },
-            getBackendConvictions: async () => {
-                try {
-                    updateStatus('Fetching convictions from backend...', 'info');
-                    const response = await sendToAPI('/convictions', null, 'GET');
-                    
-                    if (response && response.convictions) {
-                        console.log(`Found ${response.count} convictions in backend:`);
-                        console.table(response.convictions);
-                        updateStatus(`Found ${response.count} convictions in backend`, 'success');
-                        return response.convictions;
-                    } else {
-                        updateStatus('No convictions found in backend', 'info');
-                    }
-                } catch (error) {
-                    console.error('Error fetching backend convictions:', error);
-                    updateStatus('Failed to fetch convictions from backend', 'error');
-                }
-            },
-            syncToBackend: async () => {
-                try {
-                    updateStatus('Syncing annotations to backend...', 'info');
-                    const localAnnotations = GM_getValue('profileAnnotations', {});
-                    let syncCount = 0;
-                    
-                    for (const [url, annotation] of Object.entries(localAnnotations)) {
-                        try {
-                            await sendToAPI('/annotations', {
-                                profileUrl: url,
-                                annotation: annotation
-                            });
-                            syncCount++;
-                        } catch (error) {
-                            console.error(`Failed to sync ${url}:`, error);
-                        }
-                    }
-                    
-                    console.log(`Synced ${syncCount} annotations to backend`);
-                    updateStatus(`Synced ${syncCount} annotations to backend`, 'success');
-                    return syncCount;
-                } catch (error) {
-                    console.error('Error syncing to backend:', error);
-                    updateStatus('Failed to sync annotations to backend', 'error');
-                }
-            }
-        };
-        
-        console.log('FB Scraper initialized. Available commands:');
-        console.log('- FB_Scraper.getConvictions() - Get all confirmed convictions');
-        console.log('- FB_Scraper.exportConvictions() - Export convictions as CSV');
-        console.log('- FB_Scraper.getConvictionStats() - Show conviction statistics');
-        console.log('- FB_Scraper.exportAllAnnotations() - Export all annotations as JSON');
+        // Note: FB_Scraper is defined at the end of the script with all available commands
         
         // Check for existing workflow state
         const state = ScrapingState.get();
@@ -1430,7 +1485,8 @@
                 ScrapingState.clear();
             }
         }
-          // Test backend connection on startup
+        
+        // Test backend connection on startup
         setTimeout(() => {
             testBackendConnection();
             // Load annotations from backend after connection test
@@ -1444,6 +1500,7 @@
             setTimeout(autoNext, 3000);
         }
     }, 2000);
+    
 
     // Show annotation dialog
     function showAnnotationDialog() {
@@ -1789,9 +1846,9 @@
                     <strong>Risk:</strong> <span style="color: ${riskColor}; font-weight: bold;">${annotation.risk.toUpperCase()}</span>
                 </div>
                 ${annotation.source ? `<div style="margin-bottom: 4px;"><strong>Source:</strong> ${annotation.source}</div>` : ''}
-                ${annotation.notes ? `<div style="margin-bottom: 6px;"><strong>Notes:</strong> ${annotation.notes}</div>` : ''}
-                <div style="font-size: 10px; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 4px; margin-top: 6px;">
+                ${annotation.notes ? `<div style="margin-bottom:  6px;"><strong>Notes:</strong> ${annotation.notes}</div>` : ''}                <div style="font-size: 10px; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 4px; margin-top: 6px;">
                     Updated: ${new Date(annotation.lastUpdated).toLocaleDateString()}
+                    ${annotation.savedToBackend ? '<span style="background: #3498db; color: white; padding: 1px 4px; border-radius: 3px; margin-left: 5px;">BACKEND</span>' : '<span style="background: #7f8c8d; color: white; padding: 1px 4px; border-radius: 3px; margin-left: 5px;">LOCAL</span>'}
                 </div>
             `;
             
@@ -1807,124 +1864,27 @@
             }
         }
     }
-    
-    // Initialize the scraper
+      // Initialize the scraper
     createUI();
     updateProfileDisplay(); // Check for existing annotations on load
     
     // Global functions for console access
     window.FB_Scraper = {
         getConvictions: () => ProfileAnnotations.getConvictions(),
+        getBackendConvictions: () => ProfileAnnotations.getBackendConvictions(),
         exportConvictions: () => ProfileAnnotations.exportConvictionsCSV(),
-        getConvictionStats: () => {
-            const convictions = ProfileAnnotations.getConvictions();
-            const stats = {
-                total: Object.keys(convictions).length,
-                byType: {},
-                byRisk: {},
-                byCrime: {}
-            };
-            
-            for (const conviction of Object.values(convictions)) {
-                const conv = conviction.convictionDetails || {};
-                
-                // Count by conviction type
-                const type = conv.type || 'unknown';
-                stats.byType[type] = (stats.byType[type] || 0) + 1;
-                
-                // Count by risk level
-                const risk = conviction.risk || 'unknown';
-                stats.byRisk[risk] = (stats.byRisk[risk] || 0) + 1;
-                
-                // Count by crime category
-                const crime = conv.crimeCategory || 'unknown';
-                stats.byCrime[crime] = (stats.byCrime[crime] || 0) + 1;
-            }
-            
-            console.table(stats);
-            return stats;
-        },
-        exportAllAnnotations: () => ProfileAnnotations.export(),
-        clearAllAnnotations: () => {
-            if (confirm('Are you sure you want to clear ALL profile annotations? This cannot be undone.')) {
-                GM_setValue('profileAnnotations', {});
-                updateProfileDisplay();
-                console.log('All annotations cleared');
-            }
-        },
-        loadFromBackend: async () => {
-            try {
-                updateStatus('Loading annotations from backend...', 'info');
-                const response = await sendToAPI('/annotations', null, 'GET');
-                
-                if (response && response.annotations) {
-                    const localAnnotations = GM_getValue('profileAnnotations', {});
-                    
-                    // Merge backend annotations with local ones
-                    const mergedAnnotations = { ...response.annotations, ...localAnnotations };
-                    GM_setValue('profileAnnotations', mergedAnnotations);
-                    
-                    console.log(`📥 Loaded ${Object.keys(response.annotations).length} annotations from backend`);
-                    updateStatus(`Loaded ${Object.keys(response.annotations).length} annotations from backend`, 'success');
-                    updateProfileDisplay();
-                    return response.annotations;
-                }
-            } catch (error) {
-                console.error('Error loading annotations from backend:', error);
-                updateStatus('Failed to load annotations from backend', 'error');
-            }
-        },
-        getBackendConvictions: async () => {
-            try {
-                updateStatus('Fetching convictions from backend...', 'info');
-                const response = await sendToAPI('/convictions', null, 'GET');
-                
-                if (response && response.convictions) {
-                    console.log(`Found ${response.count} convictions in backend:`);
-                    console.table(response.convictions);
-                    updateStatus(`Found ${response.count} convictions in backend`, 'success');
-                    return response.convictions;
-                } else {
-                    updateStatus('No convictions found in backend', 'info');
-                }
-            } catch (error) {
-                console.error('Error fetching backend convictions:', error);
-                updateStatus('Failed to fetch convictions from backend', 'error');
-            }
-        },
-        syncToBackend: async () => {
-            try {
-                updateStatus('Syncing annotations to backend...', 'info');
-                const localAnnotations = GM_getValue('profileAnnotations', {});
-                let syncCount = 0;
-                
-                for (const [url, annotation] of Object.entries(localAnnotations)) {
-                    try {
-                        await sendToAPI('/annotations', {
-                            profileUrl: url,
-                            annotation: annotation
-                        });
-                        syncCount++;
-                    } catch (error) {
-                        console.error(`Failed to sync ${url}:`, error);
-                    }
-                }
-                
-                console.log(`Synced ${syncCount} annotations to backend`);
-                updateStatus(`Synced ${syncCount} annotations to backend`, 'success');
-                return syncCount;
-            } catch (error) {
-                console.error('Error syncing to backend:', error);
-                updateStatus('Failed to sync annotations to backend', 'error');
-            }
-        }    };
-    
-    console.log('FB Scraper initialized. Available commands:');
+        syncToBackend: () => ProfileAnnotations.syncToBackend(),
+        loadFromBackend: () => ProfileAnnotations.loadFromBackend(),
+        getConvictionStats: () => ProfileAnnotations.getConvictionStats(),
+        resetToBackend: () => ProfileAnnotations.resetToBackend(),
+        exportAllAnnotations: () => ProfileAnnotations.export()
+    };
+      console.log('FB Scraper initialized. Available commands:');
     console.log('- FB_Scraper.getConvictions() - Get all confirmed convictions');
     console.log('- FB_Scraper.exportConvictions() - Export convictions as CSV');
     console.log('- FB_Scraper.getConvictionStats() - Show conviction statistics');
-    console.log('- FB_Scraper.exportAllAnnotations() - Export all annotations as JSON');
-    console.log('- FB_Scraper.syncToBackend() - Sync all annotations to backend server');
+    console.log('- FB_Scraper.exportAllAnnotations() - Export all annotations as JSON');    console.log('- FB_Scraper.syncToBackend() - Sync all annotations to backend server');
     console.log('- FB_Scraper.loadFromBackend() - Load annotations from backend server');
     console.log('- FB_Scraper.getBackendConvictions() - Show convictions stored in backend');
-})();
+    console.log('- FB_Scraper.resetToBackend() - Clear local annotations and reload from backend');
+})(); // End of IIFE
