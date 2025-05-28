@@ -14,5 +14,15 @@
     "timestamp": 1748397454817,
     "lastUpdated": "2025-05-28T01:57:34.817Z",
     "savedToBackend": true
+  },
+  "https://www.facebook.com/dustin.hahne.56": {
+    "category": "public-record",
+    "source": "",
+    "notes": "arrested child abuse",
+    "risk": "high",
+    "profileName": "Dustin Hahne",
+    "timestamp": 1748399399757,
+    "lastUpdated": "2025-05-28T02:29:59.757Z",
+    "savedToBackend": true
   }
 }

@@ -1001,8 +1001,9 @@
                 }, 3000);
                 return;
             }            // Get next URL from queue with enhanced retry logic
-            console.log(`🔍 Auto Mode: Requesting next URL with maxDepth=${CONFIG.MAX_DEPTH}`);
-            updateStatus('Getting next profile from queue...', 'info');
+            // Use currentDepth instead of CONFIG.MAX_DEPTH to stay at current level
+            console.log(`🔍 Auto Mode: Requesting next URL at depth ${currentDepth} (maxDepth limit: ${CONFIG.MAX_DEPTH})`);
+            updateStatus(`Getting next profile from queue at depth ${currentDepth}...`, 'info');
             
             let response;
             let retryCount = 0;
@@ -1010,7 +1011,8 @@
             
             while (retryCount < maxRetries) {
                 try {
-                    response = await sendToAPI(`/scrape/next?maxDepth=${CONFIG.MAX_DEPTH}`, null, 'GET');
+                    // Use currentDepth for filtering, not CONFIG.MAX_DEPTH
+                    response = await sendToAPI(`/scrape/next?maxDepth=${currentDepth}`, null, 'GET');
                     if (response && response.url) {
                         break;
                     } else if (response && response.message) {
@@ -1029,10 +1031,33 @@
                 // Lock state during transition
                 ScrapingState.lock();
                 
-                // Update current depth to match the URL we're about to scrape
-                const newDepth = response.depth || 1;
-                currentDepth = newDepth;
-                GM_setValue('currentDepth', currentDepth);
+                // Validate the returned depth matches our current depth
+                const returnedDepth = response.depth || 1;
+                if (returnedDepth !== currentDepth) {
+                    console.warn(`⚠️ API returned URL at depth ${returnedDepth}, but we requested depth ${currentDepth}`);
+                    console.warn(`This may indicate the queue only has URLs at higher depths`);
+                    
+                    // Only update depth if it makes sense (not jumping too high)
+                    if (returnedDepth <= CONFIG.MAX_DEPTH && returnedDepth <= currentDepth + 1) {
+                        console.log(`🔄 Accepting depth change from ${currentDepth} to ${returnedDepth}`);
+                        currentDepth = returnedDepth;
+                        GM_setValue('currentDepth', currentDepth);
+                    } else {
+                        console.warn(`❌ Rejecting depth ${returnedDepth} - too high or invalid`);
+                        ScrapingState.unlock();
+                        updateStatus(`Skipping URL at invalid depth ${returnedDepth}`, 'warning');
+                        
+                        // Try again but only look at exactly current depth
+                        setTimeout(() => {
+                            if (ScrapingState.get().autoMode) {
+                                autoNext();
+                            }
+                        }, 3000);
+                        return;
+                    }
+                } else {
+                    console.log(`✅ Depth validation passed: ${returnedDepth} matches expected ${currentDepth}`);
+                }
                 
                 console.log(`✅ Auto Mode: Got next URL - ${response.url} (depth ${currentDepth})`);
                 console.log(`📊 Queue status: ${response.remaining || 0} remaining, ${response.availableAtDepth || 0} at current depth`);
@@ -1077,19 +1102,58 @@
                         }, 5000);
                     }
                 }, 2000);
+                  } else {
+                console.log(`ℹ️ Auto Mode: No more URLs available at depth ${currentDepth}`);
                 
-            } else {
-                console.log('ℹ️ Auto Mode: No more URLs available in queue');
-                updateStatus('No more URLs in queue - Auto mode paused', 'info');
+                // Check if we should try the next depth level
+                if (currentDepth < CONFIG.MAX_DEPTH) {
+                    console.log(`🔄 Auto Mode: Checking if we should move to next depth level (${currentDepth + 1})`);
+                    
+                    // Try to get a URL from the next depth level
+                    try {
+                        const nextDepthResponse = await sendToAPI(`/scrape/next?maxDepth=${currentDepth + 1}&minDepth=${currentDepth + 1}`, null, 'GET');
+                        if (nextDepthResponse && nextDepthResponse.url) {
+                            console.log(`✅ Found URLs at depth ${currentDepth + 1}, advancing depth`);
+                            currentDepth = currentDepth + 1;
+                            GM_setValue('currentDepth', currentDepth);
+                            
+                            // Update UI
+                            try {
+                                const depthDisplay = document.getElementById('current-depth');
+                                const depthValue = document.getElementById('depth-value');
+                                const depthSlider = document.getElementById('depth-slider');
+                                if (depthDisplay) depthDisplay.textContent = currentDepth;
+                                if (depthValue) depthValue.textContent = currentDepth;
+                                if (depthSlider) depthSlider.value = currentDepth;
+                            } catch (e) {
+                                console.warn('Could not update UI depth display:', e);
+                            }
+                            
+                            updateStatus(`Advanced to depth ${currentDepth}, retrying...`, 'info');
+                            
+                            // Retry autoNext with new depth
+                            setTimeout(() => {
+                                if (ScrapingState.get().autoMode) {
+                                    autoNext();
+                                }
+                            }, 2000);
+                            return;
+                        }
+                    } catch (error) {
+                        console.warn(`Could not check next depth level: ${error.message}`);
+                    }
+                }
+                
+                updateStatus(`No more URLs in queue at depth ${currentDepth} - Auto mode paused`, 'info');
                 
                 // Don't stop auto mode completely, just pause it
                 isRunning = false;
                 ScrapingState.set({ 
-                    lastAction: 'queue_empty_paused',
+                    lastAction: `queue_empty_at_depth_${currentDepth}`,
                     transitionLock: false 
                 });
                 
-                updateStatus('Auto mode paused - no URLs available. Checking again in 30 seconds...', 'warning');
+                updateStatus(`Auto mode paused - no URLs available at depth ${currentDepth}. Checking again in 30 seconds...`, 'warning');
                 
                 // Check again in 30 seconds with exponential backoff
                 let recheckDelay = 30000;
@@ -1100,12 +1164,12 @@
                 
                 setTimeout(() => {
                     if (ScrapingState.get().autoMode && !isRunning) {
-                        console.log(`🔄 Auto Mode: Recheck attempt ${recheckAttempt + 1}, checking for new queue items...`);
+                        console.log(`🔄 Auto Mode: Recheck attempt ${recheckAttempt + 1}, checking for new queue items at depth ${currentDepth}...`);
                         GM_setValue('recheckAttempt', recheckAttempt + 1);
                         autoNext();
                     }
                 }, recheckDelay);
-            }        } catch (error) {
+            }} catch (error) {
             console.error('❌ Auto Mode: Error in autoNext:', error);
             updateStatus(`Auto mode error: ${error.message} - Retrying in 10 seconds`, 'error');
             
@@ -2392,13 +2456,71 @@
             });
             console.log('✅ Stuck state cleared');
         },
-        
-        startDebugMode: () => {
+          startDebugMode: () => {
             console.log('🐛 Starting debug mode - will log every 10 seconds');
             setInterval(() => {
                 const state = ScrapingState.get();
                 console.log(`🐛 Debug: autoMode=${state.autoMode}, isRunning=${isRunning}, workflow=${state.workflow}, step=${state.step}, transitionLock=${state.transitionLock}, lastAction=${state.lastAction}`);
             }, 10000);
+        },
+        
+        // Depth management functions
+        setCurrentDepth: (newDepth) => {
+            if (newDepth < 1 || newDepth > CONFIG.MAX_DEPTH) {
+                console.error(`❌ Invalid depth: ${newDepth}. Must be between 1 and ${CONFIG.MAX_DEPTH}`);
+                return false;
+            }
+            console.log(`🔄 Setting current depth from ${currentDepth} to ${newDepth}`);
+            currentDepth = newDepth;
+            GM_setValue('currentDepth', currentDepth);
+            
+            // Update UI
+            try {
+                const depthDisplay = document.getElementById('current-depth');
+                const depthValue = document.getElementById('depth-value');
+                const depthSlider = document.getElementById('depth-slider');
+                if (depthDisplay) depthDisplay.textContent = currentDepth;
+                if (depthValue) depthValue.textContent = currentDepth;
+                if (depthSlider) depthSlider.value = currentDepth;
+            } catch (e) {
+                console.warn('Could not update UI depth display:', e);
+            }
+            
+            console.log(`✅ Current depth set to ${currentDepth}`);
+            return true;
+        },
+        
+        getCurrentDepth: () => {
+            console.log(`Current depth: ${currentDepth}`);
+            return currentDepth;
+        },
+        
+        checkQueueAtDepth: async (depth) => {
+            try {
+                const response = await sendToAPI(`/scrape/next?maxDepth=${depth}&minDepth=${depth}`, null, 'GET');
+                console.log(`Queue check at depth ${depth}:`, response);
+                return response;
+            } catch (error) {
+                console.error(`Error checking queue at depth ${depth}:`, error);
+                return null;
+            }
+        },
+        
+        showQueueStatus: async () => {
+            console.log('📊 Checking queue status across all depths...');
+            for (let d = 1; d <= CONFIG.MAX_DEPTH; d++) {
+                try {
+                    const response = await sendToAPI(`/scrape/next?maxDepth=${d}&minDepth=${d}`, null, 'GET');
+                    if (response && response.url) {
+                        console.log(`✅ Depth ${d}: Has URLs (next: ${response.url})`);
+                    } else {
+                        console.log(`⭕ Depth ${d}: No URLs available`);
+                    }
+                } catch (error) {
+                    console.log(`❌ Depth ${d}: Error checking - ${error.message}`);
+                }
+                await new Promise(resolve => setTimeout(resolve, 100)); // Small delay between requests
+            }
         }
     };      console.log('FB Scraper initialized. Available commands:');
     console.log('- FB_Scraper.getConvictions() - Get all confirmed convictions');
@@ -2414,7 +2536,13 @@
     console.log('- FB_Scraper.resetAutoMode() - Reset auto mode completely');
     console.log('- FB_Scraper.forceAutoNext() - Force start autoNext');
     console.log('- FB_Scraper.clearStuckState() - Clear stuck state locks');
-    console.log('- FB_Scraper.startDebugMode() - Enable continuous debug logging');// Enhanced auto mode heartbeat and recovery system
+    console.log('- FB_Scraper.startDebugMode() - Enable continuous debug logging');
+    console.log('');
+    console.log('📏 DEPTH MANAGEMENT COMMANDS:');
+    console.log('- FB_Scraper.getCurrentDepth() - Show current depth setting');
+    console.log('- FB_Scraper.setCurrentDepth(N) - Set current depth to N');
+    console.log('- FB_Scraper.checkQueueAtDepth(N) - Check if queue has URLs at depth N');
+    console.log('- FB_Scraper.showQueueStatus() - Show queue status for all depths');// Enhanced auto mode heartbeat and recovery system
     let lastHeartbeat = Date.now();
     let heartbeatInterval = null;
     let recoveryAttempts = 0;
@@ -2496,9 +2624,16 @@
             console.log('💓 Heartbeat: Stopped monitoring');
         }
     }
-    
-    function updateHeartbeat() {
+      function updateHeartbeat() {
         lastHeartbeat = Date.now();
         GM_setValue('lastHeartbeat', lastHeartbeat);
     }
+    
+    // Add verification message for depth progression
+    console.log('🎯 FB Scraper Loaded - Depth Progression Status:');
+    console.log(`   Current Depth: ${currentDepth}`);
+    console.log('   Expected Progression: Initial Profile (1) → Friends (2) → Friends of Friends (3)');
+    console.log('   Use setCurrentDepth(1) to reset to start from initial profiles');
+    console.log('   Use getCurrentDepth() to check current depth');
+    console.log('   Use showQueueStatus() to see queue distribution');
 })(); // End of IIFE
