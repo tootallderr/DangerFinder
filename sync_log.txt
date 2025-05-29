@@ -1620,3 +1620,156 @@ M  visualizer/visualizer.js
    9516489..ac51fb4  master -> master
 2025-05-28 20:49:01,382 - INFO - ✅ Successfully pushed changes
 2025-05-28 20:49:01,382 - INFO - 🎉 Sync completed successfully
+2025-05-28 21:40:54,662 - INFO - 🚀 Starting GitHub sync process
+2025-05-28 21:40:54,662 - INFO - Repository path: c:\Users\GEorg\Desktop\DangerFinder
+2025-05-28 21:40:54,699 - INFO - 📦 Updating existing Git repository
+2025-05-28 21:40:54,736 - INFO - ✅ Origin remote already configured correctly
+2025-05-28 21:40:54,736 - INFO - 📁 Checking required directories
+2025-05-28 21:40:54,737 - INFO - 📎 Checking that all files are tracked
+2025-05-28 21:40:54,772 - WARNING - ⚠️ Core file doesn't exist: facebook-osint.user.js
+2025-05-28 21:40:54,773 - WARNING - ⚠️ Core file doesn't exist: DEPLOYMENT.md
+2025-05-28 21:40:54,773 - WARNING - ⚠️ Core file doesn't exist: facebook-osint-scraper.md
+2025-05-28 21:40:54,773 - WARNING - ⚠️ Core file doesn't exist: element_helpers.js
+2025-05-28 21:40:54,773 - WARNING - ⚠️ Core file doesn't exist: config.json
+2025-05-28 21:40:54,773 - INFO - Adding optional file: examples/
+2025-05-28 21:40:54,774 - INFO - Running: git add examples/
+2025-05-28 21:40:54,810 - WARNING - ⚠️ Missing core files: facebook-osint.user.js, DEPLOYMENT.md, facebook-osint-scraper.md, element_helpers.js, config.json
+2025-05-28 21:40:54,810 - INFO - 💡 These files should be created for a complete project
+2025-05-28 21:40:54,810 - WARNING - ⚠️ Some core files are missing. The project may be incomplete.
+2025-05-28 21:40:54,810 - INFO - 🔧 Applying optimal Git configuration
+2025-05-28 21:40:54,810 - INFO - Running: git config core.autocrlf true
+2025-05-28 21:40:54,847 - INFO - Running: git config diff.renameLimit 10000
+2025-05-28 21:40:54,886 - INFO - Running: git config diff.renames true
+2025-05-28 21:40:54,962 - INFO - ⬇️ Pulling latest changes from master
+2025-05-28 21:40:55,968 - INFO - Running: git pull origin master
+2025-05-28 21:40:56,978 - INFO - Already up to date.
+2025-05-28 21:40:56,978 - INFO - From https://github.com/tootallderr/DangerFinder
+ * branch            master     -> FETCH_HEAD
+2025-05-28 21:40:56,978 - INFO - ✅ Successfully pulled latest changes
+2025-05-28 21:40:56,978 - INFO - 📋 Generating changelog
+2025-05-28 21:40:57,052 - INFO - ✅ Changelog written to CHANGELOG.md
+2025-05-28 21:40:57,052 - INFO - Running: git add CHANGELOG.md
+2025-05-28 21:40:57,097 - INFO - Running: git add .
+2025-05-28 21:40:58,089 - WARNING - ⚠️ warning: in the working copy of 'backend/data/annotations.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/graph.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/manual_connections.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_amber_king_112481.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_kasaun_hughey.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61555173312081.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/queue.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/visited.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/danger_monitoring_report.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/danger_zone_history.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/dispatched_alerts.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/kid_safety_analysis.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/kid_safety_report.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/monitor_config.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_david_capretta_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_eric_yount_504992.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_ethan_paulsen_33.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_harold_mazon.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_harry_wheaton_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_kim_biro_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_matt_dick_10.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_melisa_capuzzi_mels_miracles.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_michael_slicker_94.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_missy_fleger.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_morgan_slicker.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_ruby_mae_runyan.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_sara_wiesen.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_shainaj84.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_sylver_nikkole.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_tabitha_martin_587.json', LF will be replaced by CRLF the next time Git touches it
+2025-05-28 21:40:58,133 - INFO - 📝 Changes to be committed:
+2025-05-28 21:40:58,134 - INFO - Running: git status --short
+2025-05-28 21:40:58,181 - INFO - M  CHANGELOG.md
+A  SYSTEM_STATUS_REPORT.md
+M  backend/data/annotations.json
+A  backend/data/danger_alerts.json
+A  backend/data/danger_monitoring_report.json
+A  backend/data/danger_zone_history.json
+A  backend/data/dispatched_alerts.json
+M  backend/data/graph.json
+A  backend/data/kid_safety_analysis.json
+A  backend/data/kid_safety_report.txt
+M  backend/data/manual_connections.json
+A  backend/data/monitor_config.json
+M  backend/data/profiles/https___www_facebook_com_amber_king_112481.json
+A  backend/data/profiles/https___www_facebook_com_david_capretta_2025.json
+A  backend/data/profiles/https___www_facebook_com_eric_yount_504992.json
+A  backend/data/profiles/https___www_facebook_com_ethan_paulsen_33.json
+A  backend/data/profiles/https___www_facebook_com_harold_mazon.json
+A  backend/data/profiles/https___www_facebook_com_harry_wheaton_2025.json
+M  backend/data/profiles/https___www_facebook_com_kasaun_hughey.json
+A  backend/data/profiles/https___www_facebook_com_kim_biro_2025.json
+A  backend/data/profiles/https___www_facebook_com_matt_dick_10.json
+A  backend/data/profiles/https___www_facebook_com_melisa_capuzzi_mels_miracles.json
+A  backend/data/profiles/https___www_facebook_com_michael_slicker_94.json
+A  backend/data/profiles/https___www_facebook_com_missy_fleger.json
+A  backend/data/profiles/https___www_facebook_com_morgan_slicker.json
+M  backend/data/profiles/https___www_facebook_com_profile_php_id_61555173312081.json
+A  backend/data/profiles/https___www_facebook_com_ruby_mae_runyan.json
+A  backend/data/profiles/https___www_facebook_com_sara_wiesen.json
+A  backend/data/profiles/https___www_facebook_com_shainaj84.json
+A  backend/data/profiles/https___www_facebook_com_sylver_nikkole.json
+A  backend/data/profiles/https___www_facebook_com_tabitha_martin_587.json
+M  backend/data/queue.json
+M  backend/data/visited.json
+A  docs/GRAVITATIONAL_PULL_SYSTEM.md
+M  package-lock.json
+M  package.json
+A  scripts/alert-dispatcher.js
+A  scripts/danger-zone-monitor.js
+A  scripts/integrated-safety-monitor.js
+A  scripts/kid-safety-analyzer.js
+A  scripts/safety-alert-dashboard.js
+A  scripts/test-danger-monitoring.js
+A  scripts/test-danger-pull.js
+MM sync_log.txt
+M  visualizer/index.html
+M  visualizer/visualizer.js
+2025-05-28 21:40:58,181 - INFO - 💾 Committing changes: 📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-28
+2025-05-28 21:40:58,181 - INFO - Running: git commit -m "📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-28"
+2025-05-28 21:40:58,631 - INFO - [master a1ac090] 📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-28
+ 46 files changed, 1251433 insertions(+), 15021 deletions(-)
+ create mode 100644 SYSTEM_STATUS_REPORT.md
+ create mode 100644 backend/data/danger_alerts.json
+ create mode 100644 backend/data/danger_monitoring_report.json
+ create mode 100644 backend/data/danger_zone_history.json
+ create mode 100644 backend/data/dispatched_alerts.json
+ create mode 100644 backend/data/kid_safety_analysis.json
+ create mode 100644 backend/data/kid_safety_report.txt
+ create mode 100644 backend/data/monitor_config.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_david_capretta_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_eric_yount_504992.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_ethan_paulsen_33.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_harold_mazon.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_harry_wheaton_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_kim_biro_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_matt_dick_10.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_melisa_capuzzi_mels_miracles.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_michael_slicker_94.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_missy_fleger.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_morgan_slicker.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_ruby_mae_runyan.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_sara_wiesen.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_shainaj84.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_sylver_nikkole.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_tabitha_martin_587.json
+ create mode 100644 docs/GRAVITATIONAL_PULL_SYSTEM.md
+ create mode 100644 scripts/alert-dispatcher.js
+ create mode 100644 scripts/danger-zone-monitor.js
+ create mode 100644 scripts/integrated-safety-monitor.js
+ create mode 100644 scripts/kid-safety-analyzer.js
+ create mode 100644 scripts/safety-alert-dashboard.js
+ create mode 100644 scripts/test-danger-monitoring.js
+ create mode 100644 scripts/test-danger-pull.js
+2025-05-28 21:40:58,668 - INFO - ⬆️ Pushing to master
+2025-05-28 21:40:58,668 - INFO - Running: git push origin master
+2025-05-28 21:41:07,249 - WARNING - ⚠️ remote: warning: See https://gh.io/lfs for more information.        
+remote: warning: File backend/data/danger_zone_history.json is 76.87 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB        
+remote: warning: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.        
+To https://github.com/tootallderr/DangerFinder.git
+   ac51fb4..a1ac090  master -> master
+2025-05-28 21:41:07,249 - INFO - ✅ Successfully pushed changes
+2025-05-28 21:41:07,249 - INFO - 🎉 Sync completed successfully

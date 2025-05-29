@@ -61,3 +61,31 @@ exports/*.csv
 
 # Tampermonkey backups
 *.backup.js
+
+# Backend and server
+backend/data/
+backend/*.log
+backend/*.tmp
+backend/*.cache
+
+# Scripts
+scripts/*.log
+scripts/*.tmp
+scripts/*.cache
+
+# Tampermonkey scripts (ignore backups, keep user scripts)
+tampermonkey/*.backup.js
+tampermonkey/*.log
+
+# Visualizer output
+visualizer/*.log
+visualizer/*.tmp
+visualizer/*.cache
+
+# Jupyter Notebooks
+*.ipynb
+
+# HTML debug/test files (optional, comment out if you want to keep them)
+debug-*.html
+simple-visualizer-test.html
+test-alias-functionality.html
