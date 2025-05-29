@@ -338,5 +338,235 @@
     "timestamp": 1748471573770,
     "lastUpdated": "2025-05-28T22:32:53.770Z",
     "savedToBackend": true
+  },
+  "https://www.facebook.com/profile.php?id=61557104054838": {
+    "demographic": "unknown",
+    "category": "demographic-annotation",
+    "timestamp": 1748480372252,
+    "lastUpdated": "2025-05-29T00:59:32.252Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/profile.php?id=61558958985298": {
+    "demographic": "unknown",
+    "category": "demographic-annotation",
+    "timestamp": 1748480372256,
+    "lastUpdated": "2025-05-29T00:59:32.256Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/profile.php?id=61568498158577": {
+    "demographic": "unknown",
+    "category": "demographic-annotation",
+    "timestamp": 1748480372259,
+    "lastUpdated": "2025-05-29T00:59:32.259Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/profile.php?id=61559910172977": {
+    "demographic": "unknown",
+    "category": "demographic-annotation",
+    "timestamp": 1748480372262,
+    "lastUpdated": "2025-05-29T00:59:32.262Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/profile.php?id=61555173312081": {
+    "demographic": "unknown",
+    "category": "demographic-annotation",
+    "timestamp": 1748480372265,
+    "lastUpdated": "2025-05-29T00:59:32.265Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/kasaun.hughey": {
+    "category": "other",
+    "source": "",
+    "notes": "suspicious, i believe this is jon sloan's fake alias. Also note that at some point it was a black man and then became current old white man alias.",
+    "risk": "low",
+    "profileName": "Dumbway Hound",
+    "timestamp": 1748481021164,
+    "lastUpdated": "2025-05-29T01:10:21.164Z",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/morgan.slicker": {
+    "category": "investigation",
+    "source": "https://www.wfmj.com/story/48898216/west-middlesex-family-accused-of-intimidating-teen-victims-in-alleged-sex-crime-case?clienttype=mobile&config=H264",
+    "notes": "https://www.wfmj.com/story/48898216/west-middlesex-family-accused-of-intimidating-teen-victims-in-alleged-sex-crime-case?clienttype=mobile&config=H264",
+    "risk": "low",
+    "profileName": "Morgan Slicker",
+    "timestamp": 1748481916301,
+    "lastUpdated": "2025-05-29T01:25:16.301Z",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/michael.slicker.94": {
+    "category": "other",
+    "source": "https://www.wfmj.com/story/48898216/west-middlesex-family-accused-of-intimidating-teen-victims-in-alleged-sex-crime-case?clienttype=mobile&config=H264",
+    "notes": "https://www.wfmj.com/story/48898216/west-middlesex-family-accused-of-intimidating-teen-victims-in-alleged-sex-crime-case?clienttype=mobile&config=H264",
+    "risk": "medium",
+    "profileName": "Michael Slicker",
+    "timestamp": 1748481946838,
+    "lastUpdated": "2025-05-29T01:25:46.838Z",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/profile.php?id=100063644141670": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732166,
+    "lastUpdated": "2025-05-29T01:38:52.166Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/nicole.marie.bubbles": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732171,
+    "lastUpdated": "2025-05-29T01:38:52.171Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/JonSloan69": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732174,
+    "lastUpdated": "2025-05-29T01:38:52.174Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/amy.peterson.399": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732178,
+    "lastUpdated": "2025-05-29T01:38:52.178Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/joey.arduckle": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732181,
+    "lastUpdated": "2025-05-29T01:38:52.181Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/samantha.schriner": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732184,
+    "lastUpdated": "2025-05-29T01:38:52.184Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/kenneth.hites.2025": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732187,
+    "lastUpdated": "2025-05-29T01:38:52.187Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/sonya.frantz.161": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732190,
+    "lastUpdated": "2025-05-29T01:38:52.190Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/chris.knauf.12": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732194,
+    "lastUpdated": "2025-05-29T01:38:52.194Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/christopher.adams.35": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732197,
+    "lastUpdated": "2025-05-29T01:38:52.197Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/scott.schriner.2025": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732200,
+    "lastUpdated": "2025-05-29T01:38:52.200Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/coolManjon": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732203,
+    "lastUpdated": "2025-05-29T01:38:52.203Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/profile.php?id=61573523534821": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732206,
+    "lastUpdated": "2025-05-29T01:38:52.206Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/profile.php?id=61559234075838": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732210,
+    "lastUpdated": "2025-05-29T01:38:52.210Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/profile.php?id=61569750644479": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732213,
+    "lastUpdated": "2025-05-29T01:38:52.213Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/profile.php?id=61558606318327": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732216,
+    "lastUpdated": "2025-05-29T01:38:52.216Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/profile.php?id=61574596162002": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732219,
+    "lastUpdated": "2025-05-29T01:38:52.219Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/jon.sloan64": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732222,
+    "lastUpdated": "2025-05-29T01:38:52.222Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/jon.sloan65": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732225,
+    "lastUpdated": "2025-05-29T01:38:52.225Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/jon.sloan.2024": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748482732228,
+    "lastUpdated": "2025-05-29T01:38:52.228Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
   }
 }

@@ -1,0 +1,37 @@
+🚨 KID SAFETY ANALYSIS REPORT
+================================
+
+Analysis Date: 2025-05-29T01:00:57.443Z
+Total Children: 14
+Total Adults: 23
+Convicted Individuals: 1
+Safety Flags: 17
+
+⚠️ CRITICAL FINDINGS
+-------------------
+🎯 Adults Targeting Kids: 1
+  1. Chase Lockwood (24 kids, 80.0% ratio)
+
+🌀 Children in Danger Zones: 14
+   🟡 HIGH DANGER PULL: 14 children
+      1. Linda Kahena - Pull: 0.79 (1 danger sources)
+      2. Shopia Almeida  (Sho) - Pull: 0.79 (1 danger sources)
+      3. Allison Rollins  (Allie Kat) - Pull: 0.79 (1 danger sources)
+
+🗺️ Active Danger Zones: 2
+   1. HIGH_KID_TARGETING - 14 kids affected (Risk: 77.9)
+      Epicenter: Chase Lockwood (CRITICAL)
+   2. CONVICTED_PREDATOR - 0 kids affected (Risk: 25.5)
+      Epicenter: Dustin Hahne (CRITICAL)
+
+📋 RECOMMENDATIONS
+-----------------
+1. [CRITICAL] 1 adults show dangerous kid-targeting patterns
+   Action: Investigate these accounts immediately
+
+2. [HIGH] 14 children are in high-risk danger zones
+   Action: Provide safety education and monitor connections closely
+
+3. [HIGH] 2 high-risk danger zones identified
+   Action: Monitor all activity within these zones and track new connections
+

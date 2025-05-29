@@ -1,0 +1,44 @@
+[
+  {
+    "type": "SYSTEM_START",
+    "severity": "INFO",
+    "title": "Safety Monitoring System Started",
+    "description": "Integrated Safety Monitor has been started and is now actively monitoring for danger zones",
+    "details": {
+      "Monitoring Interval": "30000ms",
+      "Alerting Enabled": true,
+      "Dashboard Port": 3002
+    },
+    "recommendations": [
+      "Verify dashboard is accessible",
+      "Check alert dispatch channels",
+      "Monitor system logs for any issues"
+    ],
+    "id": "alert_1748482489137_y2auyaucc",
+    "timestamp": "2025-05-29T01:34:49.137Z",
+    "dispatched_channels": [
+      "console"
+    ]
+  },
+  {
+    "type": "MONITORING_ERROR",
+    "severity": "HIGH",
+    "title": "Monitoring Check Failed",
+    "description": "Safety monitoring check failed: this.monitor.runCheck is not a function",
+    "details": {
+      "Error Type": "TypeError",
+      "Error Message": "this.monitor.runCheck is not a function",
+      "Check Number": 1
+    },
+    "recommendations": [
+      "Check system logs for detailed error information",
+      "Verify network connectivity and data sources",
+      "Restart monitoring system if errors persist"
+    ],
+    "id": "alert_1748482253097_c7nfxtahk",
+    "timestamp": "2025-05-29T01:30:53.097Z",
+    "dispatched_channels": [
+      "console"
+    ]
+  }
+]

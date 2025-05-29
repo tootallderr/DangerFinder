@@ -1,0 +1,7 @@
+{
+  "monitoring_enabled": true,
+  "alert_email": null,
+  "check_interval_minutes": 0.1,
+  "keep_history_days": 30,
+  "auto_generate_reports": true
+}

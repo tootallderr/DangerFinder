@@ -1087,3 +1087,536 @@ M  tampermonkey/fb-scraper.user.js
    7a3e76f..9516489  master -> master
 2025-05-27 22:50:44,354 - INFO - ✅ Successfully pushed changes
 2025-05-27 22:50:44,355 - INFO - 🎉 Sync completed successfully
+2025-05-28 20:48:55,319 - INFO - 🚀 Starting GitHub sync process
+2025-05-28 20:48:55,319 - INFO - Repository path: c:\Users\GEorg\Desktop\DangerFinder
+2025-05-28 20:48:55,362 - INFO - 📦 Updating existing Git repository
+2025-05-28 20:48:55,405 - INFO - ✅ Origin remote already configured correctly
+2025-05-28 20:48:55,405 - INFO - 📁 Checking required directories
+2025-05-28 20:48:55,406 - INFO - 📎 Checking that all files are tracked
+2025-05-28 20:48:55,445 - WARNING - ⚠️ Core file doesn't exist: facebook-osint.user.js
+2025-05-28 20:48:55,445 - WARNING - ⚠️ Core file doesn't exist: DEPLOYMENT.md
+2025-05-28 20:48:55,445 - WARNING - ⚠️ Core file doesn't exist: facebook-osint-scraper.md
+2025-05-28 20:48:55,445 - WARNING - ⚠️ Core file doesn't exist: element_helpers.js
+2025-05-28 20:48:55,445 - WARNING - ⚠️ Core file doesn't exist: config.json
+2025-05-28 20:48:55,446 - INFO - Adding optional file: examples/
+2025-05-28 20:48:55,446 - INFO - Running: git add examples/
+2025-05-28 20:48:55,487 - WARNING - ⚠️ Missing core files: facebook-osint.user.js, DEPLOYMENT.md, facebook-osint-scraper.md, element_helpers.js, config.json
+2025-05-28 20:48:55,487 - INFO - 💡 These files should be created for a complete project
+2025-05-28 20:48:55,487 - WARNING - ⚠️ Some core files are missing. The project may be incomplete.
+2025-05-28 20:48:55,487 - INFO - 🔧 Applying optimal Git configuration
+2025-05-28 20:48:55,487 - INFO - Running: git config core.autocrlf true
+2025-05-28 20:48:55,528 - INFO - Running: git config diff.renameLimit 10000
+2025-05-28 20:48:55,573 - INFO - Running: git config diff.renames true
+2025-05-28 20:48:55,656 - INFO - ⬇️ Pulling latest changes from master
+2025-05-28 20:48:56,764 - INFO - Running: git pull origin master
+2025-05-28 20:48:57,938 - INFO - Already up to date.
+2025-05-28 20:48:57,938 - INFO - From https://github.com/tootallderr/DangerFinder
+ * branch            master     -> FETCH_HEAD
+2025-05-28 20:48:57,938 - INFO - ✅ Successfully pulled latest changes
+2025-05-28 20:48:57,938 - INFO - 📋 Generating changelog
+2025-05-28 20:48:58,023 - INFO - ✅ Changelog written to CHANGELOG.md
+2025-05-28 20:48:58,024 - INFO - Running: git add CHANGELOG.md
+2025-05-28 20:48:58,072 - INFO - Running: git add .
+2025-05-28 20:48:58,856 - WARNING - ⚠️ warning: in the working copy of 'backend/data/annotations.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/graph.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_cathy_culver_506577.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_chase_lockwood_82583.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_richard_parsons_803540.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/queue.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/visited.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/aliases.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/manual_connections.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_Ajsams2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_JonSloan69.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_StatelineFlooringandRemodels.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_UNITEDSTATESNAVYSEABEESCO156.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_XeXeE_SkItTlEzX.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_amber_gearhart_98.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_amber_king_112481.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_amy_peterson_399.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_andrew_fleeger_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_april_hughes_370177.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_april_milano_54.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_asd853_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_ashley_jones_778949.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_aubrianna_ashby.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_austin_isaiah_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_becky_schriner.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_bethene_bennett_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_brittany_eaken23.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_carrie_taylor_50552338.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_cassandra_lee_quatman_ferragonio.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_cathy_tury_3.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_chase_ball_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_chris_knauf_12.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_christopher_adams_35.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_chythiakate.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_coolManjon.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_cote_de_tali_pablo_270086.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_courtney_capan_3.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_danielle_ann_shonsky.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_danielle_hites_7.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_destiny_hooper_441773.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_diana_ayreswrights.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_dorothy_yerian_37.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_elizabeth_connors_201141.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_elizabeth_marie_hamby.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_george_merchant_742705.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_greg_hoovler_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_greg_hoovler_368162.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_hahne_burns.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_halee_grinavic.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_hellfire_demon_411116.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_hud_homes_service_389921.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_jean_hoaglandbuehrer.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_jeff_eakin_222897.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_jerry_hoagland_9.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_jessica_hoovler_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_jimmy_smith_425188.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_jmaravola.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_joey_arduckle.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_john_way_511331.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_joke_soper_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_jon_sloan64.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_jon_sloan65.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_jon_sloan_2024.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_jon_sloan_802336.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_josh_rivera_196957.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_josie_wassenberg.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_kasaun_hughey.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_kathleen_long_496405.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_kenneth_hites_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_kiara_mayye.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_linda_ayresguerrieri.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_linda_kahena.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_lisa_alexander_598004.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_lisaann_strouse.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_lisawalker662.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_mandy_gregory_3979.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_marie_kenzie_144505.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_marinam_gymnastic_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_marlene_parsons_144.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_marvin_meredith_796.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_mike_peterson_948833.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_mike_will_54922169.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_miranda_snackz_parsons.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_mk_blood_106.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_mohamed1878ahmed.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_momo_williams_296178.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_nick_phelps_897708.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_nicole_marie_bubbles.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_patty_adams_7549.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_patty_nocks_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_paul_culver_20190.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_pizza_lilian_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_princessmae_amandy.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_100006856440595.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_100013947759576.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_100063644141670.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_100077413130453.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_100080983495925.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_100082090243007.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_100088204451844.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_100089526782978.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_100092726051281.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61552184353076.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61552270134248.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61555173312081.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61556358533951.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61556405812060.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61556433560976.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61557104054838.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61558606318327.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61558958985298.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61559234075838.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61559910172977.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61568498158577.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61568680884652.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61568726008007.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61569750644479.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61571185625858.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61573523534821.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61574034098433.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61574596162002.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_profile_php_id_61576656053106.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_rebecca_lea_hunter.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_richard_parsons_422683.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_robbie_reed_162169.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_rose_milano_985904.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_ryan_n_dani_shonsky_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_samantha_schriner.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_samuel_aley_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_sandra_thomas_974371.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_scott_hites.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_scott_prestenbach.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_scott_schriner_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_seth_strock_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_shawn_winner_5.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_sohari_brebes_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_sonya_frantz_161.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_sophia_perez_548008.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_stephanie_ayresbenincase.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_steve_burton_page_278689.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_steve_private_817959.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_steven_masula.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_sum_mayye.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_tacssmile141.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_tasha_milano_7393.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_thusitha_gamage_520862.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_tiffany_mcintroy_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_tiffanymarie_mcfall.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_tommy_tatta_2025.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_twitchi2011.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_undertaker16146.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_wendy_ayres_5.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_ximena_castillo_2548.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_zoe_schriner_3.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/settings.json', LF will be replaced by CRLF the next time Git touches it
+2025-05-28 20:48:58,938 - INFO - 📝 Changes to be committed:
+2025-05-28 20:48:58,938 - INFO - Running: git status --short
+2025-05-28 20:48:59,015 - INFO - M  .github/instructions.md
+A  ALIAS_CONNECTION_IMPLEMENTATION_COMPLETE.md
+M  CHANGELOG.md
+A  FORCE_NEW_SEED_IMPLEMENTATION.md
+A  SETTINGS_PERSISTENCE_IMPLEMENTATION.md
+A  VISUALIZER_ENHANCEMENTS.md
+A  backend/data/aliases.json
+M  backend/data/annotations.json
+M  backend/data/graph.json
+A  backend/data/manual_connections.json
+A  backend/data/profiles/https___www_facebook_com_Ajsams2025.json
+A  backend/data/profiles/https___www_facebook_com_JonSloan69.json
+A  backend/data/profiles/https___www_facebook_com_StatelineFlooringandRemodels.json
+A  backend/data/profiles/https___www_facebook_com_UNITEDSTATESNAVYSEABEESCO156.json
+A  backend/data/profiles/https___www_facebook_com_XeXeE_SkItTlEzX.json
+A  backend/data/profiles/https___www_facebook_com_amber_gearhart_98.json
+A  backend/data/profiles/https___www_facebook_com_amber_king_112481.json
+A  backend/data/profiles/https___www_facebook_com_amy_peterson_399.json
+A  backend/data/profiles/https___www_facebook_com_andrew_fleeger_2025.json
+A  backend/data/profiles/https___www_facebook_com_april_hughes_370177.json
+A  backend/data/profiles/https___www_facebook_com_april_milano_54.json
+A  backend/data/profiles/https___www_facebook_com_asd853_2025.json
+A  backend/data/profiles/https___www_facebook_com_ashley_jones_778949.json
+A  backend/data/profiles/https___www_facebook_com_aubrianna_ashby.json
+A  backend/data/profiles/https___www_facebook_com_austin_isaiah_2025.json
+A  backend/data/profiles/https___www_facebook_com_becky_schriner.json
+A  backend/data/profiles/https___www_facebook_com_bethene_bennett_2025.json
+A  backend/data/profiles/https___www_facebook_com_brittany_eaken23.json
+A  backend/data/profiles/https___www_facebook_com_carrie_taylor_50552338.json
+A  backend/data/profiles/https___www_facebook_com_cassandra_lee_quatman_ferragonio.json
+M  backend/data/profiles/https___www_facebook_com_cathy_culver_506577.json
+A  backend/data/profiles/https___www_facebook_com_cathy_tury_3.json
+A  backend/data/profiles/https___www_facebook_com_chase_ball_2025.json
+M  backend/data/profiles/https___www_facebook_com_chase_lockwood_82583.json
+A  backend/data/profiles/https___www_facebook_com_chris_knauf_12.json
+A  backend/data/profiles/https___www_facebook_com_christopher_adams_35.json
+A  backend/data/profiles/https___www_facebook_com_chythiakate.json
+A  backend/data/profiles/https___www_facebook_com_coolManjon.json
+A  backend/data/profiles/https___www_facebook_com_cote_de_tali_pablo_270086.json
+A  backend/data/profiles/https___www_facebook_com_courtney_capan_3.json
+A  backend/data/profiles/https___www_facebook_com_danielle_ann_shonsky.json
+A  backend/data/profiles/https___www_facebook_com_danielle_hites_7.json
+A  backend/data/profiles/https___www_facebook_com_destiny_hooper_441773.json
+A  backend/data/profiles/https___www_facebook_com_diana_ayreswrights.json
+A  backend/data/profiles/https___www_facebook_com_dorothy_yerian_37.json
+A  backend/data/profiles/https___www_facebook_com_elizabeth_connors_201141.json
+A  backend/data/profiles/https___www_facebook_com_elizabeth_marie_hamby.json
+A  backend/data/profiles/https___www_facebook_com_george_merchant_742705.json
+A  backend/data/profiles/https___www_facebook_com_greg_hoovler_2025.json
+A  backend/data/profiles/https___www_facebook_com_greg_hoovler_368162.json
+A  backend/data/profiles/https___www_facebook_com_hahne_burns.json
+A  backend/data/profiles/https___www_facebook_com_halee_grinavic.json
+A  backend/data/profiles/https___www_facebook_com_hellfire_demon_411116.json
+A  backend/data/profiles/https___www_facebook_com_hud_homes_service_389921.json
+A  backend/data/profiles/https___www_facebook_com_jean_hoaglandbuehrer.json
+A  backend/data/profiles/https___www_facebook_com_jeff_eakin_222897.json
+A  backend/data/profiles/https___www_facebook_com_jerry_hoagland_9.json
+A  backend/data/profiles/https___www_facebook_com_jessica_hoovler_2025.json
+A  backend/data/profiles/https___www_facebook_com_jimmy_smith_425188.json
+A  backend/data/profiles/https___www_facebook_com_jmaravola.json
+A  backend/data/profiles/https___www_facebook_com_joey_arduckle.json
+A  backend/data/profiles/https___www_facebook_com_john_way_511331.json
+A  backend/data/profiles/https___www_facebook_com_joke_soper_2025.json
+A  backend/data/profiles/https___www_facebook_com_jon_sloan64.json
+A  backend/data/profiles/https___www_facebook_com_jon_sloan65.json
+A  backend/data/profiles/https___www_facebook_com_jon_sloan_2024.json
+A  backend/data/profiles/https___www_facebook_com_jon_sloan_802336.json
+A  backend/data/profiles/https___www_facebook_com_josh_rivera_196957.json
+A  backend/data/profiles/https___www_facebook_com_josie_wassenberg.json
+A  backend/data/profiles/https___www_facebook_com_kasaun_hughey.json
+A  backend/data/profiles/https___www_facebook_com_kathleen_long_496405.json
+A  backend/data/profiles/https___www_facebook_com_kenneth_hites_2025.json
+A  backend/data/profiles/https___www_facebook_com_kiara_mayye.json
+A  backend/data/profiles/https___www_facebook_com_linda_ayresguerrieri.json
+A  backend/data/profiles/https___www_facebook_com_linda_kahena.json
+A  backend/data/profiles/https___www_facebook_com_lisa_alexander_598004.json
+A  backend/data/profiles/https___www_facebook_com_lisaann_strouse.json
+A  backend/data/profiles/https___www_facebook_com_lisawalker662.json
+A  backend/data/profiles/https___www_facebook_com_mandy_gregory_3979.json
+A  backend/data/profiles/https___www_facebook_com_marie_kenzie_144505.json
+A  backend/data/profiles/https___www_facebook_com_marinam_gymnastic_2025.json
+A  backend/data/profiles/https___www_facebook_com_marlene_parsons_144.json
+A  backend/data/profiles/https___www_facebook_com_marvin_meredith_796.json
+A  backend/data/profiles/https___www_facebook_com_mike_peterson_948833.json
+A  backend/data/profiles/https___www_facebook_com_mike_will_54922169.json
+A  backend/data/profiles/https___www_facebook_com_miranda_snackz_parsons.json
+A  backend/data/profiles/https___www_facebook_com_mk_blood_106.json
+A  backend/data/profiles/https___www_facebook_com_mohamed1878ahmed.json
+A  backend/data/profiles/https___www_facebook_com_momo_williams_296178.json
+A  backend/data/profiles/https___www_facebook_com_nick_phelps_897708.json
+A  backend/data/profiles/https___www_facebook_com_nicole_marie_bubbles.json
+A  backend/data/profiles/https___www_facebook_com_patty_adams_7549.json
+A  backend/data/profiles/https___www_facebook_com_patty_nocks_2025.json
+A  backend/data/profiles/https___www_facebook_com_paul_culver_20190.json
+A  backend/data/profiles/https___www_facebook_com_pizza_lilian_2025.json
+A  backend/data/profiles/https___www_facebook_com_princessmae_amandy.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_100006856440595.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_100013947759576.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_100063644141670.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_100077413130453.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_100080983495925.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_100082090243007.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_100088204451844.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_100089526782978.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_100092726051281.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61552184353076.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61552270134248.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61555173312081.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61556358533951.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61556405812060.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61556433560976.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61557104054838.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61558606318327.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61558958985298.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61559234075838.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61559910172977.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61568498158577.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61568680884652.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61568726008007.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61569750644479.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61571185625858.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61573523534821.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61574034098433.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61574596162002.json
+A  backend/data/profiles/https___www_facebook_com_profile_php_id_61576656053106.json
+A  backend/data/profiles/https___www_facebook_com_rebecca_lea_hunter.json
+A  backend/data/profiles/https___www_facebook_com_richard_parsons_422683.json
+M  backend/data/profiles/https___www_facebook_com_richard_parsons_803540.json
+A  backend/data/profiles/https___www_facebook_com_robbie_reed_162169.json
+A  backend/data/profiles/https___www_facebook_com_rose_milano_985904.json
+A  backend/data/profiles/https___www_facebook_com_ryan_n_dani_shonsky_2025.json
+A  backend/data/profiles/https___www_facebook_com_samantha_schriner.json
+A  backend/data/profiles/https___www_facebook_com_samuel_aley_2025.json
+A  backend/data/profiles/https___www_facebook_com_sandra_thomas_974371.json
+A  backend/data/profiles/https___www_facebook_com_scott_hites.json
+A  backend/data/profiles/https___www_facebook_com_scott_prestenbach.json
+A  backend/data/profiles/https___www_facebook_com_scott_schriner_2025.json
+A  backend/data/profiles/https___www_facebook_com_seth_strock_2025.json
+A  backend/data/profiles/https___www_facebook_com_shawn_winner_5.json
+A  backend/data/profiles/https___www_facebook_com_sohari_brebes_2025.json
+A  backend/data/profiles/https___www_facebook_com_sonya_frantz_161.json
+A  backend/data/profiles/https___www_facebook_com_sophia_perez_548008.json
+A  backend/data/profiles/https___www_facebook_com_stephanie_ayresbenincase.json
+A  backend/data/profiles/https___www_facebook_com_steve_burton_page_278689.json
+A  backend/data/profiles/https___www_facebook_com_steve_private_817959.json
+A  backend/data/profiles/https___www_facebook_com_steven_masula.json
+A  backend/data/profiles/https___www_facebook_com_sum_mayye.json
+A  backend/data/profiles/https___www_facebook_com_tacssmile141.json
+A  backend/data/profiles/https___www_facebook_com_tasha_milano_7393.json
+A  backend/data/profiles/https___www_facebook_com_thusitha_gamage_520862.json
+A  backend/data/profiles/https___www_facebook_com_tiffany_mcintroy_2025.json
+A  backend/data/profiles/https___www_facebook_com_tiffanymarie_mcfall.json
+A  backend/data/profiles/https___www_facebook_com_tommy_tatta_2025.json
+A  backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle.json
+A  backend/data/profiles/https___www_facebook_com_twitchi2011.json
+A  backend/data/profiles/https___www_facebook_com_undertaker16146.json
+A  backend/data/profiles/https___www_facebook_com_wendy_ayres_5.json
+A  backend/data/profiles/https___www_facebook_com_ximena_castillo_2548.json
+A  backend/data/profiles/https___www_facebook_com_zoe_schriner_3.json
+M  backend/data/queue.json
+A  backend/data/settings.json
+M  backend/data/visited.json
+M  backend/routes/scrape.js
+M  backend/server.js
+A  debug-test.html
+A  debug-visualizer-simple.html
+A  debug-visualizer.html
+A  simple-visualizer-test.html
+MM sync_log.txt
+M  tampermonkey/fb-scraper.user.js
+A  test-alias-functionality.html
+D  test-api-endpoint.html
+D  test-api.html
+M  visualizer/index.html
+M  visualizer/visualizer.js
+2025-05-28 20:48:59,017 - INFO - 💾 Committing changes: 📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-28
+2025-05-28 20:48:59,017 - INFO - Running: git commit -m "📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-28"
+2025-05-28 20:48:59,207 - INFO - [master ac51fb4] 📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-28
+ 175 files changed, 150614 insertions(+), 1596 deletions(-)
+ create mode 100644 ALIAS_CONNECTION_IMPLEMENTATION_COMPLETE.md
+ create mode 100644 FORCE_NEW_SEED_IMPLEMENTATION.md
+ create mode 100644 SETTINGS_PERSISTENCE_IMPLEMENTATION.md
+ create mode 100644 VISUALIZER_ENHANCEMENTS.md
+ create mode 100644 backend/data/aliases.json
+ create mode 100644 backend/data/manual_connections.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_Ajsams2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_JonSloan69.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_StatelineFlooringandRemodels.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_UNITEDSTATESNAVYSEABEESCO156.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_XeXeE_SkItTlEzX.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_amber_gearhart_98.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_amber_king_112481.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_amy_peterson_399.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_andrew_fleeger_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_april_hughes_370177.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_april_milano_54.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_asd853_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_ashley_jones_778949.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_aubrianna_ashby.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_austin_isaiah_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_becky_schriner.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_bethene_bennett_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_brittany_eaken23.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_carrie_taylor_50552338.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_cassandra_lee_quatman_ferragonio.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_cathy_tury_3.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_chase_ball_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_chris_knauf_12.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_christopher_adams_35.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_chythiakate.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_coolManjon.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_cote_de_tali_pablo_270086.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_courtney_capan_3.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_danielle_ann_shonsky.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_danielle_hites_7.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_destiny_hooper_441773.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_diana_ayreswrights.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_dorothy_yerian_37.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_elizabeth_connors_201141.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_elizabeth_marie_hamby.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_george_merchant_742705.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_greg_hoovler_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_greg_hoovler_368162.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_hahne_burns.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_halee_grinavic.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_hellfire_demon_411116.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_hud_homes_service_389921.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_jean_hoaglandbuehrer.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_jeff_eakin_222897.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_jerry_hoagland_9.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_jessica_hoovler_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_jimmy_smith_425188.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_jmaravola.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_joey_arduckle.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_john_way_511331.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_joke_soper_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_jon_sloan64.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_jon_sloan65.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_jon_sloan_2024.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_jon_sloan_802336.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_josh_rivera_196957.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_josie_wassenberg.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_kasaun_hughey.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_kathleen_long_496405.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_kenneth_hites_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_kiara_mayye.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_linda_ayresguerrieri.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_linda_kahena.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_lisa_alexander_598004.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_lisaann_strouse.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_lisawalker662.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_mandy_gregory_3979.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_marie_kenzie_144505.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_marinam_gymnastic_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_marlene_parsons_144.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_marvin_meredith_796.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_mike_peterson_948833.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_mike_will_54922169.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_miranda_snackz_parsons.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_mk_blood_106.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_mohamed1878ahmed.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_momo_williams_296178.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_nick_phelps_897708.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_nicole_marie_bubbles.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_patty_adams_7549.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_patty_nocks_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_paul_culver_20190.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_pizza_lilian_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_princessmae_amandy.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_100006856440595.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_100013947759576.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_100063644141670.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_100077413130453.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_100080983495925.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_100082090243007.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_100088204451844.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_100089526782978.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_100092726051281.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61552184353076.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61552270134248.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61555173312081.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61556358533951.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61556405812060.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61556433560976.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61557104054838.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61558606318327.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61558958985298.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61559234075838.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61559910172977.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61568498158577.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61568680884652.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61568726008007.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61569750644479.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61571185625858.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61573523534821.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61574034098433.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61574596162002.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61576656053106.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_rebecca_lea_hunter.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_richard_parsons_422683.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_robbie_reed_162169.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_rose_milano_985904.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_ryan_n_dani_shonsky_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_samantha_schriner.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_samuel_aley_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_sandra_thomas_974371.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_scott_hites.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_scott_prestenbach.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_scott_schriner_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_seth_strock_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_shawn_winner_5.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_sohari_brebes_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_sonya_frantz_161.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_sophia_perez_548008.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_stephanie_ayresbenincase.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_steve_burton_page_278689.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_steve_private_817959.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_steven_masula.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_sum_mayye.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_tacssmile141.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_tasha_milano_7393.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_thusitha_gamage_520862.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_tiffany_mcintroy_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_tiffanymarie_mcfall.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_tommy_tatta_2025.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_tracey_l_arbuckle.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_twitchi2011.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_undertaker16146.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_wendy_ayres_5.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_ximena_castillo_2548.json
+ create mode 100644 backend/data/profiles/https___www_facebook_com_zoe_schriner_3.json
+ create mode 100644 backend/data/settings.json
+ create mode 100644 debug-test.html
+ create mode 100644 debug-visualizer-simple.html
+ create mode 100644 debug-visualizer.html
+ create mode 100644 simple-visualizer-test.html
+ create mode 100644 test-alias-functionality.html
+ delete mode 100644 test-api-endpoint.html
+ delete mode 100644 test-api.html
+2025-05-28 20:48:59,246 - INFO - ⬆️ Pushing to master
+2025-05-28 20:48:59,246 - INFO - Running: git push origin master
+2025-05-28 20:49:01,382 - INFO - To https://github.com/tootallderr/DangerFinder.git
+   9516489..ac51fb4  master -> master
+2025-05-28 20:49:01,382 - INFO - ✅ Successfully pushed changes
+2025-05-28 20:49:01,382 - INFO - 🎉 Sync completed successfully

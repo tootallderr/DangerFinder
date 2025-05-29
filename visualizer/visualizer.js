@@ -14,6 +14,15 @@ class GraphVisualizer {
         this.colorScale = d3.scaleOrdinal(d3.schemeCategory10);
         this.isMultiSelecting = false;
         this.dragStart = null;
+        
+        // NEW: Danger zone visualization properties
+        this.dangerZones = [];
+        this.kidsInDangerPull = [];
+        this.dangerSources = [];
+        this.isDangerZoneMode = false;
+        this.safetyAnalysis = null;
+        this.dangerZoneOpacity = 0.3;
+        this.pullForceScale = d3.scaleLinear().domain([0, 1]).range([0, 50]);
           // New properties for alias and connection features
         this.similarNames = [];
         this.confirmedAliases = [];
@@ -85,9 +94,7 @@ class GraphVisualizer {
         addListener('detect-aliases-btn', 'click', () => this.detectSimilarNames());
         addListener('similarity-threshold', 'input', (e) => this.updateThresholdDisplay(e.target.value));
         addListener('alias-threshold', 'input', (e) => this.updateThresholdDisplay(e.target.value));
-        addListener('highlight-aliases', 'click', () => this.toggleAliasHighlights());
-
-        // Connection mode handlers
+        addListener('highlight-aliases', 'click', () => this.toggleAliasHighlights());        // Connection mode handlers
         addListener('manual-connection-mode', 'click', () => this.toggleConnectionMode());
         addListener('alias-connection-mode', 'click', () => this.toggleAliasConnectionMode());
         addListener('analyze-shared-friends', 'click', () => this.analyzeSharedFriends());
@@ -95,6 +102,18 @@ class GraphVisualizer {
         addListener('load-alias-settings', 'click', () => this.loadAliasSettings());
         addListener('clear-highlights', 'click', () => this.clearAllHighlights());
         addListener('detect-similar-names', 'click', () => this.detectSimilarNames());
+
+        // NEW: Danger zone visualization handlers
+        addListener('danger-zone-mode', 'click', () => this.toggleDangerZoneMode());
+        addListener('load-safety-analysis', 'click', () => this.loadSafetyAnalysis());
+        addListener('danger-zone-opacity', 'input', (e) => this.updateDangerZoneOpacity(e.target.value));
+        addListener('highlight-critical-kids', 'click', () => this.highlightCriticalKids());
+        addListener('show-escape-routes', 'click', () => this.showEscapeRoutes());
+        addListener('animate-danger-pull', 'click', () => this.animateDangerPull());
+        
+        // Danger zone handlers
+        addListener('toggle-danger-zone', 'click', () => this.toggleDangerZoneMode());
+        addListener('analyze-safety', 'click', () => this.analyzeSafety());
     }    async loadData() {
         this.showLoading(true);
         
@@ -1578,7 +1597,7 @@ class GraphVisualizer {
         }
         
         // Update alias highlights if enabled
-        if (this.currentSettings.showSimilarNames && this.nodes.length > 0) {
+        if (this.currentSettings.showSimilarNames && this.nodes.length > 0) {        
             // Only detect if we have nodes loaded
             setTimeout(() => {
                 if (this.currentSettings.autoDetectAliases) {
@@ -1587,7 +1606,312 @@ class GraphVisualizer {
             }, 100);
         }
     }
+
+    // NEW: Danger Zone Visualization Methods
+    // ====================================
+
+    // Toggle danger zone visualization mode
+    toggleDangerZoneMode() {
+        this.isDangerZoneMode = !this.isDangerZoneMode;
+        
+        const btn = document.getElementById('danger-zone-mode');
+        if (btn) {
+            btn.textContent = this.isDangerZoneMode ? 'Exit Danger Mode' : 'Show Danger Zones';
+            btn.classList.toggle('active', this.isDangerZoneMode);
+        }
+
+        if (this.isDangerZoneMode) {
+            this.loadSafetyAnalysis();
+        } else {
+            this.clearDangerZoneVisuals();
+        }
+
+        this.updateVisualization();
+    }
+
+    // Load safety analysis data
+    async loadSafetyAnalysis() {
+        try {
+            const response = await fetch('/api/data/kid_safety_analysis.json');
+            if (!response.ok) {
+                throw new Error('Safety analysis not found');
+            }
+            
+            this.safetyAnalysis = await response.json();
+            this.extractDangerZoneData();
+            this.renderDangerZones();
+            
+            console.log('✅ Safety analysis loaded', {
+                dangerSources: this.dangerSources.length,
+                kidsInDanger: this.kidsInDangerPull.length,
+                dangerZones: this.dangerZones.length
+            });
+
+        } catch (error) {
+            console.error('Failed to load safety analysis:', error);
+            alert('Safety analysis data not found. Please run the kid safety analyzer first.');
+        }
+    }
+
+    // Extract danger zone data from safety analysis
+    extractDangerZoneData() {
+        if (!this.safetyAnalysis) return;
+
+        const patterns = this.safetyAnalysis.danger_patterns;
+        
+        // Extract danger sources
+        this.dangerSources = patterns.danger_sources || [];
+        
+        // Extract kids in danger pull
+        this.kidsInDangerPull = patterns.kids_in_danger_pull || [];
+        
+        // Extract danger zones
+        this.dangerZones = patterns.danger_zones || [];
+        
+        console.log('Extracted danger zone data:', {
+            sources: this.dangerSources.length,
+            kidsInDanger: this.kidsInDangerPull.length,
+            zones: this.dangerZones.length
+        });
+    }
+
+    // Render danger zones as circular overlays
+    renderDangerZones() {
+        if (!this.isDangerZoneMode || !this.dangerZones.length) return;
+
+        // Remove existing danger zone visuals
+        this.svg.selectAll('.danger-zone').remove();
+        this.svg.selectAll('.danger-zone-label').remove();
+
+        // Create danger zone group
+        const dangerZoneGroup = this.svg.append('g').attr('class', 'danger-zones');
+
+        // Render each danger zone
+        this.dangerZones.forEach((zone, i) => {
+            const epicenterNode = this.nodes.find(n => n.url === zone.epicenter.nodeId);
+            if (!epicenterNode) return;
+
+            // Calculate zone radius based on risk score
+            const maxRadius = Math.min(this.width, this.height) * 0.2;
+            const radius = Math.max(50, Math.min(maxRadius, zone.zoneRiskScore * 10));
+
+            // Color based on danger type
+            const zoneColor = this.getDangerZoneColor(zone.epicenter.dangerType);
+
+            // Create zone circle
+            dangerZoneGroup.append('circle')
+                .attr('class', 'danger-zone')
+                .attr('cx', epicenterNode.x || 0)
+                .attr('cy', epicenterNode.y || 0)
+                .attr('r', 0)
+                .attr('fill', zoneColor)
+                .attr('fill-opacity', this.dangerZoneOpacity)
+                .attr('stroke', zoneColor)
+                .attr('stroke-width', 2)
+                .attr('stroke-opacity', 0.8)
+                .transition()
+                .duration(1000)
+                .attr('r', radius);
+
+            // Add zone label
+            dangerZoneGroup.append('text')
+                .attr('class', 'danger-zone-label')
+                .attr('x', epicenterNode.x || 0)
+                .attr('y', (epicenterNode.y || 0) - radius - 10)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px')
+                .attr('font-weight', 'bold')
+                .attr('fill', zoneColor)
+                .text(`${zone.epicenter.dangerType} (${zone.totalKidsAffected} kids)`);
+        });
+
+        // Update node positions when simulation ticks
+        if (this.simulation) {
+            this.simulation.on('tick', () => this.updateDangerZonePositions());
+        }
+    }
+
+    // Update danger zone positions when nodes move
+    updateDangerZonePositions() {
+        if (!this.isDangerZoneMode) return;
+
+        this.dangerZones.forEach((zone, i) => {
+            const epicenterNode = this.nodes.find(n => n.url === zone.epicenter.nodeId);
+            if (!epicenterNode) return;
+
+            const zoneCircle = this.svg.select(`.danger-zone:nth-child(${(i * 2) + 1})`);
+            const zoneLabel = this.svg.select(`.danger-zone-label:nth-child(${(i * 2) + 2})`);
+
+            if (!zoneCircle.empty()) {
+                zoneCircle.attr('cx', epicenterNode.x).attr('cy', epicenterNode.y);
+            }
+
+            if (!zoneLabel.empty()) {
+                const radius = +zoneCircle.attr('r');
+                zoneLabel.attr('x', epicenterNode.x).attr('y', epicenterNode.y - radius - 10);
+            }
+        });
+    }
+
+    // Get color for danger zone based on type
+    getDangerZoneColor(dangerType) {
+        const colors = {
+            'CONVICTED_PREDATOR': '#ff0000',     // Red - most dangerous
+            'HIGH_KID_TARGETING': '#ff6600',     // Orange - high risk
+            'ALIAS_PREDATOR': '#ff9900',         // Yellow-orange - suspicious
+            'PREDATOR_ASSOCIATE': '#ffcc00'      // Yellow - concerning
+        };
+        return colors[dangerType] || '#ff9999';
+    }
+
+    // Update danger zone opacity
+    updateDangerZoneOpacity(opacity) {
+        this.dangerZoneOpacity = opacity;
+        this.svg.selectAll('.danger-zone')
+            .attr('fill-opacity', opacity);
+        
+        // Update display
+        const display = document.getElementById('danger-zone-opacity-display');
+        if (display) {
+            display.textContent = `${Math.round(opacity * 100)}%`;
+        }
+    }
+
+    // Highlight children in critical danger
+    highlightCriticalKids() {
+        // Clear previous highlights
+        this.svg.selectAll('.node').classed('critical-danger', false);
+
+        const criticalKids = this.kidsInDangerPull.filter(k => k.riskLevel === 'CRITICAL');
+        
+        criticalKids.forEach(kidData => {
+            const node = this.svg.selectAll('.node')
+                .filter(d => d.url === kidData.kid.id);
+            
+            node.classed('critical-danger', true)
+                .style('stroke', '#ff0000')
+                .style('stroke-width', '4px');
+        });
+
+        console.log(`Highlighted ${criticalKids.length} children in critical danger`);
+    }
+
+    // Show escape routes for selected children
+    showEscapeRoutes() {
+        const selectedNode = this.selectedNode;
+        if (!selectedNode) {
+            alert('Please select a child node first');
+            return;
+        }
+
+        // Find this child in the danger pull analysis
+        const kidInDanger = this.kidsInDangerPull.find(k => k.kid.id === selectedNode.url);
+        if (!kidInDanger) {
+            alert('Selected node is not in danger pull analysis');
+            return;
+        }
+
+        // Clear previous escape route highlights
+        this.svg.selectAll('.escape-route').remove();
+
+        // Highlight escape routes
+        const escapeRouteGroup = this.svg.append('g').attr('class', 'escape-routes');
+
+        kidInDanger.escapeRoutes.slice(0, 3).forEach((route, i) => {
+            const targetNode = this.nodes.find(n => n.url === route.node.id);
+            if (!targetNode) return;
+
+            // Draw line to escape route
+            escapeRouteGroup.append('line')
+                .attr('class', 'escape-route')
+                .attr('x1', selectedNode.x)
+                .attr('y1', selectedNode.y)
+                .attr('x2', targetNode.x)
+                .attr('y2', targetNode.y)
+                .attr('stroke', '#00ff00')
+                .attr('stroke-width', 3)
+                .attr('stroke-dasharray', '5,5')
+                .attr('opacity', 0.8);
+
+            // Highlight the escape route node
+            this.svg.selectAll('.node')
+                .filter(d => d.url === route.node.id)
+                .style('stroke', '#00ff00')
+                .style('stroke-width', '3px');
+        });
+
+        console.log(`Showing ${kidInDanger.escapeRoutes.length} escape routes for ${selectedNode.name}`);
+    }
+
+    // Animate danger pull effects
+    animateDangerPull() {
+        if (!this.isDangerZoneMode || !this.kidsInDangerPull.length) {
+            alert('No danger pull data available');
+            return;
+        }
+
+        // Create pull animation effects
+        const pullGroup = this.svg.append('g').attr('class', 'pull-animations');
+
+        this.kidsInDangerPull.forEach(kidData => {
+            const kidNode = this.nodes.find(n => n.url === kidData.kid.id);
+            if (!kidNode) return;
+
+            kidData.pullSources.forEach(pullSource => {
+                const sourceNode = this.nodes.find(n => n.url === pullSource.source.nodeId);
+                if (!sourceNode) return;
+
+                // Create animated pull line
+                const pullStrength = pullSource.pullStrength;
+                const pulseSize = this.pullForceScale(pullStrength);
+
+                // Animate pulsing effect from source to kid
+                const pulse = pullGroup.append('circle')
+                    .attr('cx', sourceNode.x)
+                    .attr('cy', sourceNode.y)
+                    .attr('r', 0)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#ff0066')
+                    .attr('stroke-width', 2)
+                    .attr('opacity', 1);
+
+                pulse.transition()
+                    .duration(2000)
+                    .ease(d3.easeCircleOut)
+                    .attr('r', pulseSize)
+                    .attr('opacity', 0)
+                    .remove();
+            });
+        });
+        // Remove animation group after 3 seconds
+        setTimeout(() => {
+            pullGroup.remove();
+        }, 3000);
+    }
+
+    // Clear all danger zone visuals
+    clearDangerZoneVisuals() {
+        this.svg.selectAll('.danger-zones').remove();
+        this.svg.selectAll('.escape-routes').remove();
+        this.svg.selectAll('.pull-animations').remove();
+        this.svg.selectAll('.node').classed('critical-danger', false);
+        this.svg.selectAll('.node').style('stroke', null).style('stroke-width', null);
+    }
+
+    // Override the updateVisualization method to include danger zones
+    updateVisualizationWithDangerZones() {
+        // Call original update if it exists
+        if (this.originalUpdateVisualization) {
+            this.originalUpdateVisualization();
+        }
+
+        // Add danger zone rendering if in danger mode
+        if (this.isDangerZoneMode) {
+            this.renderDangerZones();
+        }
+    }
 }
+
 
 // Initialize visualizer when page loads
 document.addEventListener('DOMContentLoaded', () => {
@@ -1616,5 +1940,92 @@ function toggleAutoRefresh() {
         document.getElementById('auto-refresh-btn').textContent = '🔄 Auto-Refresh: ON';
         document.getElementById('auto-refresh-btn').style.backgroundColor = 'rgba(46, 204, 113, 0.8)';
         console.log('Auto-refresh enabled (every 30 seconds)');
+    }
+}
+
+// Danger zone methods
+function toggleDangerZoneMode() {
+    window.visualizer.isDangerZoneMode = !window.visualizer.isDangerZoneMode;
+    const button = document.getElementById('toggle-danger-zone');
+    
+    if (window.visualizer.isDangerZoneMode) {
+        button.classList.add('danger-zone-active');
+        button.textContent = '🚫 Exit Danger Zone';
+        window.visualizer.analyzeSafety();
+    } else {
+        button.classList.remove('danger-zone-active');
+        button.textContent = '🚦 Enter Danger Zone';
+        window.visualizer.clearAllHighlights();
+    }
+}
+
+function analyzeSafety() {
+    const dangerZones = [];
+    const kidsInDangerPull = [];
+    const dangerSources = [];
+    
+    window.visualizer.nodes.forEach(node => {
+        const annotation = window.visualizer.getAnnotationForNode(node);
+        
+        if (annotation && annotation.risk === 'high') {
+            // High risk node - create danger zone
+            dangerZones.push(node);
+        } else if (annotation && annotation.demographic === 'kids') {
+            // Kid node - check for danger sources
+            const sources = window.visualizer.links.filter(link => 
+                (link.target.id === node.id && link.source.risk === 'high') ||
+                (link.source.id === node.id && link.target.risk === 'high')
+            ).map(link => link.source.id === node.id ? link.target : link.source);
+            
+            if (sources.length > 0) {
+                kidsInDangerPull.push({
+                    node: node,
+                    sources: sources
+                });
+            }
+        }
+    });
+    
+    // Update global danger zone data
+    window.visualizer.dangerZones = dangerZones;
+    window.visualizer.kidsInDangerPull = kidsInDangerPull;
+    
+    // Visualize danger zones
+    window.visualizer.svg.selectAll('circle.danger-zone')
+        .data(dangerZones, d => d.id)
+        .join('circle')
+        .attr('class', 'danger-zone')
+        .attr('r', d => window.visualizer.getNodeRadius(d) + 5)
+        .attr('fill', 'rgba(231, 76, 60, 0.3)')
+        .attr('stroke', '#e74c3c')
+        .attr('stroke-width', 2);
+    
+    // Visualize pull forces for kids in danger
+    window.visualizer.svg.selectAll('line.pull-force')
+        .data(kidsInDangerPull, d => d.node.id)
+        .join('line')
+        .attr('class', 'pull-force')
+        .attr('x1', d => d.node.x)
+        .attr('y1', d => d.node.y)
+        .attr('x2', d => {
+            const source = d.sources[0]; // Just take the first source for visualization
+            return source.x;
+        })
+        .attr('y2', d => {
+            const source = d.sources[0];
+            return source.y;
+        })
+        .attr('stroke', '#3498db')
+        .attr('stroke-width', 2)
+        .attr('stroke-dasharray', '4, 4');
+    
+    // Update danger zone info
+    const infoDiv = document.getElementById('danger-zone-info');
+    if (infoDiv) {
+        infoDiv.innerHTML = `
+            <strong>Danger Zone Analysis</strong><br>
+            ${dangerZones.length} high-risk nodes detected<br>
+            ${kidsInDangerPull.length} kids in danger connected to high-risk nodes
+        `;
     }
 }

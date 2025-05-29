@@ -1,0 +1,24 @@
+{
+  "timestamp": "2025-05-29T01:40:49.397Z",
+  "summary": {
+    "total_kids_monitored": 14,
+    "kids_in_danger": 14,
+    "critical_pull_kids": 0,
+    "high_pull_kids": 14,
+    "active_danger_zones": 2,
+    "danger_sources": 0,
+    "new_alerts": 0
+  },
+  "trend_analysis": {
+    "kids_in_danger_trend": "STABLE",
+    "danger_sources_trend": "STABLE",
+    "critical_cases_trend": "STABLE"
+  },
+  "recommendations": [
+    {
+      "priority": "MEDIUM",
+      "action": "Consider expanding safety education programs due to high number of at-risk children",
+      "timeframe": "1_WEEK"
+    }
+  ]
+}
