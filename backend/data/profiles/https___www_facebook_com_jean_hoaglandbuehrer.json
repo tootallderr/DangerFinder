@@ -1,0 +1,57 @@
+{
+  "url": "https://www.facebook.com/jean.hoaglandbuehrer",
+  "name": "Jean Hoagland Buehrer",
+  "profile_image": "https://scontent.fosu2-1.fna.fbcdn.net/v/t39.30808-1/468550442_9479883962026311_4093363293681705330_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=jRcgpsicTQwQ7kNvwHdBQYR&_nc_oc=AdlM5_NScQabLTQWOhAjzDmRMvBl5PEID_uGxZCmV-V7O4m-c3suaB0gVgtzNqsz32wmkU1a2ZvDC5AV3I_6ApSY&_nc_zt=24&_nc_ht=scontent.fosu2-1.fna&_nc_gid=HEkSRI480TWSOdSx9LWVnw&oh=00_AfL2NNR9TLr4IfCYBvh9dw7v3xS5P2bJJYQ9iIk--kjo-A&oe=683D5CB0",
+  "depth": 2,
+  "type": "about",
+  "scraped_at": "2025-05-28T23:52:25.181Z",
+  "friends": [
+    {
+      "name": "Jean Hoagland Buehrer",
+      "url": "https://www.facebook.com/jean.hoaglandbuehrer"
+    },
+    {
+      "name": "Grace C&MA Church",
+      "url": "https://facebook.com/gracechurchmh"
+    },
+    {
+      "name": "Prohibition Kitchen",
+      "url": "https://facebook.com/pkstaug"
+    },
+    {
+      "name": "Topgolf",
+      "url": "https://facebook.com/100089672112638"
+    },
+    {
+      "name": "Flagler Fish Company",
+      "url": "https://facebook.com/FlaglerFishCompany"
+    }
+  ],
+  "last_updated": "2025-05-28T23:52:25.182Z",
+  "scrape_history": [
+    {
+      "timestamp": "2025-05-28T23:52:12.430Z",
+      "type": "friends",
+      "sections": [
+        "name",
+        "friends",
+        "type"
+      ]
+    },
+    {
+      "timestamp": "2025-05-28T23:52:25.181Z",
+      "type": "about",
+      "sections": [
+        "name",
+        "about",
+        "type"
+      ]
+    }
+  ],
+  "about": {
+    "location": [
+      "{Origin Domain}\",\"1_2882107be72d37df895b05e0573990a6\":\"Unblock Messages?\",\"1_2b99f4eb0d10fb2a590c91881bc93620\":\"Can't Create Duplicate Account\",\"1_2dfe4f010e821ffa89d9c4133df72506\":\"Problem with bluetooth or audio source\",\"1_2e510be3887bae0dd4d73733dffa6ec4\":\"{firstname1}, {firstname2}, and {firstname3} are online\",\"1_2e9405cf33a60079eba08f7433c66595\":\"Unable To Connect Your Call\",\"1_2feb150fdf16fe534e635fa1143a7508\":\"No Devices Yet\",\"1_31426213a5556e794c313d21dbeceb6b\":\"Turn On\",\"1_3bce071d20c866b7a915136c01c2a17f\":\"Remove From Channel\",\"1_3e252ef60c34f4c269a640aedaaf9a91\":\"Recent Calls\",\"1_4323029c4a9559df6910965a98e5f7ee\":\"Customize your conversation with {short-name}",
+      "prison\",\"item_logging_id\":\"2025-05-28:2AbMgI\",\"item_logging_info\":\"{\\\"source\\\":\\\"entity_bootstrap_unknown_suggestion\\\",\\\"kwEntConnected\\\":false,\\\"category\\\":\\\"unknown\\\",\\\"kwEntId\\\":250775330827031885,\\\"kwEntIds\\\":[250775330827031885],\\\"suggestion_keys\\\":{\\\"keys\\\":[],\\\"default_key\\\":\\\"5052633109596804556\\\",\\\"tier\\\":0},\\\"explainability_code\\\":0,\\\"features\\\":{\\\"16171\\\":1,\\\"16082\\\":16171,\\\"16173\\\":0"
+    ]
+  }
+}

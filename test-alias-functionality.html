@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alias Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+        }
+        .test-section {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        .test-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #2980b9;
+        }
+        .success {
+            color: #2ecc71;
+        }
+        .error {
+            color: #e74c3c;
+        }
+        .info {
+            color: #f39c12;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎭 Facebook Social Graph Alias Connection Test</h1>
+    
+    <div class="test-section">
+        <h2>📊 Backend API Tests</h2>
+        <button class="test-button" onclick="testGraphData()">Test Graph Data</button>
+        <button class="test-button" onclick="testManualConnections()">Test Manual Connections</button>
+        <button class="test-button" onclick="testCreateConnection()">Test Create Connection</button>
+        <div id="api-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🔍 Alias Detection Tests</h2>
+        <button class="test-button" onclick="testSimilarityCalculation()">Test Similarity Calculation</button>
+        <button class="test-button" onclick="testThresholdUpdates()">Test Threshold Updates</button>
+        <div id="similarity-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🎭 Alias Connection Workflow</h2>
+        <p>Manual test instructions:</p>
+        <ol>
+            <li>Open the main visualizer at <a href="http://localhost:3000/visualizer" target="_blank">http://localhost:3000/visualizer</a></li>
+            <li>Click the "🎭 Alias Mode" button</li>
+            <li>Click on a suspected FAKE account (should highlight red)</li>
+            <li>Click on a suspected REAL account (should highlight green)</li>
+            <li>System should automatically analyze shared friends</li>
+            <li>Use "👥 Find Shared Friends" to analyze all connections</li>
+        </ol>
+    </div>
+    
+    <div class="test-section">
+        <h2>🧪 Test Results</h2>
+        <div id="test-log"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+        
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `<div class="${type}">[${timestamp}] ${message}</div>`;
+        }
+        
+        async function testGraphData() {
+            try {
+                log('Testing graph data endpoint...', 'info');
+                const response = await fetch(`${API_BASE}/graph`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                document.getElementById('api-results').innerHTML = `
+                    <div class="success">✅ Graph Data Loaded</div>
+                    <div>Nodes: ${data.nodes?.length || 0}</div>
+                    <div>Links: ${data.links?.length || 0}</div>
+                `;
+                log(`Graph data loaded: ${data.nodes?.length || 0} nodes, ${data.links?.length || 0} links`, 'success');
+            } catch (error) {
+                document.getElementById('api-results').innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+                log(`Graph data test failed: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testManualConnections() {
+            try {
+                log('Testing manual connections endpoint...', 'info');
+                const response = await fetch(`${API_BASE}/connections/manual`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                log(`Manual connections loaded: ${data.connections?.length || 0} connections`, 'success');
+            } catch (error) {
+                log(`Manual connections test failed: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testCreateConnection() {
+            try {
+                log('Testing create connection endpoint...', 'info');
+                
+                // Test with dummy data
+                const testConnection = {
+                    source: 'https://www.facebook.com/test.fake.account',
+                    target: 'https://www.facebook.com/test.real.account',
+                    connectionType: 'alias',
+                    reason: 'Test alias connection for functionality verification'
+                };
+                
+                const response = await fetch(`${API_BASE}/connections/manual`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testConnection)
+                });
+                
+                if (response.ok) {
+                    log('✅ Create connection endpoint working', 'success');
+                } else {
+                    const error = await response.json();
+                    log(`Create connection test: ${error.error || 'Unknown error'}`, 'info');
+                }
+            } catch (error) {
+                log(`Create connection test failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function testSimilarityCalculation() {
+            // Test the Levenshtein distance algorithm
+            function levenshtein(a, b) {
+                const matrix = [];
+                for (let i = 0; i <= b.length; i++) {
+                    matrix[i] = [i];
+                }
+                for (let j = 0; j <= a.length; j++) {
+                    matrix[0][j] = j;
+                }
+                for (let i = 1; i <= b.length; i++) {
+                    for (let j = 1; j <= a.length; j++) {
+                        if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                            matrix[i][j] = matrix[i - 1][j - 1];
+                        } else {
+                            matrix[i][j] = Math.min(
+                                matrix[i - 1][j - 1] + 1,
+                                matrix[i][j - 1] + 1,
+                                matrix[i - 1][j] + 1
+                            );
+                        }
+                    }
+                }
+                return matrix[b.length][a.length];
+            }
+            
+            function getSimilarity(name1, name2) {
+                const longer = name1.length > name2.length ? name1 : name2;
+                if (longer.length === 0) return 0;
+                const distance = levenshtein(longer, name1 === longer ? name2 : name1);
+                return (1 - distance / longer.length);
+            }
+            
+            const testCases = [
+                ['John Smith', 'Jon Smith', 0.9],
+                ['Michael Johnson', 'Mike Johnson', 0.8],
+                ['Sarah Connor', 'Sara Conner', 0.8],
+                ['Different Name', 'Completely Other', 0.3]
+            ];
+            
+            let results = '<h4>Similarity Test Results:</h4>';
+            testCases.forEach(([name1, name2, expected]) => {
+                const similarity = getSimilarity(name1, name2);
+                const passed = Math.abs(similarity - expected) < 0.2;
+                results += `<div class="${passed ? 'success' : 'error'}">
+                    ${name1} ↔ ${name2}: ${(similarity * 100).toFixed(1)}% 
+                    ${passed ? '✅' : '❌'}
+                </div>`;
+            });
+            
+            document.getElementById('similarity-results').innerHTML = results;
+            log('Similarity calculation tests completed', 'success');
+        }
+        
+        function testThresholdUpdates() {
+            log('Testing threshold update functionality...', 'info');
+            
+            // Simulate threshold changes
+            const thresholds = [0.5, 0.7, 0.9];
+            let results = '<h4>Threshold Tests:</h4>';
+            
+            thresholds.forEach(threshold => {
+                results += `<div class="info">Threshold ${threshold}: Would detect pairs with ${(threshold * 100).toFixed(0)}%+ similarity</div>`;
+            });
+            
+            document.getElementById('similarity-results').innerHTML += results;
+            log('Threshold update tests completed', 'success');
+        }
+        
+        // Auto-run basic tests on page load
+        window.onload = function() {
+            log('🧪 Starting automated tests...', 'info');
+            setTimeout(testGraphData, 500);
+            setTimeout(testManualConnections, 1000);
+            setTimeout(testSimilarityCalculation, 1500);
+        };
+    </script>
+</body>
+</html>

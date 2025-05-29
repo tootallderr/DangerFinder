@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Visualizer Test</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div id="status">Loading...</div>
+    <div id="result"></div>
+    
+    <script>
+        async function testVisualizerSteps() {
+            const status = document.getElementById('status');
+            const result = document.getElementById('result');
+            
+            try {
+                status.textContent = 'Step 1: Testing API connection...';
+                
+                // Test API endpoints
+                const graphResponse = await fetch('http://localhost:3000/api/graph');
+                const statsResponse = await fetch('http://localhost:3000/api/stats');
+                
+                if (!graphResponse.ok || !statsResponse.ok) {
+                    throw new Error('API connection failed');
+                }
+                
+                status.textContent = 'Step 2: Parsing API responses...';
+                
+                const graphData = await graphResponse.json();
+                const statsData = await statsResponse.json();
+                
+                status.textContent = 'Step 3: Processing data...';
+                
+                // Process nodes
+                const nodes = Object.entries(graphData.nodes || {}).map(([id, data]) => ({
+                    id,
+                    name: data.name || id,
+                    url: data.url || '',
+                    profile_image: data.profile_image || '',
+                    depth: data.depth || 0,
+                    degree: (graphData.adjacency_list[id] || []).length,
+                    pagerank: data.pagerank || 0,
+                    betweenness: data.betweenness || 0,
+                    community: data.community || 0
+                }));
+
+                // Process links
+                const links = [];
+                Object.entries(graphData.adjacency_list || {}).forEach(([source, targets]) => {
+                    targets.forEach(target => {
+                        if (nodes.find(n => n.id === source) && nodes.find(n => n.id === target)) {
+                            links.push({ source, target });
+                        }
+                    });
+                });
+                
+                status.textContent = 'Step 4: Data processing complete!';
+                
+                result.innerHTML = `
+                    <h2>✅ Visualizer Test Results</h2>
+                    <p><strong>API Status:</strong> Working</p>
+                    <p><strong>Nodes loaded:</strong> ${nodes.length}</p>
+                    <p><strong>Links loaded:</strong> ${links.length}</p>
+                    <p><strong>Communities:</strong> ${(statsData.communities || []).length}</p>
+                    <p><strong>Graph data keys:</strong> ${Object.keys(graphData).join(', ')}</p>
+                    <p><strong>Stats data keys:</strong> ${Object.keys(statsData).join(', ')}</p>
+                `;
+                
+            } catch (error) {
+                status.textContent = '❌ Error occurred';
+                result.innerHTML = `
+                    <h2>❌ Test Failed</h2>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p><strong>Stack:</strong> ${error.stack}</p>
+                `;
+                console.error('Test error:', error);
+            }
+        }
+        
+        testVisualizerSteps();
+    </script>
+</body>
+</html>

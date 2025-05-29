@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Visualizer</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <h1>Debug Visualizer</h1>
+    <div id="debug-info"></div>
+    <script>
+        async function debugVisualization() {
+            const debugDiv = document.getElementById('debug-info');
+            
+            try {
+                debugDiv.innerHTML += '<p>Testing API connections...</p>';
+                
+                // Test API endpoints
+                const endpoints = [
+                    'http://localhost:3000/api/graph',
+                    'http://localhost:3000/api/stats',
+                    'http://localhost:3000/api/annotations'
+                ];
+                
+                for (const endpoint of endpoints) {
+                    try {
+                        const response = await fetch(endpoint);
+                        const contentType = response.headers.get('content-type');
+                        debugDiv.innerHTML += `<p>✅ ${endpoint}: ${response.status} (${contentType})</p>`;
+                        
+                        if (endpoint.includes('graph')) {
+                            const data = await response.json();
+                            debugDiv.innerHTML += `<p>Graph data: ${Object.keys(data.nodes || {}).length} nodes, ${Object.keys(data.adjacency_list || {}).length} adjacency entries</p>`;
+                        }
+                    } catch (err) {
+                        debugDiv.innerHTML += `<p>❌ ${endpoint}: ${err.message}</p>`;
+                    }
+                }
+                
+                // Test D3.js
+                debugDiv.innerHTML += '<p>Testing D3.js...</p>';
+                if (typeof d3 !== 'undefined') {
+                    debugDiv.innerHTML += `<p>✅ D3.js loaded: version ${d3.version || 'unknown'}</p>`;
+                } else {
+                    debugDiv.innerHTML += `<p>❌ D3.js not loaded</p>`;
+                }
+                
+                // Test SVG creation
+                const testSvg = d3.select('body').append('svg').attr('width', 100).attr('height', 100);
+                testSvg.append('circle').attr('r', 10).attr('cx', 50).attr('cy', 50).attr('fill', 'red');
+                debugDiv.innerHTML += '<p>✅ D3.js SVG test circle created</p>';
+                
+            } catch (error) {
+                debugDiv.innerHTML += `<p>❌ Error: ${error.message}</p>`;
+                console.error('Debug error:', error);
+            }
+        }
+        
+        debugVisualization();
+    </script>
+</body>
+</html>

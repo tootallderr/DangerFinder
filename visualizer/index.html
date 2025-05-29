@@ -111,13 +111,66 @@
             font-size: 16px;
             border-bottom: 1px solid rgba(255,255,255,0.2);
             padding-bottom: 8px;
-        }
-
-        .stats-grid {
+        }        .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-bottom: 20px;
+        }
+
+        .connection-instructions {
+            background: rgba(52, 152, 219, 0.2);
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            text-align: center;
+            margin: 8px 0;
+            border: 1px solid rgba(52, 152, 219, 0.4);
+        }
+
+        .manual-connection-info {
+            background: rgba(46, 204, 113, 0.2);
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            text-align: center;
+            margin: 8px 0;
+            border: 1px solid rgba(46, 204, 113, 0.4);
+        }
+
+        .selected-for-connection {
+            font-weight: bold;
+            color: #2ecc71;
+        }
+
+        .alias-highlight {
+            stroke: #f39c12 !important;
+            stroke-width: 4px !important;
+            filter: drop-shadow(0 0 6px #f39c12);
+        }
+
+        .similar-name-highlight {
+            stroke: #e67e22 !important;
+            stroke-width: 3px !important;
+            filter: drop-shadow(0 0 4px #e67e22);
+        }
+
+        .manual-connection-line {
+            stroke: #9b59b6 !important;
+            stroke-width: 3px !important;
+            stroke-dasharray: 5,5;
+            filter: drop-shadow(0 0 4px #9b59b6);
+        }
+
+        .connection-mode-active {
+            background: rgba(52, 152, 219, 0.3) !important;
+            border: 2px solid #3498db !important;
+        }
+
+        .node-connection-selected {
+            stroke: #3498db !important;
+            stroke-width: 4px !important;
+            filter: drop-shadow(0 0 8px #3498db);
         }
 
         .stat-item {
@@ -234,12 +287,248 @@
             align-items: center;
             gap: 8px;
             margin-bottom: 5px;
-        }
-
-        .legend-color {
+        }        .legend-color {
             width: 12px;
             height: 12px;
             border-radius: 50%;
+        }
+
+        .btn-small {
+            font-size: 11px !important;
+            padding: 4px 8px !important;
+        }
+
+        .bulk-selection {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .selected-count {
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+
+        .node-convicted-high {
+            filter: drop-shadow(0 0 8px #ff0000) !important;
+        }
+
+        .node-convicted-medium {
+            filter: drop-shadow(0 0 6px #ff6b35) !important;
+        }
+
+        .node-convicted-low {
+            filter: drop-shadow(0 0 4px #e67e22) !important;
+        }
+
+        .node-selected {
+            filter: drop-shadow(0 0 10px #4ecdc4) !important;
+        }        .multi-select-mode {
+            background: rgba(46, 204, 113, 0.8) !important;
+            border-color: rgba(46, 204, 113, 1) !important;
+        }
+
+        .connection-instructions {
+            background: rgba(52, 152, 219, 0.2);
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            text-align: center;
+            margin: 8px 0;
+            border: 1px solid rgba(52, 152, 219, 0.4);
+        }
+
+        .manual-connection-info {
+            background: rgba(46, 204, 113, 0.2);
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            text-align: center;
+            margin: 8px 0;
+            border: 1px solid rgba(46, 204, 113, 0.4);
+        }
+
+        .selected-for-connection {
+            font-weight: bold;
+            color: #2ecc71;
+        }
+
+        .alias-highlight {
+            stroke: #f39c12 !important;
+            stroke-width: 4px !important;
+            filter: drop-shadow(0 0 6px #f39c12);
+        }
+
+        .similar-name-highlight {
+            stroke: #e67e22 !important;
+            stroke-width: 3px !important;
+            filter: drop-shadow(0 0 4px #e67e22);
+        }
+
+        .manual-connection-line {
+            stroke: #9b59b6 !important;
+            stroke-width: 3px !important;
+            stroke-dasharray: 5,5;
+            filter: drop-shadow(0 0 4px #9b59b6);
+        }
+
+        .connection-mode-active {
+            background: rgba(52, 152, 219, 0.3) !important;
+            border: 2px solid #3498db !important;
+        }
+
+        .node-connection-selected {
+            stroke: #3498db !important;
+            stroke-width: 4px !important;
+            filter: drop-shadow(0 0 8px #3498db);
+        }
+            text-align: center;
+            opacity: 0.6;
+            font-size: 14px;
+        }
+
+        .selection-count {
+            margin-bottom: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }        .center-text {
+            text-align: center;
+            opacity: 0.6;
+            font-size: 12px;
+        }
+
+        /* Alias and connection styles */
+        .connection-mode {
+            background: rgba(255, 193, 7, 0.8) !important;
+            border-color: rgba(255, 193, 7, 1) !important;
+        }
+
+        .alias-link {
+            stroke: #ff9800 !important;
+            stroke-width: 3px !important;
+            stroke-dasharray: 5,5 !important;
+            opacity: 0.8 !important;
+        }
+
+        .similar-name-link {
+            stroke: #9c27b0 !important;
+            stroke-width: 2px !important;
+            stroke-dasharray: 10,5 !important;
+            opacity: 0.7 !important;
+        }
+
+        .manual-connection-link {
+            stroke: #4caf50 !important;
+            stroke-width: 2px !important;
+            stroke-dasharray: 3,3 !important;
+            opacity: 0.9 !important;
+        }
+
+        .node-alias-similar {
+            filter: drop-shadow(0 0 6px #9c27b0) !important;
+        }
+
+        .connection-instructions {
+            background: rgba(255, 193, 7, 0.2);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .alias-list {
+            max-height: 150px;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .alias-item {
+            background: rgba(255,255,255,0.1);
+            padding: 6px;
+            margin-bottom: 4px;
+            border-radius: 4px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .alias-item .similarity-score {
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+
+        .alias-item .alias-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .alias-item button {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .threshold-controls {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .threshold-controls label {
+            font-size: 11px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .threshold-controls input[type="range"] {
+            width: 100%;
+            margin-bottom: 5px;
+        }        .threshold-display {
+            text-align: center;
+            font-size: 11px;
+            color: #4ecdc4;
+        }
+
+        /* Alias-specific connection styles */
+        .alias-connection-line {
+            stroke: #e74c3c !important;
+            stroke-width: 4px !important;
+            stroke-dasharray: 10,3;
+            filter: drop-shadow(0 0 6px #e74c3c);
+        }
+
+        .shared-friend-highlight {
+            stroke: #f1c40f !important;
+            stroke-width: 5px !important;
+            filter: drop-shadow(0 0 8px #f1c40f);
+            animation: pulse-yellow 2s infinite;
+        }
+
+        .alias-connection-mode-active {
+            background: rgba(231, 76, 60, 0.8) !important;
+            border: 2px solid #e74c3c !important;
+        }
+
+        @keyframes pulse-yellow {
+            0% { filter: drop-shadow(0 0 4px #f1c40f); }
+            50% { filter: drop-shadow(0 0 12px #f1c40f); }
+            100% { filter: drop-shadow(0 0 4px #f1c40f); }
         }
     </style>
 </head>
@@ -258,15 +547,22 @@
             <div class="control-group">
                 <label>Filter:</label>
                 <input type="text" id="search-input" placeholder="Search nodes...">
-            </div>
-            <div class="control-group">
+            </div>            <div class="control-group">
                 <label>Min Connections:</label>
                 <input type="range" id="connection-filter" min="0" max="50" value="0" title="Minimum number of connections to display">
                 <span id="connection-value">0</span>
             </div>
-            <button class="btn" id="refresh-btn">🔄 Refresh</button>
+            <div class="control-group">
+                <label>Similarity Threshold:</label>
+                <input type="range" id="similarity-threshold" min="0.1" max="1.0" step="0.05" value="0.7" title="Name similarity threshold for alias detection">
+                <span id="threshold-value">0.7</span>
+            </div>            <button class="btn" id="refresh-btn">🔄 Refresh</button>
+            <button class="btn" id="auto-refresh-btn" title="Toggle automatic refresh every 30 seconds" style="background-color: rgba(231, 76, 60, 0.8);">🔄 Auto-Refresh: OFF</button>
+            <button class="btn" id="detect-aliases-btn">🔍 Detect Aliases</button>
             <button class="btn" id="export-btn">📤 Export</button>
             <button class="btn" id="fullscreen-btn">⛶ Fullscreen</button>
+            <button class="btn" id="multi-select-btn" title="Toggle multi-selection mode">📌 Multi-Select</button>
+            <button class="btn" id="connection-mode-btn" title="Toggle manual connection mode">🔗 Connect</button>
         </div>
     </div>
 
@@ -277,7 +573,18 @@
                 <div class="spinner"></div>
                 <div>Loading graph data...</div>
             </div>
-            <div class="legend" id="legend">
+            <div class="legend" id="legend">                <div class="legend-item">
+                    <div class="legend-color" style="background: #ff6b9d; border: 3px solid #e91e63;"></div>
+                    <span>👶 Kids (Under 18)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #3498db; border: 2px solid #2196f3;"></div>
+                    <span>👨 Adults (18+)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #95a5a6; border: 2px solid #607d8b;"></div>
+                    <span>❓ Age Unknown</span>
+                </div>
                 <div class="legend-item">
                     <div class="legend-color" style="background: #4ecdc4;"></div>
                     <span>Central Nodes</span>
@@ -293,6 +600,29 @@
                 <div class="legend-item">
                     <div class="legend-color" style="background: #e74c3c;"></div>
                     <span>Isolated Nodes</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #8e44ad; border: 3px solid #ff0000;"></div>
+                    <span>High Risk (Convicted)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #d35400; border: 2px solid #ff6b35;"></div>
+                    <span>Medium Risk</span>
+                </div>                <div class="legend-item">
+                    <div class="legend-color" style="background: #f1c40f; border: 1px solid #e67e22;"></div>
+                    <span>Low Risk</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f39c12; border: 4px solid #f39c12;"></div>
+                    <span>✨ Confirmed Aliases</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #e67e22; border: 3px solid #e67e22;"></div>
+                    <span>🔍 Similar Names</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #9b59b6; border: 3px dashed #9b59b6;"></div>
+                    <span>🔗 Manual Connections</span>
                 </div>
             </div>
         </div>
@@ -316,18 +646,69 @@
                     <div class="stat-value" id="communities">0</div>
                     <div class="stat-label">Communities</div>
                 </div>
-            </div>
-
-            <h3>🎯 Selected Node</h3>
+            </div>            <h3>🎯 Selected Node</h3>
             <div class="node-details" id="node-details">
-                <div style="text-align: center; opacity: 0.6; font-size: 14px;">
+                <div class="click-instructions">
                     Click a node to view details
+                </div>
+            </div>            <h3>📌 Bulk Selection</h3>
+            <div class="bulk-selection" id="bulk-selection">
+                <div class="selection-count">
+                    <strong>Selected: <span id="selected-count" class="selected-count">0</span> nodes</strong>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-small" id="mark-kids">👶 Kids</button>
+                    <button class="btn btn-small" id="mark-adult">👨 Adult</button>
+                    <button class="btn btn-small" id="mark-unknown">❓ Can't Tell</button>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-small" id="clear-selection">🗑️ Clear</button>
+                    <button class="btn btn-small" id="select-all-visible">✅ All Visible</button>
+                </div>
+            </div>            <h3>🔍 Alias Detection & Manual Connections</h3>
+            <div class="alias-management">
+                <div class="threshold-controls">
+                    <label>Similarity Threshold: <span id="threshold-display">0.7</span></label>
+                    <input type="range" id="alias-threshold" min="0.1" max="1.0" step="0.05" value="0.7">
+                    <div class="threshold-display">
+                        <span>Less Similar ← → More Similar</span>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-small" id="detect-similar-names">🔍 Find Similar</button>
+                    <button class="btn btn-small" id="highlight-aliases">✨ Highlight Aliases</button>
+                </div>                <div class="button-group">
+                    <button class="btn btn-small" id="manual-connection-mode">🔗 Connection Mode</button>
+                    <button class="btn btn-small" id="alias-connection-mode">🎭 Alias Mode</button>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-small" id="analyze-shared-friends">👥 Find Shared Friends</button>
+                    <button class="btn btn-small" id="save-alias-settings">💾 Save Settings</button>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-small" id="load-alias-settings">📂 Load Settings</button>
+                    <button class="btn btn-small" id="clear-highlights">🧹 Clear Highlights</button>
+                </div>
+                <div class="connection-instructions" id="connection-instructions" style="display: none;">
+                    🔗 Connection Mode: Click on two nodes to create a manual connection
+                </div>
+                <div class="manual-connection-info" id="manual-connection-info" style="display: none;">
+                    <div class="selected-for-connection" id="selected-for-connection"></div>
+                </div>                <div class="alias-list" id="alias-list">
+                    <div class="center-text">
+                        No aliases detected yet
+                    </div>
+                </div>
+                <div class="alias-list" id="similar-names-list">
+                    <div style="padding: 10px; opacity: 0.7; text-align: center;">
+                        No similar names found
+                    </div>
                 </div>
             </div>
 
             <h3>🏘️ Communities</h3>
             <div class="community-list" id="community-list">
-                <div style="text-align: center; opacity: 0.6; font-size: 12px;">
+                <div class="center-text">
                     Loading communities...
                 </div>
             </div>

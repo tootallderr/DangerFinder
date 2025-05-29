@@ -33,6 +33,9 @@ const QUEUE_FILE = path.join(DATA_DIR, 'queue.json');
 const VISITED_FILE = path.join(DATA_DIR, 'visited.json');
 const GRAPH_FILE = path.join(DATA_DIR, 'graph.json');
 const ANNOTATIONS_FILE = path.join(DATA_DIR, 'annotations.json');
+const ALIASES_FILE = path.join(DATA_DIR, 'aliases.json');
+const MANUAL_CONNECTIONS_FILE = path.join(DATA_DIR, 'manual_connections.json');
+const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
 
 // Ensure data directories exist
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -51,6 +54,27 @@ const initializeDataFiles = () => {
     }
     if (!fs.existsSync(ANNOTATIONS_FILE)) {
         fs.writeFileSync(ANNOTATIONS_FILE, JSON.stringify({}));
+    }
+    if (!fs.existsSync(ALIASES_FILE)) {
+        fs.writeFileSync(ALIASES_FILE, JSON.stringify({ 
+            aliases: [], 
+            similarNames: [],
+            confirmedAliases: []
+        }));
+    }
+    if (!fs.existsSync(MANUAL_CONNECTIONS_FILE)) {
+        fs.writeFileSync(MANUAL_CONNECTIONS_FILE, JSON.stringify({ 
+            connections: [],
+            removedConnections: []
+        }));
+    }
+    if (!fs.existsSync(SETTINGS_FILE)) {
+        fs.writeFileSync(SETTINGS_FILE, JSON.stringify({
+            similarityThreshold: 0.7,
+            autoDetectAliases: true,
+            showSimilarNames: true,
+            showManualConnections: true
+        }));
     }
 };
 
@@ -84,6 +108,90 @@ const writeJSON = (filePath, data) => {
         console.error(`Error writing ${filePath}:`, error);
         return false;
     }
+};
+
+// Name similarity and alias detection functions
+const calculateNameSimilarity = (name1, name2) => {
+    if (!name1 || !name2) return 0;
+    
+    // Normalize names (lowercase, remove extra spaces, common prefixes/suffixes)
+    const normalize = (name) => {
+        return name.toLowerCase()
+            .replace(/\s+/g, ' ')
+            .trim()
+            .replace(/^(mr|mrs|ms|dr|prof)\.?\s+/i, '')
+            .replace(/\s+(jr|sr|ii|iii|iv)\.?$/i, '');
+    };
+    
+    const n1 = normalize(name1);
+    const n2 = normalize(name2);
+    
+    if (n1 === n2) return 1.0;
+    
+    // Check for exact word matches (different order)
+    const words1 = n1.split(' ').filter(w => w.length > 1);
+    const words2 = n2.split(' ').filter(w => w.length > 1);
+    
+    if (words1.length > 0 && words2.length > 0) {
+        const commonWords = words1.filter(w => words2.includes(w));
+        const wordSimilarity = (commonWords.length * 2) / (words1.length + words2.length);
+        
+        if (wordSimilarity > 0.5) {
+            return Math.max(wordSimilarity, levenshteinSimilarity(n1, n2));
+        }
+    }
+    
+    return levenshteinSimilarity(n1, n2);
+};
+
+const levenshteinSimilarity = (str1, str2) => {
+    const matrix = Array(str2.length + 1).fill(null).map(() => Array(str1.length + 1).fill(null));
+    
+    for (let i = 0; i <= str1.length; i++) matrix[0][i] = i;
+    for (let j = 0; j <= str2.length; j++) matrix[j][0] = j;
+    
+    for (let j = 1; j <= str2.length; j++) {
+        for (let i = 1; i <= str1.length; i++) {
+            const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
+            matrix[j][i] = Math.min(
+                matrix[j][i - 1] + 1,
+                matrix[j - 1][i] + 1,
+                matrix[j - 1][i - 1] + cost
+            );
+        }
+    }
+    
+    const maxLength = Math.max(str1.length, str2.length);
+    return maxLength === 0 ? 1 : (maxLength - matrix[str2.length][str1.length]) / maxLength;
+};
+
+const detectSimilarNames = (profiles, threshold = 0.7) => {
+    const similarPairs = [];
+    const profilesList = Object.entries(profiles);
+    
+    for (let i = 0; i < profilesList.length; i++) {
+        for (let j = i + 1; j < profilesList.length; j++) {
+            const [url1, profile1] = profilesList[i];
+            const [url2, profile2] = profilesList[j];
+            
+            if (profile1.name && profile2.name) {
+                const similarity = calculateNameSimilarity(profile1.name, profile2.name);
+                
+                if (similarity >= threshold) {
+                    similarPairs.push({
+                        url1,
+                        url2,
+                        name1: profile1.name,
+                        name2: profile2.name,
+                        similarity: similarity,
+                        detectedAt: new Date().toISOString()
+                    });
+                }
+            }
+        }
+    }
+    
+    return similarPairs;
 };
 
 // Merge profile data with existing profile
@@ -674,6 +782,299 @@ app.delete('/api/annotations/:profileUrl', (req, res) => {
         }
     } catch (error) {
         console.error('Error removing annotation:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Alias and similarity detection endpoints
+
+// GET /api/aliases - Get all alias relationships
+app.get('/api/aliases', (req, res) => {
+    try {
+        const aliases = readJSON(ALIASES_FILE) || { aliases: [], similarNames: [], confirmedAliases: [] };
+        res.json(aliases);
+    } catch (error) {
+        console.error('Error reading aliases:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// POST /api/aliases/detect - Detect similar names automatically
+app.post('/api/aliases/detect', (req, res) => {
+    try {
+        const settings = readJSON(SETTINGS_FILE) || { similarityThreshold: 0.7 };
+        const { threshold } = req.body;
+        const finalThreshold = threshold || settings.similarityThreshold;
+        
+        // Read all profiles
+        const profileFiles = fs.readdirSync(PROFILES_DIR).filter(file => file.endsWith('.json'));
+        const profiles = {};
+        
+        profileFiles.forEach(file => {
+            try {
+                const profile = readJSON(path.join(PROFILES_DIR, file));
+                if (profile && profile.url) {
+                    profiles[profile.url] = profile;
+                }
+            } catch (error) {
+                console.error(`Error reading profile ${file}:`, error);
+            }
+        });
+        
+        const similarPairs = detectSimilarNames(profiles, finalThreshold);
+        
+        // Update aliases file with new detections
+        const aliases = readJSON(ALIASES_FILE) || { aliases: [], similarNames: [], confirmedAliases: [] };
+        
+        // Add new similar pairs, avoiding duplicates
+        const existingPairs = new Set(aliases.similarNames.map(p => `${p.url1}|${p.url2}`));
+        
+        similarPairs.forEach(pair => {
+            const pairKey1 = `${pair.url1}|${pair.url2}`;
+            const pairKey2 = `${pair.url2}|${pair.url1}`;
+            
+            if (!existingPairs.has(pairKey1) && !existingPairs.has(pairKey2)) {
+                aliases.similarNames.push(pair);
+                existingPairs.add(pairKey1);
+            }
+        });
+        
+        writeJSON(ALIASES_FILE, aliases);
+        
+        res.json({
+            success: true,
+            detected: similarPairs.length,
+            threshold: finalThreshold,
+            totalSimilar: aliases.similarNames.length,
+            newDetections: similarPairs
+        });
+    } catch (error) {
+        console.error('Error detecting aliases:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// POST /api/aliases/confirm - Confirm a similarity as an alias
+app.post('/api/aliases/confirm', (req, res) => {
+    try {
+        const { url1, url2, aliasType } = req.body;
+        
+        if (!url1 || !url2) {
+            return res.status(400).json({ error: 'Both URLs are required' });
+        }
+        
+        const aliases = readJSON(ALIASES_FILE) || { aliases: [], similarNames: [], confirmedAliases: [] };
+        
+        const confirmedAlias = {
+            url1,
+            url2,
+            aliasType: aliasType || 'confirmed',
+            confirmedAt: new Date().toISOString(),
+            confirmedBy: 'manual'
+        };
+        
+        // Add to confirmed aliases
+        aliases.confirmedAliases.push(confirmedAlias);
+        
+        // Remove from similar names if it exists there
+        aliases.similarNames = aliases.similarNames.filter(pair => 
+            !(pair.url1 === url1 && pair.url2 === url2) && 
+            !(pair.url1 === url2 && pair.url2 === url1)
+        );
+        
+        writeJSON(ALIASES_FILE, aliases);
+        
+        res.json({
+            success: true,
+            message: 'Alias confirmed successfully',
+            alias: confirmedAlias
+        });
+    } catch (error) {
+        console.error('Error confirming alias:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// DELETE /api/aliases/similar - Remove a similar name pair
+app.delete('/api/aliases/similar', (req, res) => {
+    try {
+        const { url1, url2 } = req.body;
+        
+        if (!url1 || !url2) {
+            return res.status(400).json({ error: 'Both URLs are required' });
+        }
+        
+        const aliases = readJSON(ALIASES_FILE) || { aliases: [], similarNames: [], confirmedAliases: [] };
+        
+        const beforeCount = aliases.similarNames.length;
+        aliases.similarNames = aliases.similarNames.filter(pair => 
+            !(pair.url1 === url1 && pair.url2 === url2) && 
+            !(pair.url1 === url2 && pair.url2 === url1)
+        );
+        
+        const removed = beforeCount - aliases.similarNames.length;
+        
+        writeJSON(ALIASES_FILE, aliases);
+        
+        res.json({
+            success: true,
+            message: `Removed ${removed} similar name pair(s)`,
+            removed
+        });
+    } catch (error) {
+        console.error('Error removing similar name pair:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Manual connection endpoints
+
+// GET /api/connections/manual - Get all manual connections
+app.get('/api/connections/manual', (req, res) => {
+    try {
+        const connections = readJSON(MANUAL_CONNECTIONS_FILE) || { connections: [], removedConnections: [] };
+        res.json(connections);
+    } catch (error) {
+        console.error('Error reading manual connections:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// POST /api/connections/manual - Add a manual connection
+app.post('/api/connections/manual', (req, res) => {
+    try {
+        const { source, target, connectionType, reason } = req.body;
+        
+        if (!source || !target) {
+            return res.status(400).json({ error: 'Source and target URLs are required' });
+        }
+        
+        const connections = readJSON(MANUAL_CONNECTIONS_FILE) || { connections: [], removedConnections: [] };
+        
+        const newConnection = {
+            source,
+            target,
+            connectionType: connectionType || 'friend',
+            reason: reason || 'Manual connection',
+            createdAt: new Date().toISOString(),
+            createdBy: 'manual'
+        };
+        
+        // Check if connection already exists
+        const exists = connections.connections.some(conn => 
+            (conn.source === source && conn.target === target) ||
+            (conn.source === target && conn.target === source)
+        );
+        
+        if (!exists) {
+            connections.connections.push(newConnection);
+            writeJSON(MANUAL_CONNECTIONS_FILE, connections);
+            
+            res.json({
+                success: true,
+                message: 'Manual connection added successfully',
+                connection: newConnection
+            });
+        } else {
+            res.status(400).json({ error: 'Connection already exists' });
+        }
+    } catch (error) {
+        console.error('Error adding manual connection:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// DELETE /api/connections/manual - Remove a manual connection
+app.delete('/api/connections/manual', (req, res) => {
+    try {
+        const { source, target } = req.body;
+        
+        if (!source || !target) {
+            return res.status(400).json({ error: 'Source and target URLs are required' });
+        }
+        
+        const connections = readJSON(MANUAL_CONNECTIONS_FILE) || { connections: [], removedConnections: [] };
+        
+        const beforeCount = connections.connections.length;
+        const removedConnection = connections.connections.find(conn => 
+            (conn.source === source && conn.target === target) ||
+            (conn.source === target && conn.target === source)
+        );
+        
+        connections.connections = connections.connections.filter(conn => 
+            !((conn.source === source && conn.target === target) ||
+              (conn.source === target && conn.target === source))
+        );
+        
+        const removed = beforeCount - connections.connections.length;
+        
+        if (removed > 0 && removedConnection) {
+            // Track removed connection for potential restoration
+            connections.removedConnections.push({
+                ...removedConnection,
+                removedAt: new Date().toISOString()
+            });
+        }
+        
+        writeJSON(MANUAL_CONNECTIONS_FILE, connections);
+        
+        res.json({
+            success: true,
+            message: `Removed ${removed} manual connection(s)`,
+            removed
+        });
+    } catch (error) {
+        console.error('Error removing manual connection:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Settings endpoints
+
+// GET /api/settings - Get user settings
+app.get('/api/settings', (req, res) => {
+    try {
+        const settings = readJSON(SETTINGS_FILE) || {
+            similarityThreshold: 0.7,
+            autoDetectAliases: true,
+            showSimilarNames: true,
+            showManualConnections: true
+        };
+        res.json(settings);
+    } catch (error) {
+        console.error('Error reading settings:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// POST /api/settings - Update user settings
+app.post('/api/settings', (req, res) => {
+    try {
+        const currentSettings = readJSON(SETTINGS_FILE) || {};
+        const newSettings = { ...currentSettings, ...req.body };
+        
+        // Validate threshold
+        if (newSettings.similarityThreshold !== undefined) {
+            if (typeof newSettings.similarityThreshold !== 'number' || 
+                newSettings.similarityThreshold < 0 || 
+                newSettings.similarityThreshold > 1) {
+                return res.status(400).json({ error: 'Similarity threshold must be between 0 and 1' });
+            }
+        }
+        
+        newSettings.lastUpdated = new Date().toISOString();
+        
+        if (writeJSON(SETTINGS_FILE, newSettings)) {
+            res.json({
+                success: true,
+                message: 'Settings updated successfully',
+                settings: newSettings
+            });
+        } else {
+            res.status(500).json({ error: 'Failed to save settings' });
+        }
+    } catch (error) {
+        console.error('Error updating settings:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });

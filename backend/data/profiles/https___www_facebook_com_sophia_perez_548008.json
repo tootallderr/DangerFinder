@@ -1,0 +1,40 @@
+{
+  "url": "https://www.facebook.com/sophia.perez.548008",
+  "name": "Sophia Perez",
+  "profile_image": "https://scontent.fosu2-1.fna.fbcdn.net/v/t39.30808-1/495580847_122103442802865513_6543793040625013905_n.jpg?stp=c107.0.462.462a_dst-jpg_s200x200_tt6&_nc_cat=102&ccb=1-7&_nc_sid=111fe6&_nc_ohc=8dQQu1ImgBsQ7kNvwETcZZ5&_nc_oc=AdnJkYrbr15xuwUoMjp_oIbyTvNMBZ9QtxLRUEAQtgIXyQarDDVlgEzzZcHBJln-CoyLUTLvf8LMaFuEl2Ck13qg&_nc_zt=24&_nc_ht=scontent.fosu2-1.fna&_nc_gid=iAfhezPBMrxKkRnJHs7E_Q&oh=00_AfItmsNXoRuuymhGfaOwiIQMwXa6vp-CbWJ4falJcuxHPQ&oe=683D5195",
+  "depth": 2,
+  "type": "about",
+  "scraped_at": "2025-05-28T20:49:05.410Z",
+  "friends": [
+    {
+      "name": "Sophia Perez",
+      "url": "https://www.facebook.com/sophia.perez.548008"
+    }
+  ],
+  "last_updated": "2025-05-28T20:49:05.411Z",
+  "scrape_history": [
+    {
+      "timestamp": "2025-05-28T20:48:55.906Z",
+      "type": "friends",
+      "sections": [
+        "name",
+        "friends",
+        "type"
+      ]
+    },
+    {
+      "timestamp": "2025-05-28T20:49:05.410Z",
+      "type": "about",
+      "sections": [
+        "name",
+        "about",
+        "type"
+      ]
+    }
+  ],
+  "about": {
+    "location": [
+      "{Origin Domain}\",\"1_2882107be72d37df895b05e0573990a6\":\"Unblock Messages?\",\"1_2b99f4eb0d10fb2a590c91881bc93620\":\"Can't Create Duplicate Account\",\"1_2dfe4f010e821ffa89d9c4133df72506\":\"Problem with bluetooth or audio source\",\"1_2e510be3887bae0dd4d73733dffa6ec4\":\"{firstname1}, {firstname2}, and {firstname3} are online\",\"1_2e9405cf33a60079eba08f7433c66595\":\"Unable To Connect Your Call\",\"1_2feb150fdf16fe534e635fa1143a7508\":\"No Devices Yet\",\"1_31426213a5556e794c313d21dbeceb6b\":\"Turn On\",\"1_3bce071d20c866b7a915136c01c2a17f\":\"Remove From Channel\",\"1_3e252ef60c34f4c269a640aedaaf9a91\":\"Recent Calls\",\"1_4323029c4a9559df6910965a98e5f7ee\":\"Customize your conversation with {short-name}"
+    ]
+  }
+}

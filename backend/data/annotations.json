@@ -1,18 +1,10 @@
 {
   "https://www.facebook.com/chase.lockwood.82583": {
-    "category": "confirmed-conviction",
-    "source": "",
-    "notes": "",
-    "risk": "high",
-    "profileName": "Chase Lockwood",
-    "convictionDetails": {
-      "type": "felony",
-      "crimeCategory": "Admitted on Camera to Child Porn",
-      "date": "",
-      "jurisdiction": ""
-    },
-    "timestamp": 1748397454817,
-    "lastUpdated": "2025-05-28T01:57:34.817Z",
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748465038987,
+    "lastUpdated": "2025-05-28T20:43:58.987Z",
+    "source": "graph-visualizer-bulk-selection",
     "savedToBackend": true
   },
   "https://www.facebook.com/dustin.hahne.56": {
@@ -23,6 +15,328 @@
     "profileName": "Dustin Hahne",
     "timestamp": 1748399399757,
     "lastUpdated": "2025-05-28T02:29:59.757Z",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/linda.kahena": {
+    "demographic": "kids",
+    "category": "demographic-annotation",
+    "timestamp": 1748465135990,
+    "lastUpdated": "2025-05-28T20:45:35.990Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/richard.parsons.803540": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748465038994,
+    "lastUpdated": "2025-05-28T20:43:58.994Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/profile.php?id=61574034098433": {
+    "demographic": "kids",
+    "category": "demographic-annotation",
+    "timestamp": 1748465135999,
+    "lastUpdated": "2025-05-28T20:45:35.999Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/profile.php?id=61556358533951": {
+    "demographic": "kids",
+    "category": "demographic-annotation",
+    "timestamp": 1748465136002,
+    "lastUpdated": "2025-05-28T20:45:36.002Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/princessmae.amandy": {
+    "demographic": "kids",
+    "category": "demographic-annotation",
+    "timestamp": 1748465136005,
+    "lastUpdated": "2025-05-28T20:45:36.005Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/ximena.castillo.2548": {
+    "demographic": "kids",
+    "category": "demographic-annotation",
+    "timestamp": 1748465136008,
+    "lastUpdated": "2025-05-28T20:45:36.008Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/marinam.gymnastic.2025": {
+    "demographic": "kids",
+    "category": "demographic-annotation",
+    "timestamp": 1748465136011,
+    "lastUpdated": "2025-05-28T20:45:36.011Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/sohari.brebes.2025": {
+    "demographic": "kids",
+    "category": "demographic-annotation",
+    "timestamp": 1748465136015,
+    "lastUpdated": "2025-05-28T20:45:36.015Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/pizza.lilian.2025": {
+    "demographic": "kids",
+    "category": "demographic-annotation",
+    "timestamp": 1748465228392,
+    "lastUpdated": "2025-05-28T20:47:08.392Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/elizabeth.connors.201141": {
+    "demographic": "kids",
+    "category": "demographic-annotation",
+    "timestamp": 1748465228398,
+    "lastUpdated": "2025-05-28T20:47:08.398Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/chythiakate": {
+    "demographic": "kids",
+    "category": "demographic-annotation",
+    "timestamp": 1748465764088,
+    "lastUpdated": "2025-05-28T20:56:04.088Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/sophia.perez.548008": {
+    "demographic": "kids",
+    "category": "demographic-annotation",
+    "timestamp": 1748465764092,
+    "lastUpdated": "2025-05-28T20:56:04.092Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/sandra.thomas.974371": {
+    "demographic": "kids",
+    "category": "demographic-annotation",
+    "timestamp": 1748465764095,
+    "lastUpdated": "2025-05-28T20:56:04.095Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/asd853.2025": {
+    "demographic": "kids",
+    "category": "demographic-annotation",
+    "timestamp": 1748465764098,
+    "lastUpdated": "2025-05-28T20:56:04.098Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/cote.de.tali.pablo.270086": {
+    "demographic": "kids",
+    "category": "demographic-annotation",
+    "timestamp": 1748465773586,
+    "lastUpdated": "2025-05-28T20:56:13.586Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/greg.hoovler.2025": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748469963510,
+    "lastUpdated": "2025-05-28T22:06:03.510Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/tracey.l.arbuckle": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748469963515,
+    "lastUpdated": "2025-05-28T22:06:03.515Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/amber.king.112481": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748470759225,
+    "lastUpdated": "2025-05-28T22:19:19.225Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/undertaker16146": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748469963521,
+    "lastUpdated": "2025-05-28T22:06:03.521Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/elizabeth.marie.hamby": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748469992002,
+    "lastUpdated": "2025-05-28T22:06:32.002Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/seth.strock.2025": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748469992010,
+    "lastUpdated": "2025-05-28T22:06:32.010Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/kiara.mayye": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748469992013,
+    "lastUpdated": "2025-05-28T22:06:32.013Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/sum.mayye": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748469992016,
+    "lastUpdated": "2025-05-28T22:06:32.016Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/cathy.culver.506577": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748469992019,
+    "lastUpdated": "2025-05-28T22:06:32.019Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/momo.williams.296178": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748469992022,
+    "lastUpdated": "2025-05-28T22:06:32.022Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/tiffanymarie.mcfall": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748469992025,
+    "lastUpdated": "2025-05-28T22:06:32.025Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/cathy.tury.3": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748470759214,
+    "lastUpdated": "2025-05-28T22:19:19.214Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/wendy.ayres.5": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748470759228,
+    "lastUpdated": "2025-05-28T22:19:19.228Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/brittany.eaken23": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748470759231,
+    "lastUpdated": "2025-05-28T22:19:19.231Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/tommy.tatta.2025": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748470759233,
+    "lastUpdated": "2025-05-28T22:19:19.233Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/courtney.capan.3": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748470759236,
+    "lastUpdated": "2025-05-28T22:19:19.236Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/jeff.eakin.222897": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748470759239,
+    "lastUpdated": "2025-05-28T22:19:19.239Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/scott.prestenbach": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748470759242,
+    "lastUpdated": "2025-05-28T22:19:19.242Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/miranda.snackz.parsons": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748470759245,
+    "lastUpdated": "2025-05-28T22:19:19.245Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/marvin.meredith.796": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748470759248,
+    "lastUpdated": "2025-05-28T22:19:19.248Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/mk.blood.106": {
+    "demographic": "adult",
+    "category": "demographic-annotation",
+    "timestamp": 1748470759251,
+    "lastUpdated": "2025-05-28T22:19:19.251Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/danielle.ann.shonsky": {
+    "demographic": "unknown",
+    "category": "demographic-annotation",
+    "timestamp": 1748471132520,
+    "lastUpdated": "2025-05-28T22:25:32.520Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/marlene.parsons.144": {
+    "demographic": "unknown",
+    "category": "demographic-annotation",
+    "timestamp": 1748471132524,
+    "lastUpdated": "2025-05-28T22:25:32.524Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/jessica.hoovler.2025": {
+    "demographic": "unknown",
+    "category": "demographic-annotation",
+    "timestamp": 1748471132528,
+    "lastUpdated": "2025-05-28T22:25:32.528Z",
+    "source": "graph-visualizer-bulk-selection",
+    "savedToBackend": true
+  },
+  "https://www.facebook.com/profile.php?id=100013947759576": {
+    "category": "other",
+    "source": "",
+    "notes": "confirmed arrest for pedo shit",
+    "risk": "high",
+    "profileName": "Dustin Hahne",
+    "timestamp": 1748471573770,
+    "lastUpdated": "2025-05-28T22:32:53.770Z",
     "savedToBackend": true
   }
 }

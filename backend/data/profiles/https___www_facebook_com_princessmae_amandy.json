@@ -1,0 +1,40 @@
+{
+  "url": "https://www.facebook.com/princessmae.amandy",
+  "name": "Princessmae Amandy",
+  "profile_image": "https://scontent.fosu2-1.fna.fbcdn.net/v/t39.30808-1/499981316_122107250822873604_4101487169736690445_n.jpg?stp=c0.0.720.720a_dst-jpg_s100x100_tt6&_nc_cat=109&ccb=1-7&_nc_sid=e99d92&_nc_ohc=izhxfJCXoDwQ7kNvwEgl1go&_nc_oc=Adm-sk3jnfEAkPvNNC5ZSF60TqxtNvvDWabro-UsHGYJUFzMojySiNs7iUTykiO0PETyfC1tjCmLeyJSaqSnuO3P&_nc_zt=24&_nc_ht=scontent.fosu2-1.fna&_nc_gid=AcUzdiUD2FUNsxVS7_i7UQ&oh=00_AfLPVD0y5n17ueyc7VimTdpK1Y4TgJHVQsjRIGjsqVZxZQ&oe=683D52FE",
+  "depth": 2,
+  "type": "about",
+  "scraped_at": "2025-05-28T20:43:30.438Z",
+  "friends": [
+    {
+      "name": "Princessmae Amandy",
+      "url": "https://www.facebook.com/princessmae.amandy"
+    }
+  ],
+  "last_updated": "2025-05-28T20:43:30.439Z",
+  "scrape_history": [
+    {
+      "timestamp": "2025-05-28T20:43:21.071Z",
+      "type": "friends",
+      "sections": [
+        "name",
+        "friends",
+        "type"
+      ]
+    },
+    {
+      "timestamp": "2025-05-28T20:43:30.438Z",
+      "type": "about",
+      "sections": [
+        "name",
+        "about",
+        "type"
+      ]
+    }
+  ],
+  "about": {
+    "location": [
+      "{Origin Domain}\",\"1_2882107be72d37df895b05e0573990a6\":\"Unblock Messages?\",\"1_2b99f4eb0d10fb2a590c91881bc93620\":\"Can't Create Duplicate Account\",\"1_2dfe4f010e821ffa89d9c4133df72506\":\"Problem with bluetooth or audio source\",\"1_2e510be3887bae0dd4d73733dffa6ec4\":\"{firstname1}, {firstname2}, and {firstname3} are online\",\"1_2e9405cf33a60079eba08f7433c66595\":\"Unable To Connect Your Call\",\"1_2feb150fdf16fe534e635fa1143a7508\":\"No Devices Yet\",\"1_31426213a5556e794c313d21dbeceb6b\":\"Turn On\",\"1_3bce071d20c866b7a915136c01c2a17f\":\"Remove From Channel\",\"1_3e252ef60c34f4c269a640aedaaf9a91\":\"Recent Calls\",\"1_4323029c4a9559df6910965a98e5f7ee\":\"Customize your conversation with {short-name}"
+    ]
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "url": "https://www.facebook.com/elizabeth.marie.hamby",
+  "name": "Elizabeth Marie Hamby",
+  "profile_image": "https://scontent.fosu2-1.fna.fbcdn.net/v/t39.30808-1/494642299_122107817816852461_5233967725354801510_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=BdWAHguRLKkQ7kNvwHz3lzt&_nc_oc=Adm2B-csMObd_adf9buRR7wj20LREch8kFGxlPFohUdkIQFDqZJWe9DAG96ZNF6qoW39J9caBMvNfgNyk8IvLqe8&_nc_zt=24&_nc_ht=scontent.fosu2-1.fna&_nc_gid=3vo-sHbV6LdKyPR02G9XPQ&oh=00_AfJYdWmTL_JT-vBoqktTrBsze52Yj1b7__LmrfTSpA-75w&oe=683D4C8D",
+  "depth": 2,
+  "type": "about",
+  "scraped_at": "2025-05-28T21:54:34.777Z",
+  "friends": [
+    {
+      "name": "Elizabeth Marie Hamby",
+      "url": "https://www.facebook.com/elizabeth.marie.hamby"
+    },
+    {
+      "name": "Robert Norris",
+      "url": "https://www.facebook.com/robert.norris.38534"
+    },
+    {
+      "name": "Ashley Sams",
+      "url": "https://www.facebook.com/Ajsams2025"
+    },
+    {
+      "name": "Jazzi Warner",
+      "url": "https://www.facebook.com/jazzi.warner.2025"
+    },
+    {
+      "name": "Allyson Ballew",
+      "url": "https://www.facebook.com/allyson.ballew.2025"
+    },
+    {
+      "name": "Leah Ballew",
+      "url": "https://www.facebook.com/leah.ballew.2025"
+    },
+    {
+      "name": "Aubrianna Ashby",
+      "url": "https://www.facebook.com/aubrianna.ashby"
+    },
+    {
+      "name": "Albert Klink",
+      "url": "https://www.facebook.com/albert.klink.2025"
+    },
+    {
+      "name": "Tiffany Marie Rivas",
+      "url": "https://www.facebook.com/tiffanymarie.mcfall"
+    },
+    {
+      "name": "Julia Seiders",
+      "url": "https://www.facebook.com/roxy.lace.14"
+    },
+    {
+      "name": "Christian Hice",
+      "url": "https://www.facebook.com/christian.hice"
+    },
+    {
+      "name": "Richard Parsons",
+      "url": "https://www.facebook.com/richard.parsons.803540"
+    },
+    {
+      "name": "Diamond Rose",
+      "url": "https://www.facebook.com/diamond.rose.160568"
+    },
+    {
+      "name": "Aleah Ballew",
+      "url": "https://www.facebook.com/aleah.ballew"
+    },
+    {
+      "name": "Ashley Nicole Sams",
+      "url": "https://www.facebook.com/ashley.nicole.sams"
+    },
+    {
+      "name": "Austin Crowder",
+      "url": "https://www.facebook.com/austin.crowder.2025"
+    },
+    {
+      "name": "Brandon Oliver",
+      "url": "https://www.facebook.com/brandon.oliver.127297"
+    },
+    {
+      "name": "Michael Burleson",
+      "url": "https://www.facebook.com/michael.burleson5855"
+    },
+    {
+      "name": "Diamond Rose",
+      "url": "https://www.facebook.com/diamond.rose.551534"
+    },
+    {
+      "name": "China Wallace",
+      "url": "https://www.facebook.com/china.wallace.152001"
+    },
+    {
+      "name": "Young Verse",
+      "url": "https://facebook.com/youngversemusic"
+    }
+  ],
+  "last_updated": "2025-05-28T21:54:34.778Z",
+  "scrape_history": [
+    {
+      "timestamp": "2025-05-28T21:54:25.275Z",
+      "type": "friends",
+      "sections": [
+        "name",
+        "friends",
+        "type"
+      ]
+    },
+    {
+      "timestamp": "2025-05-28T21:54:34.777Z",
+      "type": "about",
+      "sections": [
+        "name",
+        "about",
+        "type"
+      ]
+    }
+  ],
+  "about": {
+    "location": [
+      "{Origin Domain}\",\"1_2882107be72d37df895b05e0573990a6\":\"Unblock Messages?\",\"1_2b99f4eb0d10fb2a590c91881bc93620\":\"Can't Create Duplicate Account\",\"1_2dfe4f010e821ffa89d9c4133df72506\":\"Problem with bluetooth or audio source\",\"1_2e510be3887bae0dd4d73733dffa6ec4\":\"{firstname1}, {firstname2}, and {firstname3} are online\",\"1_2e9405cf33a60079eba08f7433c66595\":\"Unable To Connect Your Call\",\"1_2feb150fdf16fe534e635fa1143a7508\":\"No Devices Yet\",\"1_31426213a5556e794c313d21dbeceb6b\":\"Turn On\",\"1_3bce071d20c866b7a915136c01c2a17f\":\"Remove From Channel\",\"1_3e252ef60c34f4c269a640aedaaf9a91\":\"Recent Calls\",\"1_4323029c4a9559df6910965a98e5f7ee\":\"Customize your conversation with {short-name}"
+    ]
+  }
+}

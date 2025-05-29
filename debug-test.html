@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Test</title>
+</head>
+<body>
+    <div id="result"></div>
+    <script>
+        async function testAPI() {
+            try {
+                console.log('Testing API endpoints...');
+                
+                const graphResponse = await fetch('http://localhost:3000/api/graph');
+                console.log('Graph response status:', graphResponse.status);
+                
+                if (graphResponse.ok) {
+                    const graphData = await graphResponse.json();
+                    console.log('Graph data loaded:', Object.keys(graphData));
+                    console.log('Nodes count:', Object.keys(graphData.nodes || {}).length);
+                    console.log('Adjacency list count:', Object.keys(graphData.adjacency_list || {}).length);
+                    
+                    document.getElementById('result').innerHTML = `
+                        <h2>API Test Results</h2>
+                        <p>Graph API: ✅ Working</p>
+                        <p>Nodes: ${Object.keys(graphData.nodes || {}).length}</p>
+                        <p>Adjacency entries: ${Object.keys(graphData.adjacency_list || {}).length}</p>
+                    `;
+                } else {
+                    document.getElementById('result').innerHTML = '<h2>❌ API Failed</h2>';
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = `<h2>❌ Error: ${error.message}</h2>`;
+            }
+        }
+        
+        testAPI();
+    </script>
+</body>
+</html>

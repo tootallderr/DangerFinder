@@ -1009,3 +1009,81 @@ M  visualizer/visualizer.js
    a2ca3e8..7a3e76f  master -> master
 2025-05-27 22:24:48,976 - INFO - ✅ Successfully pushed changes
 2025-05-27 22:24:48,976 - INFO - 🎉 Sync completed successfully
+2025-05-27 22:50:41,601 - INFO - 🚀 Starting GitHub sync process
+2025-05-27 22:50:41,601 - INFO - Repository path: c:\Users\GEorg\Desktop\DangerFinder
+2025-05-27 22:50:41,641 - INFO - 📦 Updating existing Git repository
+2025-05-27 22:50:41,678 - INFO - ✅ Origin remote already configured correctly
+2025-05-27 22:50:41,678 - INFO - 📁 Checking required directories
+2025-05-27 22:50:41,678 - INFO - 📎 Checking that all files are tracked
+2025-05-27 22:50:41,718 - WARNING - ⚠️ Core file doesn't exist: facebook-osint.user.js
+2025-05-27 22:50:41,718 - WARNING - ⚠️ Core file doesn't exist: DEPLOYMENT.md
+2025-05-27 22:50:41,718 - WARNING - ⚠️ Core file doesn't exist: facebook-osint-scraper.md
+2025-05-27 22:50:41,718 - WARNING - ⚠️ Core file doesn't exist: element_helpers.js
+2025-05-27 22:50:41,718 - WARNING - ⚠️ Core file doesn't exist: config.json
+2025-05-27 22:50:41,719 - INFO - Adding optional file: examples/
+2025-05-27 22:50:41,719 - INFO - Running: git add examples/
+2025-05-27 22:50:41,758 - WARNING - ⚠️ Missing core files: facebook-osint.user.js, DEPLOYMENT.md, facebook-osint-scraper.md, element_helpers.js, config.json
+2025-05-27 22:50:41,759 - INFO - 💡 These files should be created for a complete project
+2025-05-27 22:50:41,759 - WARNING - ⚠️ Some core files are missing. The project may be incomplete.
+2025-05-27 22:50:41,759 - INFO - 🔧 Applying optimal Git configuration
+2025-05-27 22:50:41,759 - INFO - Running: git config core.autocrlf true
+2025-05-27 22:50:41,799 - INFO - Running: git config diff.renameLimit 10000
+2025-05-27 22:50:41,839 - INFO - Running: git config diff.renames true
+2025-05-27 22:50:41,927 - INFO - ⬇️ Pulling latest changes from master
+2025-05-27 22:50:42,274 - INFO - Running: git pull origin master
+2025-05-27 22:50:42,665 - INFO - Already up to date.
+2025-05-27 22:50:42,665 - INFO - From https://github.com/tootallderr/DangerFinder
+ * branch            master     -> FETCH_HEAD
+2025-05-27 22:50:42,665 - INFO - ✅ Successfully pulled latest changes
+2025-05-27 22:50:42,665 - INFO - 📋 Generating changelog
+2025-05-27 22:50:42,739 - INFO - ✅ Changelog written to CHANGELOG.md
+2025-05-27 22:50:42,739 - INFO - Running: git add CHANGELOG.md
+2025-05-27 22:50:42,785 - INFO - Running: git add .
+2025-05-27 22:50:42,860 - WARNING - ⚠️ warning: in the working copy of 'backend/data/annotations.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/graph.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_chase_lockwood_82583.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_richard_parsons_803540.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/queue.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/visited.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/data/profiles/https___www_facebook_com_cathy_culver_506577.json', LF will be replaced by CRLF the next time Git touches it
+2025-05-27 22:50:42,911 - INFO - 📝 Changes to be committed:
+2025-05-27 22:50:42,911 - INFO - Running: git status --short
+2025-05-27 22:50:42,961 - INFO - M  CHANGELOG.md
+M  backend/data/annotations.json
+M  backend/data/graph.json
+A  backend/data/profiles/https___www_facebook_com_cathy_culver_506577.json
+M  backend/data/profiles/https___www_facebook_com_chase_lockwood_82583.json
+D  backend/data/profiles/https___www_facebook_com_elizabeth_connors_201141.json
+D  backend/data/profiles/https___www_facebook_com_linda_kahena.json
+D  backend/data/profiles/https___www_facebook_com_marinam_gymnastic_2025.json
+D  backend/data/profiles/https___www_facebook_com_pizza_lilian_2025.json
+D  backend/data/profiles/https___www_facebook_com_princessmae_amandy.json
+D  backend/data/profiles/https___www_facebook_com_profile_php_id_61556358533951.json
+D  backend/data/profiles/https___www_facebook_com_profile_php_id_61574034098433.json
+M  backend/data/profiles/https___www_facebook_com_richard_parsons_803540.json
+D  backend/data/profiles/https___www_facebook_com_sohari_brebes_2025.json
+D  backend/data/profiles/https___www_facebook_com_ximena_castillo_2548.json
+M  backend/data/queue.json
+M  backend/data/visited.json
+MM sync_log.txt
+M  tampermonkey/fb-scraper.user.js
+2025-05-27 22:50:42,961 - INFO - 💾 Committing changes: 📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27
+2025-05-27 22:50:42,961 - INFO - Running: git commit -m "📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27"
+2025-05-27 22:50:43,064 - INFO - [master 9516489] 📦 v0.2 Update with Enhanced UI and Error Handling - 2025-05-27
+ 19 files changed, 1755 insertions(+), 10237 deletions(-)
+ create mode 100644 backend/data/profiles/https___www_facebook_com_cathy_culver_506577.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_elizabeth_connors_201141.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_linda_kahena.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_marinam_gymnastic_2025.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_pizza_lilian_2025.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_princessmae_amandy.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61556358533951.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_profile_php_id_61574034098433.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_sohari_brebes_2025.json
+ delete mode 100644 backend/data/profiles/https___www_facebook_com_ximena_castillo_2548.json
+2025-05-27 22:50:43,105 - INFO - ⬆️ Pushing to master
+2025-05-27 22:50:43,105 - INFO - Running: git push origin master
+2025-05-27 22:50:44,354 - INFO - To https://github.com/tootallderr/DangerFinder.git
+   7a3e76f..9516489  master -> master
+2025-05-27 22:50:44,354 - INFO - ✅ Successfully pushed changes
+2025-05-27 22:50:44,355 - INFO - 🎉 Sync completed successfully

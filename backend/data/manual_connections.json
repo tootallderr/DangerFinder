@@ -1,0 +1,21 @@
+{
+  "connections": [
+    {
+      "source": "https://www.facebook.com/profile.php?id=61568498158577",
+      "target": "https://www.facebook.com/profile.php?id=61557104054838",
+      "connectionType": "friend",
+      "reason": "Manual connection via visualizer",
+      "createdAt": "2025-05-28T23:54:01.896Z",
+      "createdBy": "manual"
+    },
+    {
+      "source": "https://www.facebook.com/chase.lockwood.82583",
+      "target": "https://www.facebook.com/profile.php?id=61557104054838",
+      "connectionType": "friend",
+      "reason": "Manual connection via visualizer",
+      "createdAt": "2025-05-28T23:56:12.590Z",
+      "createdBy": "manual"
+    }
+  ],
+  "removedConnections": []
+}

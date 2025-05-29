@@ -196,3 +196,4 @@ Scraping capabilities:
 - [ ] **Advanced Community Detection**: Implement more sophisticated community detection algorithms beyond simple connected components.
 - [ ] **Privacy-Focused Enhancement**: Add features to automatically detect and anonymize personal data in exported graphs.
 - [ ] **Performance Optimization**: Implement pagination and lazy-loading for large graphs with thousands of nodes.
+- [ ] **Alias & Similar Name Detection**: Integrate logic to detect profile aliases and similar names, linking profiles that may represent the same individual or closely related identities. This helps identify duplicate or merged profiles and improves the accuracy of the social graph.

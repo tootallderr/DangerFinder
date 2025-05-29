@@ -12,16 +12,27 @@
 // ==/UserScript==
 
 (function() {
-    'use strict';
-
-    const CONFIG = {
+    'use strict';    const CONFIG = {
         API_BASE: 'http://localhost:3000/api',
         MAX_DEPTH: 5,
         SCRAPE_DELAY: 2000,
-        FRIEND_LIMIT: 100
+        FRIEND_LIMIT: 100,
+        
+        // Default scraping sections - can be overridden by user settings
+        DEFAULT_SECTIONS: {
+            basic_info: true,      // Name, profile image, URL
+            friends: true,         // Friends list  
+            about: true,           // About page (work, education, location)
+            photos: false,         // Photo albums (slower)
+            posts: false           // Recent posts (much slower)
+        }
     };    let currentDepth = GM_getValue('currentDepth', 1);
     let isRunning = false;
     let debugPanel = null;
+    let isScrapeAsNewSeed = false; // Flag to indicate we're scraping as a new seed
+    let lastHeartbeat = GM_getValue('lastHeartbeat', Date.now()); // Define lastHeartbeat globally
+    let heartbeatInterval = null;
+    let recoveryAttempts = 0;
       // Enhanced state management with locking and validation
     let stateLock = false;
     const ScrapingState = {
@@ -445,6 +456,475 @@
         },
     };
     
+    // Scraping Settings Management System
+    const ScrapingSettings = {
+        // Get current scraping settings with defaults
+        get: () => {
+            const saved = GM_getValue('scrapingSettings', null);
+            if (saved) {
+                return { ...CONFIG.DEFAULT_SECTIONS, ...saved };
+            }
+            return { ...CONFIG.DEFAULT_SECTIONS };
+        },
+        
+        // Save scraping settings
+        set: (newSettings) => {
+            const current = ScrapingSettings.get();
+            const updated = { ...current, ...newSettings };
+            GM_setValue('scrapingSettings', updated);
+            console.log('💾 Scraping settings saved:', updated);
+            return updated;
+        },
+        
+        // Reset to defaults
+        reset: () => {
+            GM_setValue('scrapingSettings', CONFIG.DEFAULT_SECTIONS);
+            console.log('🔄 Scraping settings reset to defaults');
+            return CONFIG.DEFAULT_SECTIONS;
+        },
+        
+        // Check if a specific section is enabled
+        isEnabled: (section) => {
+            const settings = ScrapingSettings.get();
+            return settings[section] === true;
+        },
+        
+        // Toggle a specific section
+        toggle: (section) => {
+            const current = ScrapingSettings.get();
+            current[section] = !current[section];
+            return ScrapingSettings.set(current);
+        },
+        
+        // Get active sections as array
+        getActiveSections: () => {
+            const settings = ScrapingSettings.get();
+            return Object.keys(settings).filter(key => settings[key] === true);
+        },
+        
+        // Export settings
+        export: () => {
+            const settings = ScrapingSettings.get();
+            const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `fb-scraper-settings-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        },
+        
+        // Import settings
+        import: (settingsData) => {
+            try {
+                const imported = typeof settingsData === 'string' ? JSON.parse(settingsData) : settingsData;
+                return ScrapingSettings.set(imported);
+            } catch (error) {
+                console.error('Error importing settings:', error);
+                return false;
+            }
+        }
+    };
+
+    // Speed Settings Management
+    const SpeedSettings = {
+        PRESETS: {
+            'fast': {
+                name: '🚀 Fast',
+                scrape_delay: 1000,
+                friend_limit: 50,
+                max_retries: 2,
+                sections: { basic_info: true, friends: true, about: false, photos: false, posts: false }
+            },
+            'balanced': {
+                name: '⚖️ Balanced', 
+                scrape_delay: 2000,
+                friend_limit: 100,
+                max_retries: 3,
+                sections: { basic_info: true, friends: true, about: true, photos: false, posts: false }
+            },
+            'thorough': {
+                name: '🔍 Thorough',
+                scrape_delay: 3000,
+                friend_limit: 200,
+                max_retries: 5,
+                sections: { basic_info: true, friends: true, about: true, photos: true, posts: false }
+            },
+            'complete': {
+                name: '💯 Complete',
+                scrape_delay: 4000,
+                friend_limit: 300,
+                max_retries: 5,
+                sections: { basic_info: true, friends: true, about: true, photos: true, posts: true }
+            }
+        },
+        
+        // Get current speed preset
+        getPreset: () => {
+            return GM_getValue('speedPreset', 'balanced');
+        },
+        
+        // Set speed preset
+        setPreset: (preset) => {
+            if (!SpeedSettings.PRESETS[preset]) {
+                console.error('Invalid speed preset:', preset);
+                return false;
+            }
+            
+            GM_setValue('speedPreset', preset);
+            const presetData = SpeedSettings.PRESETS[preset];
+            
+            // Update CONFIG values
+            CONFIG.SCRAPE_DELAY = presetData.scrape_delay;
+            CONFIG.FRIEND_LIMIT = presetData.friend_limit;
+            
+            // Update scraping sections
+            ScrapingSettings.set(presetData.sections);
+            
+            console.log(`⚡ Speed preset set to: ${presetData.name}`, presetData);
+            return true;
+        },
+        
+        // Get current speed settings
+        getCurrent: () => {
+            const preset = SpeedSettings.getPreset();
+            return SpeedSettings.PRESETS[preset];
+        }
+    };
+
+    // Settings persistence functions
+    function updateSpeedPreset(preset) {
+        try {
+            if (!SpeedSettings.PRESETS[preset]) {
+                console.warn(`Invalid speed preset: ${preset}`);
+                updateStatus('Invalid speed preset selected', 'error');
+                return;
+            }
+            
+            // Update the speed preset
+            SpeedSettings.setPreset(preset);
+            
+            // Update UI display
+            const speedIndicator = document.getElementById('speed-indicator');
+            if (speedIndicator) {
+                speedIndicator.textContent = SpeedSettings.getCurrent().name;
+            }
+            
+            // Update delay slider to match preset
+            const delaySlider = document.getElementById('delay-slider');
+            const delayValue = document.getElementById('delay-value');
+            if (delaySlider && delayValue) {
+                const presetDelay = SpeedSettings.PRESETS[preset].scrape_delay;
+                delaySlider.value = presetDelay;
+                delayValue.textContent = `${presetDelay}ms`;
+                CONFIG.SCRAPE_DELAY = presetDelay;
+            }
+            
+            // Update section checkboxes
+            updateSectionCheckboxes();
+            
+            console.log(`⚡ Speed preset updated to: ${preset}`);
+        } catch (error) {
+            console.error('Error updating speed preset:', error);
+            updateStatus('Failed to update speed preset', 'error');
+        }
+    }    function updateDelayValue(value) {
+        try {
+            const delay = parseInt(value);
+            if (delay < 500 || delay > 10000) {
+                console.warn(`Invalid delay value: ${delay}ms. Must be between 500-10000ms`);
+                return;
+            }
+            
+            // Update CONFIG and UI
+            CONFIG.SCRAPE_DELAY = delay;
+            const delayValue = document.getElementById('delay-value');
+            if (delayValue) {
+                delayValue.textContent = `${delay}ms`;
+            }
+            
+            // Auto-save the custom delay setting
+            GM_setValue('customScrapeDelay', delay);
+            GM_setValue('savedScrapeDelay', delay);
+            
+            console.log(`⏱️ Delay updated and saved: ${delay}ms`);
+        } catch (error) {
+            console.error('Error updating delay value:', error);
+        }
+    }
+
+    function updateSectionSetting(section, checked) {
+        try {
+            const currentSettings = ScrapingSettings.get();
+            currentSettings[section] = checked;
+            ScrapingSettings.set(currentSettings);
+            
+            console.log(`📋 Section ${section} ${checked ? 'enabled' : 'disabled'}`);
+        } catch (error) {
+            console.error('Error updating section setting:', error);
+        }
+    }
+
+    function updateSectionCheckboxes() {
+        try {
+            const currentSettings = ScrapingSettings.get();
+            const sections = ['basic_info', 'friends', 'about', 'photos', 'posts'];
+            
+            sections.forEach(section => {
+                const checkbox = document.getElementById(`setting-${section.replace('_', '-')}`);
+                if (checkbox) {
+                    checkbox.checked = currentSettings[section] || false;
+                }
+            });
+        } catch (error) {
+            console.error('Error updating section checkboxes:', error);
+        }
+    }
+
+    function saveSettings() {
+        try {
+            const currentPreset = document.getElementById('speed-preset')?.value || 'balanced';
+            const currentDelay = CONFIG.SCRAPE_DELAY;
+            const currentSections = ScrapingSettings.get();
+            
+            // Save to GM storage with validation
+            GM_setValue('savedSpeedPreset', currentPreset);
+            GM_setValue('savedScrapeDelay', currentDelay);
+            GM_setValue('savedSections', currentSections);
+            GM_setValue('customScrapeDelay', currentDelay);
+            GM_setValue('settingsSavedTimestamp', Date.now());
+            
+            console.log('💾 Settings saved:', {
+                preset: currentPreset,
+                delay: currentDelay,
+                sections: currentSections
+            });
+            
+            updateStatus('Settings saved successfully', 'success');
+        } catch (error) {
+            console.error('Error saving settings:', error);
+            updateStatus('Failed to save settings', 'error');
+        }
+    }
+
+    function resetSettings() {
+        try {
+            if (!confirm('Reset all settings to defaults? This will clear your saved preferences.')) {
+                return;
+            }
+            
+            // Clear saved settings
+            GM_deleteValue('savedSpeedPreset');
+            GM_deleteValue('savedScrapeDelay');
+            GM_deleteValue('savedSections');
+            GM_deleteValue('customScrapeDelay');
+            GM_deleteValue('settingsSavedTimestamp');
+            
+            // Reset to defaults
+            SpeedSettings.setPreset('balanced');
+            ScrapingSettings.reset();
+            CONFIG.SCRAPE_DELAY = 2000;
+            
+            // Update display
+            updateSettingsDisplay();
+            
+            console.log('🔄 Settings reset to defaults');
+            updateStatus('Settings reset to defaults', 'success');
+        } catch (error) {
+            console.error('Error resetting settings:', error);
+            updateStatus('Failed to reset settings', 'error');
+        }
+    }
+
+    function loadSavedSettings() {
+        try {
+            console.log('📥 Loading saved settings...');
+            
+            // Load speed preset with validation
+            const savedPreset = GM_getValue('savedSpeedPreset', null);
+            if (savedPreset && typeof savedPreset === 'string' && SpeedSettings.PRESETS[savedPreset]) {
+                SpeedSettings.setPreset(savedPreset);
+                console.log(`✅ Loaded speed preset: ${savedPreset}`);
+            } else if (savedPreset) {
+                console.warn(`Invalid saved preset: ${savedPreset}, using default`);
+                GM_deleteValue('savedSpeedPreset'); // Clean up invalid data
+            }
+            
+            // Load custom delay with validation
+            const savedDelay = GM_getValue('savedScrapeDelay', null);
+            if (savedDelay && typeof savedDelay === 'number' && savedDelay >= 500 && savedDelay <= 10000) {
+                CONFIG.SCRAPE_DELAY = savedDelay;
+                console.log(`✅ Loaded custom delay: ${savedDelay}ms`);
+            } else if (savedDelay) {
+                console.warn(`Invalid saved delay: ${savedDelay}, using default`);
+                GM_deleteValue('savedScrapeDelay'); // Clean up invalid data
+            }
+            
+            // Load section settings with validation
+            const savedSections = GM_getValue('savedSections', null);
+            if (savedSections && typeof savedSections === 'object' && savedSections !== null) {
+                // Validate section structure
+                const validSections = {};
+                const expectedSections = ['basic_info', 'friends', 'about', 'photos', 'posts'];
+                
+                expectedSections.forEach(section => {
+                    validSections[section] = savedSections[section] === true;
+                });
+                
+                ScrapingSettings.set(validSections);
+                console.log(`✅ Loaded section settings:`, validSections);
+            } else if (savedSections) {
+                console.warn(`Invalid saved sections:`, savedSections);
+                GM_deleteValue('savedSections'); // Clean up invalid data
+            }
+            
+            console.log('✅ Settings loading complete');
+        } catch (error) {
+            console.error('Error loading saved settings:', error);
+            // Clean up potentially corrupted settings
+            GM_deleteValue('savedSpeedPreset');
+            GM_deleteValue('savedScrapeDelay');
+            GM_deleteValue('savedSections');
+            updateStatus('Error loading settings, reset to defaults', 'warning');
+        }
+    }
+
+    function updateSettingsDisplay() {
+        try {
+            console.log('🔄 Updating settings display...');
+            
+            // Update speed preset dropdown
+            const speedPreset = document.getElementById('speed-preset');
+            if (speedPreset) {
+                const currentPreset = SpeedSettings.getPreset();
+                speedPreset.value = currentPreset;
+            }
+            
+            // Update speed indicator
+            const speedIndicator = document.getElementById('speed-indicator');
+            if (speedIndicator) {
+                speedIndicator.textContent = SpeedSettings.getCurrent().name;
+            }
+            
+            // Update delay slider and value
+            const delaySlider = document.getElementById('delay-slider');
+            const delayValue = document.getElementById('delay-value');
+            if (delaySlider && delayValue) {
+                delaySlider.value = CONFIG.SCRAPE_DELAY;
+                delayValue.textContent = `${CONFIG.SCRAPE_DELAY}ms`;
+            }
+            
+            // Update section checkboxes
+            updateSectionCheckboxes();
+            
+            console.log('✅ Settings display updated');
+        } catch (error) {
+            console.error('Error updating settings display:', error);
+        }
+    }
+
+    // Test settings persistence function
+    function testSettingsPersistence() {
+        try {
+            console.log('🧪 Testing settings persistence...');
+            updateStatus('Running settings persistence test...', 'info');
+            
+            // Store original settings
+            const originalPreset = SpeedSettings.getPreset();
+            const originalDelay = CONFIG.SCRAPE_DELAY;
+            const originalSections = { ...ScrapingSettings.get() };
+            
+            // Change settings
+            console.log('📝 Step 1: Changing settings...');
+            updateSpeedPreset('fast');
+            updateDelayValue(1500);
+            updateSectionSetting('photos', true);
+            updateSectionSetting('posts', false);
+            
+            // Save settings
+            console.log('💾 Step 2: Saving settings...');
+            saveSettings();
+            
+            // Simulate reload by clearing current state and reloading
+            console.log('🔄 Step 3: Simulating reload...');
+            SpeedSettings.setPreset('balanced'); // Reset temporarily
+            CONFIG.SCRAPE_DELAY = 2000;
+            ScrapingSettings.reset();
+            
+            // Load saved settings
+            console.log('📥 Step 4: Loading saved settings...');
+            loadSavedSettings();
+            updateSettingsDisplay();
+            
+            // Verify settings were restored
+            console.log('✅ Step 5: Verifying restoration...');
+            const restoredPreset = SpeedSettings.getPreset();
+            const restoredDelay = CONFIG.SCRAPE_DELAY;
+            const restoredSections = ScrapingSettings.get();
+            
+            const testResults = {
+                presetTest: restoredPreset === 'fast',
+                delayTest: restoredDelay === 1500,
+                photosTest: restoredSections.photos === true,
+                postsTest: restoredSections.posts === false
+            };
+            
+            const allPassed = Object.values(testResults).every(test => test === true);
+            
+            if (allPassed) {
+                console.log('✅ All persistence tests PASSED!', testResults);
+                updateStatus('Settings persistence test PASSED', 'success');
+            } else {
+                console.error('❌ Some persistence tests FAILED:', testResults);
+                updateStatus('Settings persistence test FAILED', 'error');
+            }
+            
+            // Restore original settings
+            console.log('🔄 Step 6: Restoring original settings...');
+            SpeedSettings.setPreset(originalPreset);
+            CONFIG.SCRAPE_DELAY = originalDelay;
+            ScrapingSettings.set(originalSections);
+            updateSettingsDisplay();
+            
+            console.log('🧪 Settings persistence test complete');
+            return allPassed;
+            
+        } catch (error) {
+            console.error('❌ Error in settings persistence test:', error);
+            updateStatus('Settings test failed with error', 'error');
+            return false;
+        }
+    }
+
+    // Show settings debug information
+    function showSettingsInfo() {
+        try {
+            const info = {
+                currentPreset: SpeedSettings.getPreset(),
+                currentDelay: CONFIG.SCRAPE_DELAY,
+                currentSections: ScrapingSettings.get(),
+                savedPreset: GM_getValue('savedSpeedPreset', 'none'),
+                savedDelay: GM_getValue('savedScrapeDelay', 'none'),
+                savedSections: GM_getValue('savedSections', 'none'),
+                savedTimestamp: GM_getValue('settingsSavedTimestamp', 'none')
+            };
+            
+            console.log('ℹ️ Current Settings Info:', info);
+            updateStatus('Settings info logged to console', 'info');
+            
+            // Show last saved timestamp if available
+            if (info.savedTimestamp !== 'none') {
+                const lastSaved = new Date(info.savedTimestamp).toLocaleString();
+                console.log(`📅 Last saved: ${lastSaved}`);
+            }
+            
+            return info;
+        } catch (error) {
+            console.error('Error getting settings info:', error);
+            return null;
+        }
+    }
+
     // Main UI Panel
     function createUI() {
         if (document.getElementById('fb-scraper-ui')) return;
@@ -466,13 +946,87 @@
                 color: white;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.3);
                 font-size: 14px;
-            ">
-                <div style="text-align: center; margin-bottom: 15px;">
+            ">                <div style="text-align: center; margin-bottom: 15px;">
                     <h3 style="margin: 0; font-size: 18px; font-weight: 600;">🕷️ FB Social Graph Scraper</h3>
                     <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">
                         Depth: <span id="current-depth">${currentDepth}</span> / ${CONFIG.MAX_DEPTH}
+                        | <span id="speed-indicator">${SpeedSettings.getCurrent().name}</span>
                     </div>
-                </div>                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
+                </div>
+
+                <!-- Settings Panel (Initially Hidden) -->
+                <div id="settings-panel" style="display: none; margin-bottom: 15px; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 15px;">
+                    <div style="font-weight: bold; margin-bottom: 10px; text-align: center;">⚙️ Scraping Settings</div>
+                    
+                    <!-- Speed Presets -->
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 12px; display: block; margin-bottom: 5px;">Speed Preset:</label>
+                        <select id="speed-preset" style="width: 100%; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px; border-radius: 4px; font-size: 12px;">
+                            <option value="fast">🚀 Fast (Basic + Friends)</option>
+                            <option value="balanced" selected>⚖️ Balanced (+ About)</option>
+                            <option value="thorough">🔍 Thorough (+ Photos)</option>
+                            <option value="complete">💯 Complete (Everything)</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Individual Section Toggles -->
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 12px; display: block; margin-bottom: 5px;">Sections to Scrape:</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 11px;">
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" id="setting-basic-info" checked>
+                                📋 Basic Info
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" id="setting-friends" checked>
+                                👥 Friends
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" id="setting-about">
+                                📝 About
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" id="setting-photos">
+                                📸 Photos
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" id="setting-posts">
+                                📄 Posts
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Custom Speed Settings -->
+                    <div style="margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <label style="font-size: 12px;">Delay:</label>
+                            <span id="delay-value" style="font-size: 11px;">${CONFIG.SCRAPE_DELAY}ms</span>
+                        </div>
+                        <input type="range" id="delay-slider" min="500" max="10000" step="500" value="${CONFIG.SCRAPE_DELAY}" 
+                               style="width: 100%; cursor: pointer;">
+                    </div>
+                      <div style="display: flex; gap: 5px; margin-bottom: 8px;">
+                        <button id="save-settings" style="
+                            background: rgba(46, 204, 113, 0.8); border: 1px solid rgba(46, 204, 113, 1);
+                            color: white; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; flex: 1;
+                        ">💾 Save</button>
+                        <button id="reset-settings" style="
+                            background: rgba(231, 76, 60, 0.8); border: 1px solid rgba(231, 76, 60, 1);
+                            color: white; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; flex: 1;
+                        ">🔄 Reset</button>
+                    </div>
+                    
+                    <div style="display: flex; gap: 5px;">
+                        <button id="test-settings" style="
+                            background: rgba(52, 152, 219, 0.8); border: 1px solid rgba(52, 152, 219, 1);
+                            color: white; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; flex: 1;
+                        ">🧪 Test</button>
+                        <button id="debug-settings" style="
+                            background: rgba(155, 89, 182, 0.8); border: 1px solid rgba(155, 89, 182, 1);
+                            color: white; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; flex: 1;
+                        ">ℹ️ Debug</button>
+                    </div>
+                </div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
                     <button id="scrape-basic" style="
                         background: rgba(255,255,255,0.2);
                         border: 1px solid rgba(255,255,255,0.3);
@@ -577,8 +1131,7 @@
                         transition: all 0.3s;
                         font-weight: bold;
                     ">🚨 Mark Conviction</button>
-                    
-                    <button id="annotate-profile" style="
+                      <button id="annotate-profile" style="
                         background: rgba(142, 68, 173, 0.8);
                         border: 1px solid rgba(142, 68, 173, 1);
                         color: white;
@@ -588,6 +1141,32 @@
                         font-size: 12px;
                         transition: all 0.3s;
                     ">📝 Annotate</button>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
+                    <button id="set-new-seed" style="
+                        background: rgba(30, 139, 195, 0.8);
+                        border: 1px solid rgba(30, 139, 195, 1);
+                        color: white;
+                        padding: 8px 12px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 12px;
+                        transition: all 0.3s;
+                        font-weight: bold;
+                    ">🌱 Set as New Seed</button>
+                    
+                    <button id="scrape-as-seed" style="
+                        background: rgba(39, 174, 96, 0.8);
+                        border: 1px solid rgba(39, 174, 96, 1);
+                        color: white;
+                        padding: 8px 12px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 12px;
+                        transition: all 0.3s;
+                        font-weight: bold;
+                    ">🔄 Scrape as Seed</button>
                 </div>
 
                 <div style="margin-bottom: 15px;">
@@ -620,6 +1199,17 @@
                         font-size: 11px;
                         flex: 1;
                     ">🔗 Test API</button>
+                    
+                    <button id="toggle-settings" style="
+                        background: rgba(52, 152, 219, 0.8);
+                        border: 1px solid rgba(52, 152, 219, 1);
+                        color: white;
+                        padding: 6px 12px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 11px;
+                        flex: 1;
+                    ">⚙️ Settings</button>
                     
                     <button id="toggle-debug" style="
                         background: rgba(255,193,7,0.8);
@@ -681,14 +1271,29 @@
         document.getElementById('scrape-friends').addEventListener('click', () => startWorkflow('friends_only'));
         document.getElementById('scrape-full').addEventListener('click', () => startWorkflow('full_scrape'));
         document.getElementById('auto-next').addEventListener('click', () => autoNext());
-        document.getElementById('stop-workflow').addEventListener('click', () => stopWorkflow());
-        document.getElementById('workflow-friends').addEventListener('click', () => startAutoWorkflow('friends_only'));
+        document.getElementById('stop-workflow').addEventListener('click', () => stopWorkflow());        document.getElementById('workflow-friends').addEventListener('click', () => startAutoWorkflow('friends_only'));
         document.getElementById('view-queue').addEventListener('click', () => viewQueue());
         document.getElementById('mark-conviction').addEventListener('click', () => quickMarkConviction());
         document.getElementById('annotate-profile').addEventListener('click', () => showAnnotationDialog());
-        document.getElementById('test-backend').addEventListener('click', () => testBackendConnection());
+        document.getElementById('set-new-seed').addEventListener('click', () => setAsNewSeed());
+        document.getElementById('scrape-as-seed').addEventListener('click', () => scrapeAsNewSeed());        document.getElementById('test-backend').addEventListener('click', () => testBackendConnection());
+        document.getElementById('toggle-settings').addEventListener('click', () => toggleSettingsPanel());
         document.getElementById('toggle-debug').addEventListener('click', () => toggleDebugPanel());
-        document.getElementById('minimize-panel').addEventListener('click', () => minimizePanel());}
+        document.getElementById('minimize-panel').addEventListener('click', () => minimizePanel());
+
+        // Settings panel event listeners
+        document.getElementById('speed-preset').addEventListener('change', (e) => updateSpeedPreset(e.target.value));        document.getElementById('delay-slider').addEventListener('input', (e) => updateDelayValue(e.target.value));
+        document.getElementById('save-settings').addEventListener('click', () => saveSettings());
+        document.getElementById('reset-settings').addEventListener('click', () => resetSettings());
+        document.getElementById('test-settings').addEventListener('click', () => testSettingsPersistence());
+        document.getElementById('debug-settings').addEventListener('click', () => showSettingsInfo());
+        
+        // Section toggle event listeners
+        document.getElementById('setting-basic-info').addEventListener('change', (e) => updateSectionSetting('basic_info', e.target.checked));
+        document.getElementById('setting-friends').addEventListener('change', (e) => updateSectionSetting('friends', e.target.checked));
+        document.getElementById('setting-about').addEventListener('change', (e) => updateSectionSetting('about', e.target.checked));
+        document.getElementById('setting-photos').addEventListener('change', (e) => updateSectionSetting('photos', e.target.checked));
+        document.getElementById('setting-posts').addEventListener('change', (e) => updateSectionSetting('posts', e.target.checked));}
 
     // Status and logging functions
     function updateStatus(message, type = 'info') {
@@ -723,8 +1328,7 @@
     // Core scraping functions
     async function scrapeBasicInfo() {
         updateStatus('Scraping basic profile info...', 'info');
-        
-        try {
+          try {
             const profileData = {
                 url: getCurrentProfileUrl(),
                 name: extractProfileName(),
@@ -732,6 +1336,11 @@
                 depth: currentDepth,
                 type: 'basic'
             };
+
+            // Add force_new_seed flag if we're scraping as a new seed
+            if (isScrapeAsNewSeed) {
+                profileData.force_new_seed = true;
+            }
 
             await sendToAPI('/profile', profileData);
             updateStatus(`Basic info scraped for: ${profileData.name}`, 'success');
@@ -776,14 +1385,18 @@
             const aboutData = extractAboutInfo();
             
             console.log('📊 Extracted about data:', aboutData);
-            
-            const profileData = {
+              const profileData = {
                 url: currentUrl,
                 name: extractProfileName(),
                 about: aboutData,
                 depth: currentDepth,
                 type: 'about'
             };
+
+            // Add force_new_seed flag if we're scraping as a new seed
+            if (isScrapeAsNewSeed) {
+                profileData.force_new_seed = true;
+            }
 
             console.log('📤 Sending profile data to API:', profileData);
             const response = await sendToAPI('/profile', profileData);
@@ -835,14 +1448,18 @@
             if (baseProfileUrl.includes('?sk=friends')) {
                 baseProfileUrl = baseProfileUrl.replace('?sk=friends', '');
             }
-            
-            const profileData = {
+              const profileData = {
                 url: baseProfileUrl,
                 name: extractProfileName(),
                 friends: friends,
                 depth: currentDepth,
                 type: 'friends'
             };
+
+            // Add force_new_seed flag if we're scraping as a new seed
+            if (isScrapeAsNewSeed) {
+                profileData.force_new_seed = true;
+            }
 
             await sendToAPI('/profile', profileData);
             
@@ -899,15 +1516,19 @@
             }
 
             const aboutData = extractAboutInfo();
-            
-            // Combine all data
+              // Combine all data
             const fullProfileData = {
                 ...basicData,
                 about: aboutData,
                 depth: currentDepth,
                 type: 'full',
                 scraped_sections: ['basic', 'about']
-            };            await sendToAPI('/profile', fullProfileData);
+            };
+            
+            // Add force_new_seed flag if scraping as new seed
+            if (isScrapeAsNewSeed) {
+                fullProfileData.force_new_seed = true;
+            }await sendToAPI('/profile', fullProfileData);
             updateStatus('Full profile scraped successfully', 'success');
 
             // Navigate to friends after a delay with proper URL format
@@ -983,11 +1604,9 @@
             updateHeartbeat();
             startAutoModeHeartbeat();
             stateLock = false;
-        }
-
-        try {
+        }        try {
             // Check if we're continuing a workflow (with transition lock check)
-            if (currentState.workflow && currentState.isRecent() && ScrapingState.isActive() && !currentState.transitionLock) {
+            if (currentState.workflow && ScrapingState.isRecent() && ScrapingState.isActive() && !currentState.transitionLock) {
                 console.log('🔄 Auto Mode: Continuing existing workflow');
                 updateStatus(`Continuing workflow: ${currentState.workflow} - ${currentState.step}`, 'info');
                 await continueWorkflow();
@@ -1262,10 +1881,15 @@
                             }
                         }, 3000);
                     }
-            }
-        } catch (error) {
+            }        } catch (error) {
             console.error('❌ Error in continueWorkflow:', error);
             updateStatus(`Workflow error: ${error.message}`, 'error');
+            
+            // Reset the scrape-as-new-seed flag on workflow errors
+            if (isScrapeAsNewSeed) {
+                console.log('🔄 Resetting isScrapeAsNewSeed flag after workflow error');
+                isScrapeAsNewSeed = false;
+            }
             
             // Unlock any locked state
             ScrapingState.unlock();
@@ -1427,9 +2051,14 @@
     async function completeWorkflowAndNext() {
         const currentState = ScrapingState.get();
         updateHeartbeat();
-        
-        console.log(`✅ Completed workflow for ${currentState.profileUrl}`);
+          console.log(`✅ Completed workflow for ${currentState.profileUrl}`);
         updateStatus(`Completed workflow for ${currentState.profileUrl}`, 'success');
+        
+        // Reset the scrape-as-new-seed flag after workflow completion
+        if (isScrapeAsNewSeed) {
+            console.log('🔄 Resetting isScrapeAsNewSeed flag after workflow completion');
+            isScrapeAsNewSeed = false;
+        }
         
         // Reset error counters on successful completion
         GM_setValue('autoNextErrorCount', 0);
@@ -1895,9 +2524,19 @@
                         Links: ${document.querySelectorAll('a').length}
                     </div>
                 </div>
-            </div>
-        `;
+            </div>        `;
         document.body.appendChild(debugPanel);
+    }
+
+    function toggleSettingsPanel() {
+        const settingsPanel = document.getElementById('settings-panel');
+        if (settingsPanel) {
+            if (settingsPanel.style.display === 'none') {
+                settingsPanel.style.display = 'block';
+            } else {
+                settingsPanel.style.display = 'none';
+            }
+        }
     }
 
     function getPageType() {
@@ -1936,12 +2575,16 @@
             updateStatus(`❌ Backend connection failed: ${error.message}`, 'error');
             console.error('Backend connection error:', error);
             return false;
-        }    }
-    
-    // Initialize
+        }    }    // Initialize
     setTimeout(() => {
         createUI();
         updateProfileDisplay(); // Check for existing annotations on load
+        
+        // Load saved settings and update UI (with small delay to ensure DOM is ready)
+        setTimeout(() => {
+            loadSavedSettings();
+            updateSettingsDisplay();
+        }, 100);
         
         // Note: FB_Scraper is defined at the end of the script with all available commands
         
@@ -2345,10 +2988,15 @@
                     }
                 }, 10000);
             }
-        }
-    }      // Initialize the scraper with enhanced state recovery
+        }    }      // Initialize the scraper with enhanced state recovery
     createUI();
     updateProfileDisplay(); // Check for existing annotations on load
+    
+    // Load saved settings and update UI (with small delay to ensure DOM is ready)
+    setTimeout(() => {
+        loadSavedSettings();
+        updateSettingsDisplay();
+    }, 100);
     
     // Enhanced initialization with state recovery
     setTimeout(() => {
@@ -2373,9 +3021,8 @@
             console.log('🔄 Auto mode was active, checking if we should resume...');
             updateHeartbeat();
             startAutoModeHeartbeat();
-            
-            // If we have an active workflow, resume it
-            if (state.workflow && state.isRecent() && ScrapingState.isActive()) {
+              // If we have an active workflow, resume it
+            if (state.workflow && ScrapingState.isRecent() && ScrapingState.isActive()) {
                 console.log('🔄 Resuming existing workflow:', state.workflow, state.step);
                 updateStatus(`Resuming workflow: ${state.workflow} - ${state.step}`, 'info');
                 // Unlock any stale transition locks from previous session
@@ -2463,8 +3110,7 @@
                 console.log(`🐛 Debug: autoMode=${state.autoMode}, isRunning=${isRunning}, workflow=${state.workflow}, step=${state.step}, transitionLock=${state.transitionLock}, lastAction=${state.lastAction}`);
             }, 10000);
         },
-        
-        // Depth management functions
+          // Depth management functions
         setCurrentDepth: (newDepth) => {
             if (newDepth < 1 || newDepth > CONFIG.MAX_DEPTH) {
                 console.error(`❌ Invalid depth: ${newDepth}. Must be between 1 and ${CONFIG.MAX_DEPTH}`);
@@ -2521,6 +3167,68 @@
                 }
                 await new Promise(resolve => setTimeout(resolve, 100)); // Small delay between requests
             }
+        },
+        
+        // NEW: Batch fix depth issues in queue
+        fixAllDepthIssues: async () => {
+            try {
+                console.log('🔧 Starting comprehensive depth fix...');
+                updateStatus('Analyzing and fixing depth issues...', 'info');
+                
+                const response = await sendToAPI('/scrape/fix-all-depths', {}, 'POST');
+                
+                if (response.success) {
+                    console.log(`✅ Depth fix completed:`, response);
+                    updateStatus(`Fixed ${response.totalFixed} URLs across ${response.profilesProcessed} profiles`, 'success');
+                    
+                    if (response.details && response.details.length > 0) {
+                        console.log('📋 Fix details:');
+                        response.details.forEach(detail => {
+                            console.log(`   ${detail.profile}: ${detail.fixed} friends fixed (${detail.oldDepth}→${detail.newDepth})`);
+                        });
+                    }
+                } else {
+                    console.error('Depth fix failed:', response.error);
+                    updateStatus(`Depth fix failed: ${response.error}`, 'error');
+                }
+                
+                return response;
+            } catch (error) {
+                console.error('Error during depth fix:', error);
+                updateStatus(`Error during depth fix: ${error.message}`, 'error');
+                return { success: false, error: error.message };
+            }
+        },
+        
+        // NEW: Validate current queue depth consistency
+        validateQueueDepths: async () => {
+            try {
+                console.log('🔍 Validating queue depth consistency...');
+                updateStatus('Validating queue depths...', 'info');
+                
+                const response = await sendToAPI('/scrape/validate-depths', {}, 'GET');
+                
+                if (response.valid) {
+                    console.log('✅ Queue depths are consistent');
+                    updateStatus('Queue depths are valid', 'success');
+                } else {
+                    console.warn('⚠️ Queue depth issues found:', response.issues);
+                    updateStatus(`Found ${response.issues.length} depth issues`, 'warning');
+                    
+                    if (response.issues.length > 0) {
+                        console.log('📋 Issues found:');
+                        response.issues.forEach((issue, i) => {
+                            console.log(`   ${i + 1}. ${issue}`);
+                        });
+                    }
+                }
+                
+                return response;
+            } catch (error) {
+                console.error('Error validating depths:', error);
+                updateStatus(`Error validating depths: ${error.message}`, 'error');
+                return { valid: false, error: error.message };
+            }
         }
     };      console.log('FB Scraper initialized. Available commands:');
     console.log('- FB_Scraper.getConvictions() - Get all confirmed convictions');
@@ -2537,15 +3245,13 @@
     console.log('- FB_Scraper.forceAutoNext() - Force start autoNext');
     console.log('- FB_Scraper.clearStuckState() - Clear stuck state locks');
     console.log('- FB_Scraper.startDebugMode() - Enable continuous debug logging');
-    console.log('');
-    console.log('📏 DEPTH MANAGEMENT COMMANDS:');
+    console.log('');    console.log('📏 DEPTH MANAGEMENT COMMANDS:');
     console.log('- FB_Scraper.getCurrentDepth() - Show current depth setting');
     console.log('- FB_Scraper.setCurrentDepth(N) - Set current depth to N');
     console.log('- FB_Scraper.checkQueueAtDepth(N) - Check if queue has URLs at depth N');
-    console.log('- FB_Scraper.showQueueStatus() - Show queue status for all depths');// Enhanced auto mode heartbeat and recovery system
-    let lastHeartbeat = Date.now();
-    let heartbeatInterval = null;
-    let recoveryAttempts = 0;
+    console.log('- FB_Scraper.showQueueStatus() - Show queue status for all depths');
+    console.log('- FB_Scraper.validateQueueDepths() - Check for depth inconsistencies');
+    console.log('- FB_Scraper.fixAllDepthIssues() - Fix all depth issues in queue automatically');// Enhanced auto mode heartbeat and recovery system - heartbeat variables are defined at the top of the script
     
     function startAutoModeHeartbeat() {
         if (heartbeatInterval) clearInterval(heartbeatInterval);
@@ -2628,12 +3334,118 @@
         lastHeartbeat = Date.now();
         GM_setValue('lastHeartbeat', lastHeartbeat);
     }
-    
-    // Add verification message for depth progression
+      // Add verification message for depth progression
     console.log('🎯 FB Scraper Loaded - Depth Progression Status:');
     console.log(`   Current Depth: ${currentDepth}`);
     console.log('   Expected Progression: Initial Profile (1) → Friends (2) → Friends of Friends (3)');
     console.log('   Use setCurrentDepth(1) to reset to start from initial profiles');
     console.log('   Use getCurrentDepth() to check current depth');
     console.log('   Use showQueueStatus() to see queue distribution');
+    console.log('');
+    console.log('⚠️  DEPTH ISSUE DETECTED: Run FB_Scraper.validateQueueDepths() to check for depth inconsistencies');
+    console.log('🔧 QUICK FIX: Run FB_Scraper.fixAllDepthIssues() to automatically fix all depth problems');
+    console.log('');
+      // Set current profile as a new seed (depth 1)
+    async function setAsNewSeed() {
+        try {
+            const currentUrl = getCurrentProfileUrl();
+            const profileName = extractProfileName();
+            
+            if (!currentUrl) {
+                updateStatus('Error: Could not determine current profile URL', 'error');
+                return null;
+            }
+
+            updateStatus(`Setting ${profileName} as new seed...`, 'info');
+            
+            const response = await sendToAPI('/scrape/set-seed', {
+                url: currentUrl,
+                name: profileName
+            });
+
+            if (response.success) {
+                updateStatus(`✅ ${profileName} set as new seed (depth 1)`, 'success');
+                addLog(`🌱 New seed: ${profileName} (was depth ${response.profile.old_depth})`);
+                
+                // Update current depth to 1 since we're now at a seed profile
+                currentDepth = 1;
+                GM_setValue('currentDepth', currentDepth);
+                
+                // Update UI depth display
+                try {
+                    const depthDisplay = document.getElementById('current-depth');
+                    const depthValue = document.getElementById('depth-value');
+                    const depthSlider = document.getElementById('depth-slider');
+                    if (depthDisplay) depthDisplay.textContent = currentDepth;
+                    if (depthValue) depthValue.textContent = currentDepth;
+                    if (depthSlider) depthSlider.value = currentDepth;
+                } catch (e) {
+                    console.warn('Could not update UI depth display:', e);
+                }
+                
+                // Fix existing friends depth if they were added with wrong depth
+                await fixFriendsDepth(currentUrl, response.profile.old_depth);
+                
+                return response;
+                
+            } else {
+                updateStatus(`Error setting as seed: ${response.error || 'Unknown error'}`, 'error');
+            }
+        } catch (error) {
+            console.error('Error setting profile as seed:', error);
+            updateStatus(`Error setting as seed: ${error.message}`, 'error');
+        }
+    }    // Fix friends depth when profile is set as new seed
+    async function fixFriendsDepth(seedUrl, oldDepth) {
+        try {
+            if (oldDepth > 1) {
+                updateStatus('Fixing friends depth in queue...', 'info');
+                
+                const response = await sendToAPI('/scrape/fix-friends-depth', {
+                    seedUrl: seedUrl,
+                    oldDepth: oldDepth,
+                    newDepth: 1
+                });
+                
+                if (response.success) {
+                    updateStatus(`✅ Fixed ${response.fixed} friend URLs from depth ${oldDepth + 1} to depth 2`, 'success');
+                    addLog(`🔧 Depth fix: ${response.fixed} friends moved from depth ${oldDepth + 1} to depth 2`);
+                } else {
+                    console.warn('Failed to fix friends depth:', response.error);
+                }
+            }
+        } catch (error) {
+            console.warn('Error fixing friends depth:', error);
+        }
+    }
+          // Set current profile as new seed and start full scrape
+    async function scrapeAsNewSeed() {
+        try {
+            updateStatus('Setting as new seed and starting full scrape...', 'info');
+            
+            // Set flag to indicate we're scraping as a new seed
+            isScrapeAsNewSeed = true;
+            
+            // First set as new seed
+            const response = await setAsNewSeed();
+            
+            // Add a note about friends being added to queue
+            if (response && response.success) {
+                addLog(`🔄 Friends of this seed will be queued at depth 2 for scraping`);
+            }
+            
+            // Wait a moment for the seed setting to complete
+            setTimeout(() => {
+                // Then start a full scrape workflow
+                updateStatus('Starting full scrape workflow as new seed...', 'info');
+                addLog(`ℹ️ Full scrape will collect all profile data and ensure friends are in the queue`);
+                startWorkflow('full_scrape');
+            }, 2000);
+            
+        } catch (error) {
+            console.error('Error in scrape as new seed:', error);
+            updateStatus(`Error in scrape as seed: ${error.message}`, 'error');
+        }
+    }
+
 })(); // End of IIFE

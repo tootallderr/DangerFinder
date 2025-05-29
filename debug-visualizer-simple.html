@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Visualizer</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        #graph-container {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+        #debug-output {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Debug Facebook Social Graph Visualizer</h1>
+        
+        <div id="status-container">
+            <div id="d3-status" class="status info">Checking D3.js...</div>
+            <div id="api-status" class="status info">Checking API...</div>
+            <div id="data-status" class="status info">Checking data...</div>
+            <div id="render-status" class="status info">Checking rendering...</div>
+        </div>
+        
+        <div id="graph-container">
+            <svg id="debug-svg" width="100%" height="100%"></svg>
+        </div>
+        
+        <div id="debug-output"></div>
+    </div>
+
+    <script>
+        const debugOutput = document.getElementById('debug-output');
+        
+        function log(message) {
+            console.log(message);
+            debugOutput.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+            debugOutput.scrollTop = debugOutput.scrollHeight;
+        }
+        
+        function updateStatus(id, success, message) {
+            const element = document.getElementById(id);
+            element.className = `status ${success ? 'success' : 'error'}`;
+            element.textContent = message;
+        }
+        
+        async function debugVisualization() {
+            log('=== Starting debug process ===');
+            
+            // Check D3.js
+            try {
+                if (typeof d3 !== 'undefined') {
+                    updateStatus('d3-status', true, '✓ D3.js loaded successfully');
+                    log('D3.js version: ' + d3.version);
+                } else {
+                    throw new Error('D3.js not found');
+                }
+            } catch (error) {
+                updateStatus('d3-status', false, '✗ D3.js failed: ' + error.message);
+                log('D3.js error: ' + error.message);
+                return;
+            }
+            
+            // Check API
+            try {
+                log('Fetching data from API...');
+                const [graphResponse, statsResponse] = await Promise.all([
+                    fetch('http://localhost:3000/api/graph'),
+                    fetch('http://localhost:3000/api/stats')
+                ]);
+                
+                if (!graphResponse.ok || !statsResponse.ok) {
+                    throw new Error(`API error: graph=${graphResponse.status}, stats=${statsResponse.status}`);
+                }
+                
+                const graphData = await graphResponse.json();
+                const statsData = await statsResponse.json();
+                
+                updateStatus('api-status', true, '✓ API endpoints working');
+                log('Graph data keys: ' + Object.keys(graphData).join(', '));
+                log('Stats data keys: ' + Object.keys(statsData).join(', '));
+                
+                // Check data structure
+                const nodeCount = Object.keys(graphData.nodes || {}).length;
+                const adjCount = Object.keys(graphData.adjacency_list || {}).length;
+                
+                updateStatus('data-status', nodeCount > 0, 
+                    nodeCount > 0 ? 
+                    `✓ Found ${nodeCount} nodes, ${adjCount} adjacency entries` : 
+                    '✗ No nodes found in data');
+                
+                log(`Nodes: ${nodeCount}, Adjacency entries: ${adjCount}`);
+                log('Sample node IDs: ' + Object.keys(graphData.nodes).slice(0, 3).join(', '));
+                
+                if (nodeCount === 0) {
+                    log('ERROR: No nodes found in graph data!');
+                    return;
+                }
+                
+                // Try to render
+                try {
+                    renderSimpleGraph(graphData, statsData);
+                    updateStatus('render-status', true, '✓ Graph rendered successfully');
+                } catch (renderError) {
+                    updateStatus('render-status', false, '✗ Render failed: ' + renderError.message);
+                    log('Render error: ' + renderError.message);
+                    log('Render stack: ' + renderError.stack);
+                }
+                
+            } catch (error) {
+                updateStatus('api-status', false, '✗ API failed: ' + error.message);
+                log('API error: ' + error.message);
+                log('API stack: ' + error.stack);
+            }
+        }
+        
+        function renderSimpleGraph(graphData, statsData) {
+            log('=== Starting render process ===');
+            
+            // Process nodes
+            const nodes = Object.entries(graphData.nodes || {}).map(([id, data]) => ({
+                id,
+                name: data.name || id,
+                url: data.url || '',
+                degree: (graphData.adjacency_list[id] || []).length,
+                x: Math.random() * 600,
+                y: Math.random() * 300
+            }));
+            
+            // Process links
+            const links = [];
+            Object.entries(graphData.adjacency_list || {}).forEach(([source, targets]) => {
+                targets.forEach(target => {
+                    if (nodes.find(n => n.id === source) && nodes.find(n => n.id === target)) {
+                        links.push({ source, target });
+                    }
+                });
+            });
+            
+            log(`Processed: ${nodes.length} nodes, ${links.length} links`);
+            
+            if (nodes.length === 0) {
+                throw new Error('No nodes to render');
+            }
+            
+            // Set up SVG
+            const svg = d3.select('#debug-svg');
+            const width = 800;
+            const height = 400;
+            
+            svg.selectAll('*').remove();
+            
+            const g = svg.append('g');
+            
+            // Create simulation
+            const simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id).distance(50))
+                .force('charge', d3.forceManyBody().strength(-200))
+                .force('center', d3.forceCenter(width / 2, height / 2));
+            
+            // Create links
+            const link = g.append('g')
+                .selectAll('line')
+                .data(links)
+                .join('line')
+                .attr('stroke', '#999')
+                .attr('stroke-opacity', 0.6)
+                .attr('stroke-width', 1);
+            
+            // Create nodes
+            const node = g.append('g')
+                .selectAll('circle')
+                .data(nodes)
+                .join('circle')
+                .attr('r', d => Math.max(5, Math.min(15, 5 + d.degree * 0.5)))
+                .attr('fill', '#69b3a2')
+                .attr('stroke', '#fff')
+                .attr('stroke-width', 2);
+            
+            // Add labels
+            const labels = g.append('g')
+                .selectAll('text')
+                .data(nodes)
+                .join('text')
+                .text(d => d.name.length > 20 ? d.name.substring(0, 20) + '...' : d.name)
+                .attr('font-size', 10)
+                .attr('font-family', 'Arial, sans-serif')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '.35em')
+                .style('pointer-events', 'none');
+            
+            // Update positions on tick
+            simulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+                
+                node
+                    .attr('cx', d => d.x)
+                    .attr('cy', d => d.y);
+                
+                labels
+                    .attr('x', d => d.x)
+                    .attr('y', d => d.y);
+            });
+            
+            log('Graph simulation started successfully');
+            log(`Final stats: ${nodes.length} nodes, ${links.length} links rendered`);
+        }
+        
+        // Start debugging when page loads
+        window.addEventListener('load', () => {
+            setTimeout(debugVisualization, 100);
+        });
+    </script>
+</body>
+</html>
