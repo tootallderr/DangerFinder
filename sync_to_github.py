@@ -23,57 +23,48 @@ logger = logging.getLogger("github_sync")
 # CONFIG
 REPO_PATH = os.path.abspath(os.path.dirname(__file__))
 REMOTE_URL = "https://github.com/tootallderr/DangerFinder.git"  # Updated to new repo
-# Set the commit message to include a timestamp
-COMMIT_MESSAGE = f"📦 v0.2 Update with Enhanced UI and Error Handling - {datetime.now().strftime('%Y-%m-%d')}"
-# Don't hardcode the branch name, let's detect it dynamically
+COMMIT_MESSAGE = f"\U0001F4E6 v0.2 Update with Enhanced UI and Error Handling - {datetime.now().strftime('%Y-%m-%d')}"
 DEFAULT_BRANCH = "master"  # Changed from "main" to match your actual branch
-# Path to log file
 LOG_FILE_PATH = os.path.join(REPO_PATH, "sync_log.txt")
 
-# Files to ensure exist and are tracked
+# Files to ensure exist and are tracked (only files that actually exist in the codebase)
 CORE_FILES = [
-    "facebook-osint.user.js",
     "README.md",
-    "DEPLOYMENT.md",
-    "facebook-osint-scraper.md",
-    "element_helpers.js",
-    "config.json",
+    "CHANGELOG.md",
     "sync_to_github.py",
+    "package.json",
 ]
 
 # Optional files (will be tracked if they exist, but won't cause errors if missing)
 OPTIONAL_FILES = [
     ".gitignore",
-    "CHANGELOG.md",
     "LICENSE",
-    "package.json",
-    "examples/"
+    "ALIAS_CONNECTION_IMPLEMENTATION_COMPLETE.md",
+    "conviction-tracking-explanation.md",
+    "FORCE_NEW_SEED_IMPLEMENTATION.md",
+    "PROFILE_IMAGES_UPDATE.md",
+    "SETTINGS_PERSISTENCE_IMPLEMENTATION.md",
+    "SYSTEM_STATUS_REPORT.md",
+    "VISUALIZER_ENHANCEMENTS.md",
 ]
 
-# Legacy module structure (for backward compatibility)
+# Module structure (actual modules directory)
 MODULES = [
-    "modules/profile-scraper.js",
-    "modules/friend-scraper.js", 
-    "modules/recursion-engine.js",
-    "modules/alias-matcher.js",
-    "modules/graph-visualizer.js",
-    "modules/ui.js",
-    "modules/anti-detection.js",
-    "modules/ollama-integration.js",
-    "modules/utilities.js",
-    "modules/suspicious-detector.js",
-    "modules/storage-manager.js",
-    "modules/test-suite.js",
+    # Only add if you want to ensure these exist, otherwise leave empty or auto-detect
 ]
 
 # Asset files to ensure exist and are tracked
 ASSETS = [
-    "assets/styles.css",
-    "assets/icons/",
-    "assets/images/"
+    "assets/",
+    "visualizer/",
+    "tampermonkey/",
+    "backend/",
+    "docs/",
+    "examples/",
+    "modules/",
+    "scripts/",
 ]
 
-# Add configuration for Git settings
 GIT_CONFIG = {
     "core.autocrlf": "true",       # Handle line endings automatically
     "diff.renameLimit": "10000",   # Increase rename detection limit
